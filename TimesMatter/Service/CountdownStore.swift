@@ -73,7 +73,7 @@ struct CountdownStore {
         .init(
             title: "Project Deadline",
             icon: "📋",
-            date: Calendar.current.date(byAdding: .weekOfYear, value: 3, to: Date()) ?? Date(),
+            date: Calendar.current.date(byAdding: .weekOfYear, value: -3, to: Date()) ?? Date(),
             categoryID: 3, // Work category
             backgroundColor: 0xFF34495ECC,
             textColor: 0xFFFFFFFFFF,
@@ -121,7 +121,7 @@ struct CountdownStore {
         .init(
             title: "Vacation",
             icon: "🏖️",
-            date: Calendar.current.date(byAdding: .month, value: 4, to: Date()) ?? Date(),
+            date: Calendar.current.date(byAdding: .month, value: -1, to: Date()) ?? Date(),
             categoryID: nil, // No category
             backgroundColor: 0xFF2ECC71CC,
             textColor: 0xFFFFFFFFFF,

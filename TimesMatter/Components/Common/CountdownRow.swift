@@ -6,7 +6,7 @@ struct CountdownRow: View {
     
     // Timer to update the view every second
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-
+    
     var body: some View {
         HStack(spacing: 0) {
             // Icon
@@ -14,55 +14,56 @@ struct CountdownRow: View {
                 .font(.system(size: 36))
                 .frame(width: 50, height: 50)
                 .background(Color.clear)
-                .padding(.leading, 8)
-
+                .padding(.leading, AppSpacing.small)
+            
             VStack(alignment: .leading, spacing: 4) {
                 // Title
                 Text(countdown.title)
-                    .font(.system(size: 22, weight: .bold))
+                    .font(AppFont.title2)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .foregroundColor(Color(hex: countdown.textColor))
                     .lineLimit(1)
                 // Date
                 Text(countdown.date, style: .date)
-                    .font(.system(size: 14, weight: .regular))
+                    .font(AppFont.subheadline)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .foregroundColor(Color(hex: countdown.textColor).opacity(0.8))
             }
-            .padding(.leading, 8)
-            .padding(.vertical, 8)
-
+            .padding(.leading, AppSpacing.small)
+            .padding(.vertical, AppSpacing.smallMedium)
+            
             Spacer()
-
-            // Time left
-            let time = countdown.calculateRelativeTime(currentTime: currentTime)
-            VStack() {
+            
+            VStack {
+                let time = countdown.calculateRelativeTime(currentTime: currentTime)
                 Text("\(time.number)")
-                    .font(.system(size: 28, weight: .bold))
+                    .font(AppFont.title2)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
-                    .foregroundColor(Color(hex: countdown.textColor))
+                    .foregroundColor(countdown.textColor.toColor)
+                
                 Text(time.label)
-                    .font(.system(size: 14, weight: .medium))
+                    .font(AppFont.subheadline)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
-                    .foregroundColor(Color(hex: countdown.textColor).opacity(0.8))
+                    .foregroundColor(countdown.textColor.toColor.opacity(0.8))
             }
             .frame(width: 80)
-            .padding(.vertical, 12)
-            .padding(.horizontal, 16)
+            .frame(minHeight: 50)
+            .padding(.vertical, AppSpacing.smallMedium)
+            .padding(.horizontal, AppSpacing.smallMedium)
             .background(
-                RoundedRectangle(cornerRadius: 16)
+                RoundedRectangle(cornerRadius: AppCornerRadius.card)
                     .fill(Color.black.opacity(0.3))
             )
         }
         .background(
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: AppCornerRadius.card)
                 .fill(Color(hex: countdown.backgroundColor))
         )
-        .shadow(color: countdown.backgroundColor.toColor, radius: 8, x: 0, y: 4)
+        .shadow(color: countdown.backgroundColor.toColor.opacity(0.08), radius: 8, x: 0, y: 4)
         .onReceive(timer) { _ in
             currentTime = Date()
         }
@@ -76,7 +77,7 @@ struct CountdownRow_Previews: PreviewProvider {
             id: 1,
             title: "Test",
             icon: "😀",
-            date: Date().addingTimeInterval(3600 * 8),
+            date: Date(),
             backgroundColor: 0xFF6B9DCC,
             textColor: 0xFFFFFFFF,
             isFavorite: true,

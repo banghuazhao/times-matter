@@ -113,6 +113,7 @@ extension DependencyValues {
 struct AppFont {
     static let largeTitle = Font.system(size: 34, weight: .bold)
     static let title = Font.system(size: 28, weight: .semibold)
+    static let title2 = Font.system(size: 22, weight: .semibold)
     static let headline = Font.system(size: 17, weight: .semibold)
     static let body = Font.system(size: 17, weight: .regular)
     static let subheadline = Font.system(size: 15, weight: .regular)

@@ -12,7 +12,7 @@ extension Countdown {
 
     /// Computed property for next occurrence date (for repeating countdowns)
     var nextOccurrence: Date? {
-        guard repeatType != .none else { return nil }
+        guard repeatType != .none else { return date }
 
         let now = Date()
         if date > now { return date }

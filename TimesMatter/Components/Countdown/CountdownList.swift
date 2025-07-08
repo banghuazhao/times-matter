@@ -12,7 +12,15 @@ import SwiftUINavigation
 @MainActor
 class CountdownListModel {
     @ObservationIgnored
-    @FetchAll(Countdown.all) var countdowns
+    @FetchAll(Countdown.all) var allCountdowns
+    
+    var countdowns: [Countdown] {
+        var countdowns = allCountdowns
+        countdowns.sort {
+            ($0.nextOccurrence ?? Date()) > ($1.nextOccurrence ?? Date())
+        }
+        return countdowns
+    }
     
     @CasePathable
     enum Route {
@@ -41,30 +49,34 @@ struct CountdownListView: View {
     @State private var showingNewCountdown = false
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                ForEach(model.countdowns) { countdown in
-                    CountdownRow(countdown: countdown)
-                        .onTapGesture {
-                            model.onTapCountDown(countdown)
-                        }
+        NavigationStack {
+            
+            ScrollView {
+                VStack(spacing: 16) {
+                    ForEach(model.countdowns) { countdown in
+                        CountdownRow(countdown: countdown)
+                            .onTapGesture {
+                                model.onTapCountDown(countdown)
+                            }
+                    }
+                }
+                .padding(16)
+            }
+            .appBackground()
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: model.onTapAddCountDown) {
+                        Image(systemName: "plus")
+                    }
+                    .buttonStyle(.appCircular)
                 }
             }
-            .padding(16)
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(action: model.onTapAddCountDown) {
-                    Image(systemName: "plus")
-                }
-                .buttonStyle(.appCircular)
+            .sheet(item: $model.route.countdownForm, id: \.self) { model in
+                CountdownFormView(model: model)
             }
-        }
-        .sheet(item: $model.route.countdownForm, id: \.self) { model in
-            CountdownFormView(model: model)
-        }
-        .navigationDestination(item: $model.route.countdownDetail) { model in
-            CountdownDetailView(model: model)
+            .navigationDestination(item: $model.route.countdownDetail) { model in
+                CountdownDetailView(model: model)
+            }
         }
     }
 }
