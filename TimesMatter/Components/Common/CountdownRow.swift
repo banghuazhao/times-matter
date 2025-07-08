@@ -2,6 +2,10 @@ import SwiftUI
 
 struct CountdownRow: View {
     let countdown: Countdown
+    @State private var currentTime = Date()
+    
+    // Timer to update the view every second
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         HStack(spacing: 0) {
@@ -33,7 +37,7 @@ struct CountdownRow: View {
             Spacer()
 
             // Time left
-            let time = countdown.compactRelativeTime
+            let time = countdown.calculateRelativeTime(currentTime: currentTime)
             VStack() {
                 Text("\(time.number)")
                     .font(.system(size: 28, weight: .bold))
@@ -59,6 +63,9 @@ struct CountdownRow: View {
                 .fill(Color(hex: countdown.backgroundColor))
         )
         .shadow(color: countdown.backgroundColor.toColor, radius: 8, x: 0, y: 4)
+        .onReceive(timer) { _ in
+            currentTime = Date()
+        }
     }
 }
 

@@ -71,8 +71,8 @@ extension Countdown {
     // MARK: Compact Relative Time
 
     /// Computed property for relative time (number and label)
-    var compactRelativeTime: (number: Int, label: String) {
-        let now = Date()
+    func calculateRelativeTime(currentTime: Date) -> (number: Int, label: String) {
+        let now = currentTime
         let targetDate: Date
         if repeatType == .none {
             targetDate = date
