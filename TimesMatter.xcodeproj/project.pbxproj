@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		996833A82E1CD1AF00D314BA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 996833A72E1CD1AF00D314BA /* Localizable.xcstrings */; };
 		996833DD2E1CF5C900D314BA /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 996833DC2E1CF5C900D314BA /* SwiftUINavigation */; };
+		4144A1582E1CF92500DEB393 /* MoreApps in Frameworks */ = {isa = PBXBuildFile; productRef = 4144A1572E1CF92500DEB393 /* MoreApps */; };
 		99BABECB2E1C924900895B3B /* SharingGRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 99BABECA2E1C924900895B3B /* SharingGRDB */; };
 /* End PBXBuildFile section */
 
@@ -28,9 +29,22 @@
 		99BABCFA2E1BAFF000895B3B /* TimesMatterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimesMatterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4144A1552E1CF8DE00DEB393 /* Exceptions for "TimesMatter" folder in "TimesMatter" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Modules/MoreApps,
+			);
+			target = 99BABCE92E1BAFEE00895B3B /* TimesMatter */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		99BABCEC2E1BAFEE00895B3B /* TimesMatter */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4144A1552E1CF8DE00DEB393 /* Exceptions for "TimesMatter" folder in "TimesMatter" target */,
+			);
 			path = TimesMatter;
 			sourceTree = "<group>";
 		};
@@ -48,6 +62,7 @@
 			files = (
 				996833DD2E1CF5C900D314BA /* SwiftUINavigation in Frameworks */,
 				99BABECB2E1C924900895B3B /* SharingGRDB in Frameworks */,
+				4144A1582E1CF92500DEB393 /* MoreApps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,12 +76,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4144A1562E1CF92500DEB393 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		99BABCE12E1BAFEE00895B3B = {
 			isa = PBXGroup;
 			children = (
 				996833A72E1CD1AF00D314BA /* Localizable.xcstrings */,
 				99BABCEC2E1BAFEE00895B3B /* TimesMatter */,
 				99BABCFD2E1BAFF000895B3B /* TimesMatterTests */,
+				4144A1562E1CF92500DEB393 /* Frameworks */,
 				99BABCEB2E1BAFEE00895B3B /* Products */,
 			);
 			sourceTree = "<group>";
