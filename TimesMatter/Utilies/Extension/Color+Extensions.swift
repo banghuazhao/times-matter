@@ -57,3 +57,9 @@ extension Color {
         return (r << 24) | (g << 16) | (b << 8) | a
     }
 }
+
+extension Int {
+    var toColor: Color {
+        Color(hex: self)
+    }
+}

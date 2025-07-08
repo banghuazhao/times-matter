@@ -5,17 +5,29 @@
   
 
 import SwiftUI
+import SharingGRDB
 
 @Observable
 @MainActor
 class CountdownListModel {
-    
+    @ObservationIgnored
+    @FetchAll(Countdown.all) var countdowns
 }
 
 struct CountdownListView: View {
     @State var model = CountdownListModel()
-    
+
     var body: some View {
-        Text("all countdowns")
+        ScrollView {
+            VStack(spacing: 16) {
+                ForEach(model.countdowns) { countdown in
+                    CountdownRow(countdown: countdown)
+                }
+            }
+            .padding(16)
+        }
+        .toolbar {
+            
+        }
     }
 }
