@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		996833A82E1CD1AF00D314BA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 996833A72E1CD1AF00D314BA /* Localizable.xcstrings */; };
 		99BABECB2E1C924900895B3B /* SharingGRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 99BABECA2E1C924900895B3B /* SharingGRDB */; };
 /* End PBXBuildFile section */
 
@@ -21,6 +22,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		996833A72E1CD1AF00D314BA /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		99BABCEA2E1BAFEE00895B3B /* TimesMatter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimesMatter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99BABCFA2E1BAFF000895B3B /* TimesMatterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimesMatterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -60,6 +62,7 @@
 		99BABCE12E1BAFEE00895B3B = {
 			isa = PBXGroup;
 			children = (
+				996833A72E1CD1AF00D314BA /* Localizable.xcstrings */,
 				99BABCEC2E1BAFEE00895B3B /* TimesMatter */,
 				99BABCFD2E1BAFF000895B3B /* TimesMatterTests */,
 				99BABCEB2E1BAFEE00895B3B /* Products */,
@@ -149,6 +152,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 99BABCE12E1BAFEE00895B3B;
 			minimizedProjectReferenceProxies = 1;
@@ -171,6 +175,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				996833A82E1CD1AF00D314BA /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,6 +273,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -324,6 +330,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

@@ -47,13 +47,16 @@ func appDatabase() throws -> any DatabaseWriter {
             CREATE TABLE "countdowns" (
              "id" INTEGER PRIMARY KEY AUTOINCREMENT, 
              "title" TEXT NOT NULL DEFAULT '', 
-             "category" INTEGER NOT NULL DEFAULT 0, 
              "icon" TEXT NOT NULL DEFAULT '', 
-             "categoryID" INTEGER REFERENCES "categorys"("id") ON DELETE SET NULL,
+             "date" TEXT NOT NULL DEFAULT '', 
+             "categoryID" INTEGER REFERENCES "categories"("id") ON DELETE SET NULL,
              "backgroundColor" TEXT NOT NULL DEFAULT '', 
              "textColor" TEXT NOT NULL DEFAULT '', 
              "isFavorite" INTEGER NOT NULL DEFAULT 0, 
-             "isArchived" INTEGER NOT NULL DEFAULT 0 
+             "isArchived" INTEGER NOT NULL DEFAULT 0,
+             "repeatType" TEXT NOT NULL DEFAULT 'none',
+             "customInterval" INTEGER NOT NULL DEFAULT 1,
+             "compactTimeUnit" TEXT NOT NULL DEFAULT 'days'
             ) STRICT 
             """
         )
@@ -61,23 +64,30 @@ func appDatabase() throws -> any DatabaseWriter {
 
         try #sql(
             """
-            CREATE TABLE "categorys" ( 
+            CREATE TABLE "categories" ( 
              "id" INTEGER PRIMARY KEY AUTOINCREMENT, 
              "title" TEXT NOT NULL DEFAULT '',
+             "icon" TEXT NOT NULL DEFAULT ''
             ) STRICT
             """
         )
         .execute(db)
     }
+    
+    migrator.registerMigration("Seed category") { db in
+        try db.seed {
+            CategoryStore.seed
+        }
+    }
+    
     #if DEBUG
-        migrator.registerMigration("Seed database") { db in
+        migrator.registerMigration("Seed countdown") { db in
             try db.seed {
-                CategoryStore.seed
                 CountdownStore.seed
             }
         }
     #endif
-    
+
     try migrator.migrate(database)
 
     return database

@@ -1,0 +1,78 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "all countdowns" : {
+
+    },
+    "Anniversary" : {
+
+    },
+    "Birthday" : {
+
+    },
+    "CountDown Detail" : {
+
+    },
+    "CountDown Form" : {
+
+    },
+    "Countdowns" : {
+
+    },
+    "day" : {
+      "comment" : "Singular day unit"
+    },
+    "days" : {
+      "comment" : "Plural day unit"
+    },
+    "hour" : {
+
+    },
+    "hours" : {
+
+    },
+    "Me" : {
+
+    },
+    "minute" : {
+
+    },
+    "minutes" : {
+
+    },
+    "month" : {
+      "comment" : "Singular month unit"
+    },
+    "months" : {
+      "comment" : "Plural month unit"
+    },
+    "Now" : {
+
+    },
+    "Reminders" : {
+
+    },
+    "second" : {
+
+    },
+    "seconds" : {
+
+    },
+    "week" : {
+      "comment" : "Singular week unit"
+    },
+    "weeks" : {
+      "comment" : "Plural week unit"
+    },
+    "Work" : {
+
+    },
+    "year" : {
+      "comment" : "Singular year unit"
+    },
+    "years" : {
+      "comment" : "Plural year unit"
+    }
+  },
+  "version" : "1.0"
+}
