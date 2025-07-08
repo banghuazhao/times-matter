@@ -8,12 +8,16 @@ import SwiftUI
 
 @Observable
 @MainActor
-class CountdownFormModel {
+class CountdownFormModel: HashableObject {
+    var countdown: Countdown.Draft
     
+    init(countdown: Countdown.Draft) {
+        self.countdown = countdown
+    }
 }
 
 struct CountdownFormView: View {
-    @State var model = CountdownFormModel()
+    @State var model: CountdownFormModel
     
     var body: some View {
         Text("CountDown Form")
