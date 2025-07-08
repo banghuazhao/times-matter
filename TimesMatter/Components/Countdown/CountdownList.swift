@@ -157,8 +157,8 @@ struct CategorySelectionSheet: View {
                                 .foregroundColor(themeManager.current.primaryColor)
                         }
                     }
+                    .contentShape(Rectangle()) // Make the whole row tappable
                 }
-                .clipped()
                 .buttonStyle(.plain)
 
                 // Category options
@@ -175,7 +175,7 @@ struct CategorySelectionSheet: View {
                                     .foregroundColor(themeManager.current.primaryColor)
                             }
                         }
-                        .clipped()
+                        .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                 }
