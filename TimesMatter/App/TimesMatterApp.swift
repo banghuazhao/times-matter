@@ -29,6 +29,7 @@ struct TimesMatterApp: App {
                 tabView
             }
         }
+        .tint(ThemeManager.shared.current.primaryColor)
     }
 
     @available(iOS 18.0, *)

@@ -18,7 +18,7 @@ struct CountdownStore {
         .init(
             title: "Test second",
             icon: "🔧",
-            date: Calendar.current.date(byAdding: .minute, value: 1, to: Date()) ?? Date(),
+            date: Calendar.current.date(byAdding: .second, value: 10, to: Date()) ?? Date(),
             backgroundColor: 0xFF6B9DCC,
             textColor: 0xFFFFFFFFFF
         ),

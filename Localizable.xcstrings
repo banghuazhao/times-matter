@@ -41,6 +41,9 @@
     "days" : {
       "comment" : "Plural day unit"
     },
+    "Filter By" : {
+
+    },
     "hour" : {
 
     },
@@ -68,6 +71,9 @@
     "Others" : {
 
     },
+    "Past" : {
+
+    },
     "Please describe your issue below" : {
 
     },
@@ -80,10 +86,16 @@
     "seconds" : {
 
     },
+    "Sort By" : {
+
+    },
     "Statistics" : {
 
     },
     "Times Matter  |  Remind Your Life" : {
+
+    },
+    "Upcoming" : {
 
     },
     "v%@  Check for Updates" : {
