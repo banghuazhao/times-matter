@@ -19,7 +19,7 @@ struct Countdown: Identifiable {
     var textColor: Int = 0xFFFFFFFFFF
     var isFavorite: Bool = false
     var isArchived: Bool = false
-    var repeatType: RepeatType = .none
+    var repeatType: RepeatType = .nonRepeating
     var customInterval: Int = 1
     // Compact format: single time unit selection
     var compactTimeUnit: CompactTimeUnit = .days
@@ -30,7 +30,7 @@ extension Countdown.Draft: Identifiable {}
 
 // MARK: - Repeat Type Enum
 enum RepeatType: String, Codable, CaseIterable, QueryBindable {
-    case none
+    case nonRepeating
     case daily
     case weekly
     case monthly

@@ -6,22 +6,25 @@
 import Foundation
 
 struct CountdownStore {
-    static let seed: [Countdown.Draft] = [
-        .init(
-            title: "Test minute",
-            icon: "🔧",
-            date: Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date(),
-            backgroundColor: 0xFF6B9DCC,
-            textColor: 0xFFFFFFFFFF
-        ),
+    static let testMinute = Countdown.Draft(
+        title: "Test minute",
+        icon: "🔧",
+        date: Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date(),
+        backgroundColor: 0xFF6B9DCC,
+        textColor: 0xFFFFFFFFFF
+    )
 
-        .init(
-            title: "Test second",
-            icon: "🔧",
-            date: Calendar.current.date(byAdding: .second, value: 10, to: Date()) ?? Date(),
-            backgroundColor: 0xFF6B9DCC,
-            textColor: 0xFFFFFFFFFF
-        ),
+    static let testSecond = Countdown.Draft(
+        title: "Test second",
+        icon: "🔧",
+        date: Calendar.current.date(byAdding: .second, value: 10, to: Date()) ?? Date(),
+        backgroundColor: 0xFF6B9DCC,
+        textColor: 0xFFFFFFFFFF
+    )
+
+    static let seed: [Countdown.Draft] = [
+        testMinute,
+        testSecond,
 
         // Birthday countdowns
         .init(
@@ -78,7 +81,7 @@ struct CountdownStore {
             backgroundColor: 0xFF34495ECC,
             textColor: 0xFFFFFFFFFF,
             isFavorite: false,
-            repeatType: .none
+            repeatType: .nonRepeating
         ),
 
         .init(
@@ -126,7 +129,7 @@ struct CountdownStore {
             backgroundColor: 0xFF2ECC71CC,
             textColor: 0xFFFFFFFFFF,
             isFavorite: true,
-            repeatType: .none
+            repeatType: .nonRepeating
         ),
 
         .init(

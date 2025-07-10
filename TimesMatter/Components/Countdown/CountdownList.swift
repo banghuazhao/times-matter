@@ -48,7 +48,8 @@ class CountdownListModel {
     @ObservationIgnored
     @Shared(.appStorage("countdownFilterOption")) var filterOption: FilterOption = .all
     
-    var currentTime = Date()
+    @ObservationIgnored
+    @Dependency(\.timerService) var timerService
 
     var countdowns: [Countdown] {
         var countdowns = allCountdowns
@@ -68,7 +69,7 @@ class CountdownListModel {
         countdowns.sort {
             switch orderType {
             case .default:
-                let now = currentTime
+                let now = timerService.currentTime
                 let lhsTime = ($0.nextOccurrence ?? $0.date).timeIntervalSince(now)
                 let rhsTime = ($1.nextOccurrence ?? $1.date).timeIntervalSince(now)
                 // Future first (X left), sorted soonest to furthest; then past (X ago), sorted soonest to furthest
@@ -145,14 +146,13 @@ class CountdownListModel {
 struct CountdownListView: View {
     @State var model = CountdownListModel()
     @Dependency(\.themeManager) var themeManager
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
                     if model.orderType == .default {
-                        let now = model.currentTime
+                        let now = model.timerService.currentTime
                         let futureCountdowns = model.countdowns.filter { ($0.nextOccurrence ?? $0.date) >= now }
                         let pastCountdowns = model.countdowns.filter { ($0.nextOccurrence ?? $0.date) < now }
                         if !futureCountdowns.isEmpty {
@@ -161,7 +161,7 @@ struct CountdownListView: View {
                                     .font(AppFont.headline)
                                     .padding(.leading, 4)
                                 ForEach(futureCountdowns) { countdown in
-                                    CountdownRow(countdown: countdown, currentTime: model.currentTime)
+                                    CountdownRow(countdown: countdown)
                                         .onTapGesture {
                                             model.onTapCountDown(countdown)
                                         }
@@ -174,7 +174,7 @@ struct CountdownListView: View {
                                     .font(AppFont.headline)
                                     .padding(.leading, 4)
                                 ForEach(pastCountdowns) { countdown in
-                                    CountdownRow(countdown: countdown, currentTime: model.currentTime)
+                                    CountdownRow(countdown: countdown)
                                         .onTapGesture {
                                             model.onTapCountDown(countdown)
                                         }
@@ -183,7 +183,7 @@ struct CountdownListView: View {
                         }
                     } else {
                         ForEach(model.countdowns) { countdown in
-                            CountdownRow(countdown: countdown, currentTime: model.currentTime)
+                            CountdownRow(countdown: countdown)
                                 .onTapGesture {
                                     model.onTapCountDown(countdown)
                                 }
@@ -261,11 +261,6 @@ struct CountdownListView: View {
                         Image(systemName: "plus")
                     }
                     .buttonStyle(.appCircular)
-                }
-            }
-            .onReceive(timer) { now in
-                withAnimation {
-                    model.currentTime = now
                 }
             }
             .sheet(item: $model.route.countdownForm, id: \.self) { model in

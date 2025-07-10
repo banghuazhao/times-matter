@@ -11,25 +11,10 @@
         }
       }
     },
-    "%lld" : {
-
-    },
     "📅" : {
 
     },
-    "2/10" : {
-
-    },
-    "3/5" : {
-
-    },
-    "7" : {
-
-    },
-    "12" : {
-
-    },
-    "Achievements" : {
+    "1 day or more" : {
 
     },
     "All" : {
@@ -38,22 +23,16 @@
     "Anniversary" : {
 
     },
+    "Automatically adjusts time display based on remaining duration for better readability." : {
+
+    },
     "Birthday" : {
 
     },
-    "Category" : {
-
-    },
-    "Check-ins" : {
-
-    },
-    "Checkin History" : {
+    "Compact Time Format" : {
 
     },
     "CountDown Detail" : {
-
-    },
-    "CountDown Form" : {
 
     },
     "Countdowns" : {
@@ -65,16 +44,31 @@
     "days" : {
       "comment" : "Plural day unit"
     },
+    "Dismiss" : {
+
+    },
+    "Edit Countdown" : {
+
+    },
+    "Enter event title" : {
+
+    },
+    "Event Time" : {
+
+    },
     "Filter By" : {
 
     },
-    "Habits" : {
+    "Gallery" : {
 
     },
     "hour" : {
 
     },
     "hours" : {
+
+    },
+    "Less than 1 day" : {
 
     },
     "Me" : {
@@ -92,10 +86,7 @@
     "months" : {
       "comment" : "Plural month unit"
     },
-    "More Features" : {
-
-    },
-    "My Stats" : {
+    "New Countdown" : {
 
     },
     "Now" : {
@@ -113,28 +104,37 @@
     "Reminders" : {
 
     },
+    "Save" : {
+
+    },
     "second" : {
 
     },
     "seconds" : {
 
     },
-    "Settings" : {
+    "Shows hours, minutes, or seconds" : {
+
+    },
+    "Shows the selected time format" : {
 
     },
     "Sort By" : {
 
     },
-    "Theme Color" : {
+    "Statistics" : {
 
     },
-    "Times Matter  |  Smart Reminders" : {
+    "Time Unit" : {
+
+    },
+    "Times Matter  |  Remind Your Life" : {
 
     },
     "Upcoming" : {
 
     },
-    "Upgrade to Premium" : {
+    "Update" : {
 
     },
     "v%@  Check for Updates" : {
@@ -154,9 +154,6 @@
     },
     "years" : {
       "comment" : "Plural year unit"
-    },
-    "Your Name" : {
-
     }
   },
   "version" : "1.0"

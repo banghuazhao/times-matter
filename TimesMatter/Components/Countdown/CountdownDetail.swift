@@ -5,11 +5,15 @@
   
 
 import SwiftUI
+import Dependencies
 
 @Observable
 @MainActor
 class CountdownDetailModel {
     let countdown: Countdown
+    @ObservationIgnored
+    @Dependency(\.timerService) var timerService
+    
     init(countdown: Countdown) {
         self.countdown = countdown
     }

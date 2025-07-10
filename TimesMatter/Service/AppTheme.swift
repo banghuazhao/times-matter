@@ -117,6 +117,7 @@ struct AppFont {
     static let headline = Font.system(size: 17, weight: .semibold)
     static let body = Font.system(size: 17, weight: .regular)
     static let subheadline = Font.system(size: 15, weight: .regular)
+    static let subheadlineSemibold = Font.system(size: 15, weight: .semibold)
     static let caption = Font.system(size: 13, weight: .regular)
     static let footnote = Font.system(size: 12, weight: .regular)
 }

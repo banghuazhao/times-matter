@@ -1,8 +1,10 @@
 import SwiftUI
+import Dependencies
 
 struct CountdownRow: View {
     let countdown: Countdown
-    let currentTime: Date
+    
+    @Dependency(\.timerService) var timerService
     
     var body: some View {
         HStack(spacing: 0) {
@@ -34,8 +36,8 @@ struct CountdownRow: View {
             Spacer()
             
             VStack {
-                let time = countdown.calculateRelativeTime(currentTime: currentTime)
-                Text("\(time.number)")
+                let time = countdown.calculateRelativeTime(currentTime: timerService.currentTime)
+                Text(time.number)
                     .font(AppFont.title2)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
@@ -76,12 +78,12 @@ struct CountdownRow_Previews: PreviewProvider {
             textColor: 0xFFFFFFFF,
             isFavorite: true,
             isArchived: false,
-            repeatType: .none,
+            repeatType: .nonRepeating,
             customInterval: 1,
             compactTimeUnit: .days
         )
         VStack {
-            CountdownRow(countdown: sample, currentTime: Date())
+            CountdownRow(countdown: sample)
         }
         .padding()
     }
