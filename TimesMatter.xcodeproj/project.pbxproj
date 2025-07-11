@@ -36,6 +36,7 @@
 		4144A1552E1CF8DE00DEB393 /* Exceptions for "TimesMatter" folder in "TimesMatter" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Info.plist,
 				Modules/MoreApps,
 			);
 			target = 99BABCE92E1BAFEE00895B3B /* TimesMatter */;
@@ -196,6 +197,7 @@
 				996833DB2E1CF5C900D314BA /* XCRemoteSwiftPackageReference "swift-navigation" */,
 				996834502E1D267E00D314BA /* XCLocalSwiftPackageReference "TimesMatter/Modules/MoreApps" */,
 				99AD2D4B2E20B70A00699F68 /* XCRemoteSwiftPackageReference "EasyToast" */,
+				418CB66E2E210A8D00E4AF36 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 99BABCEB2E1BAFEE00895B3B /* Products */;
@@ -383,6 +385,7 @@
 				DEVELOPMENT_TEAM = F694X76A5X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TimesMatter/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -411,6 +414,7 @@
 				DEVELOPMENT_TEAM = F694X76A5X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TimesMatter/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -507,6 +511,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		418CB66E2E210A8D00E4AF36 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.7.0;
+			};
+		};
 		996833DB2E1CF5C900D314BA /* XCRemoteSwiftPackageReference "swift-navigation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-navigation";
