@@ -11,7 +11,25 @@
         }
       }
     },
+    "⏰ Reminders" : {
+
+    },
+    "⏱️ Enter New Category" : {
+
+    },
+    "🎂 Birthday" : {
+
+    },
+    "💼 Work" : {
+
+    },
     "📅" : {
+
+    },
+    "📅 All" : {
+
+    },
+    "🥳 Anniversary" : {
 
     },
     "1 day or more" : {
@@ -32,28 +50,16 @@
     "All" : {
 
     },
-    "Anniversary" : {
-
-    },
     "Automatically adjusts time display based on remaining duration for better readability." : {
 
     },
-    "Birthday" : {
-
-    },
     "Cancel" : {
-
-    },
-    "categories" : {
 
     },
     "Categories" : {
 
     },
     "Category" : {
-
-    },
-    "Category name" : {
 
     },
     "Checkin Sound" : {
@@ -92,6 +98,9 @@
     "Dismiss" : {
 
     },
+    "Done" : {
+
+    },
     "Edit" : {
 
     },
@@ -119,9 +128,6 @@
     "hours" : {
 
     },
-    "Icon" : {
-
-    },
     "Less than 1 day" : {
 
     },
@@ -146,7 +152,7 @@
     "New Countdown" : {
 
     },
-    "Note: When a category is deleted, all countdowns in that category will be moved to 'All' category." : {
+    "Note: When a category is deleted, all countdowns in that category will be moved to '📅 All' category." : {
 
     },
     "Now" : {
@@ -235,9 +241,6 @@
     },
     "weeks" : {
       "comment" : "Plural week unit"
-    },
-    "Work" : {
-
     },
     "year" : {
       "comment" : "Singular year unit"

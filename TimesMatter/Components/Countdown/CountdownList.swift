@@ -307,15 +307,9 @@ struct CountdownListView: View {
                 ToolbarItem(placement: .principal) {
                     Button(action: model.onTapSelectCategory) {
                         if let selected = model.allCategories.first(where: { $0.id == model.selectedCategory }) {
-                            HStack {
-                                Text(selected.icon)
-                                Text(selected.title)
-                            }
+                            Text(selected.title)
                         } else {
-                            HStack {
-                                Text("📅")
-                                Text("All")
-                            }
+                            Text("📅 All")
                         }
                     }
                     .buttonStyle(.appRect)

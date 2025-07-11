@@ -8,9 +8,9 @@ import Foundation
 
 struct CategoryStore {
     static let seed: [Category.Draft] = [
-        .init(id: 1, title: String(localized: "Anniversary"), icon: "🥳"),
-        .init(id: 2, title: String(localized: "Birthday"), icon: "🎂"),
-        .init(id: 3, title: String(localized: "Work"), icon: "💼"),
-        .init(id: 4, title: String(localized: "Reminders"), icon: "⏰")
+        .init(id: 1, title: String(localized: "🥳 Anniversary")),
+        .init(id: 2, title: String(localized: "🎂 Birthday")),
+        .init(id: 3, title: String(localized: "💼 Work")),
+        .init(id: 4, title: String(localized: "⏰ Reminders"))
     ]
 }

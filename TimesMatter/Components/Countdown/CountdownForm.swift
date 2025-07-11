@@ -142,11 +142,9 @@ struct CountdownFormView: View {
                             } label: {
                                 HStack {
                                     if let selectedCategory = model.allCategories.first(where: { $0.id == model.countdown.categoryID }) {
-                                        Text(selectedCategory.icon)
                                         Text(selectedCategory.title)
                                     } else {
-                                        Text("📅")
-                                        Text("All")
+                                        Text("📅 All")
                                     }
                                 }
                             }
@@ -213,13 +211,15 @@ struct CountdownFormView: View {
              .scrollDismissesKeyboard(.immediately)
              .navigationBarTitleDisplayMode(.inline)
              .sheet(isPresented: Binding($model.route.selectCategory)) {
-                 CategorySelectionSheet(
-                    selectedCategory: model.countdown.categoryID,
-                    onSelect: { category in
-                        model.onSelectCategory(category)
-                    }
+                 CategoryFormView(
+                    model: CategoryFormModel(
+                        selectedCategory: model.countdown.categoryID,
+                        onSelect: { category in
+                            model.onSelectCategory(category)
+                        }
+                    )
                  )
-                 .presentationDetents([.medium, .large])
+                 .presentationDetents([.fraction(0.7), .large])
                  .presentationDragIndicator(.visible)
              }
              .easyToast(isPresented: $model.showTitleEmptyToast, message: String(localized:"Event title is empty"))

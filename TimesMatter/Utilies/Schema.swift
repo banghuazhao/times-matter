@@ -66,8 +66,7 @@ func appDatabase() throws -> any DatabaseWriter {
             """
             CREATE TABLE "categories" ( 
              "id" INTEGER PRIMARY KEY AUTOINCREMENT, 
-             "title" TEXT NOT NULL DEFAULT '',
-             "icon" TEXT NOT NULL DEFAULT ''
+             "title" TEXT NOT NULL DEFAULT ''
             ) STRICT
             """
         )

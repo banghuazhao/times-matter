@@ -10,7 +10,7 @@ import Dependencies
 
 struct CategorySelectionSheet: View {
     @FetchAll(Category.all) var categories
-    let selectedCategory: Category.ID?
+    @State var selectedCategory: Category.ID?
     let onSelect: (Category?) -> Void
     
     @Dependency(\.themeManager) var themeManager
@@ -38,10 +38,10 @@ struct CategorySelectionSheet: View {
             // Category options
             ForEach(categories) { category in
                 Button {
+                    selectedCategory = category.id
                     onSelect(category)
                 } label: {
                     HStack {
-                        Text(category.icon)
                         Text(category.title)
                         Spacer()
                         if category.id == selectedCategory {

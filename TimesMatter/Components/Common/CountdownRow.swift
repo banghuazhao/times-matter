@@ -35,14 +35,7 @@ struct CountdownRow: View {
                         Image(systemName: "heart.fill")
                             .font(AppFont.caption)
                             .foregroundColor(.red)
-                    }
-                    
-                    if let categoryID = countdown.categoryID,
-                       let category = allCategories.first(where: { $0.id == categoryID }) {
-                        Text(category.icon)
-                            .font(AppFont.caption)
-                    }
-                    
+                    }                    
                 }
             }
             .padding(.leading, AppSpacing.small)

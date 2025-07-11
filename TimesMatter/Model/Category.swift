@@ -11,6 +11,6 @@ import SharingGRDB
 struct Category: Identifiable {
     let id: Int
     var title: String = ""
-    var icon: String = "📆"
 }
+
 extension Category.Draft: Identifiable {}
