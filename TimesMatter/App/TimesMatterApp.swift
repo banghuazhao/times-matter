@@ -8,6 +8,8 @@ import SwiftUI
 
 @main
 struct TimesMatterApp: App {
+    @Dependency(\.themeManager) var themeManager
+
     init() {
         prepareDependencies {
             $0.defaultDatabase = try! appDatabase()
@@ -17,6 +19,7 @@ struct TimesMatterApp: App {
     var body: some Scene {
         WindowGroup {
             content
+                .preferredColorScheme(themeManager.darkModeEnabled ? .dark : .light)
         }
     }
 

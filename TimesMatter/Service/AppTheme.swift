@@ -80,7 +80,10 @@ class ThemeManager: ObservableObject {
     }
     
     @ObservationIgnored
-    @Shared(.appStorage("darkModeEnabled")) private var darkModeEnabled: Bool = false
+    @Shared(.appStorage("darkModeEnabled")) private var darkModeEnabledStorage: Bool = false
+
+    var darkModeEnabled: Bool { darkModeEnabledStorage }
+    
     @ObservationIgnored
     @Shared(.appStorage("selectedThemeColor")) private var selectedThemeColor: String = ThemeColor.default.rawValue
         
@@ -93,6 +96,12 @@ class ThemeManager: ObservableObject {
     func updateThemeColor(_ themeColorName: String) {
         $selectedThemeColor.withLock{
             $0 = themeColorName
+        }
+    }
+
+    func updateTheme(darkMode: Bool) {
+        $darkModeEnabledStorage.withLock {
+            $0 = darkMode
         }
     }
 }

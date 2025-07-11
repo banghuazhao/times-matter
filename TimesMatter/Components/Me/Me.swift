@@ -160,7 +160,7 @@ struct MeView: View {
                 NavigationLink(destination: MoreAppsView()) {
                     moreItem(icon: "storefront", title: "More Apps")
                 }
-                if let url = URL(string: "https://itunes.apple.com/app/id1234567890?action=write-review") {
+                if let url = URL(string: "https://itunes.apple.com/app/id6748243795?action=write-review") {
                     Button {
                         openURL(url)
                     } label: {
@@ -168,11 +168,12 @@ struct MeView: View {
                     }
                 }
                 Button {
-                    // Feedback action placeholder
+                    let email = SupportEmail()
+                    email.send(openURL: openURL)
                 } label: {
                     moreItem(icon: "envelope.fill", title: "Feedback")
                 }
-                if let appURL = URL(string: "https://itunes.apple.com/app/id1234567890") {
+                if let appURL = URL(string: "https://itunes.apple.com/app/id6748243795") {
                     ShareLink(item: appURL) {
                         moreItem(icon: "square.and.arrow.up", title: "Share App")
                     }
@@ -205,22 +206,22 @@ struct MeView: View {
             Text(String(localized: "More Features"))
                 .appSectionHeader(theme: themeManager.current)
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
-                NavigationLink(destination: MeView()) {
+                NavigationLink(destination: SettingView()) {
                     featureItem(icon: "gear", title: String(localized: "Settings"))
                 }
-                NavigationLink(destination: MeView()) {
+                NavigationLink(destination: Text("Coming Soon")) {
                     featureItem(icon: "clock", title: String(localized: "Checkin History"))
                 }
-                NavigationLink(destination: MeView()) {
+                NavigationLink(destination: Text("Coming Soon")) {
                     featureItem(icon: "bell", title: String(localized: "Reminders"))
                 }
-                NavigationLink(destination: MeView()) {
+                NavigationLink(destination: Text("Coming Soon")) {
                     featureItem(icon: "trophy", title: String(localized: "Achievements"))
                 }
-                NavigationLink(destination: MeView()) {
+                NavigationLink(destination:Text("Coming Soon")) {
                     featureItem(icon: "paintbrush.fill", title: String(localized: "Theme Color"))
                 }
-                NavigationLink(destination: MeView()) {
+                NavigationLink(destination: Text("Coming Soon")) {
                     featureItem(icon: "chart.bar.fill", title: String(localized: "My Stats"))
                 }
             }
@@ -256,7 +257,7 @@ struct MeView: View {
 
 struct SupportEmail {
     let toAddress = "appsbayarea@gmail.com"
-    let subject: String = String(localized: "\("LongevityMaster") - \("Feedback")")
+    let subject: String = String(localized: "\("Times Matter") - \("Feedback")")
     var body: String { """
       Application Name: \(Bundle.main.infoDictionary?["CFBundleName"] as? String ?? "Unknown")
       iOS Version: \(UIDevice.current.systemVersion)
