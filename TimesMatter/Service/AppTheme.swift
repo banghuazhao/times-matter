@@ -188,4 +188,14 @@ extension View {
             .background(theme.secondaryGray.opacity(0.1))
             .cornerRadius(AppCornerRadius.info)
     }
+
+    func appButtonStyle(theme: AppTheme = ThemeManager.shared.current, filled: Bool = true) -> some View {
+        self
+            .font(AppFont.headline)
+            .padding(.vertical, AppSpacing.small)
+            .padding(.horizontal, AppSpacing.large)
+            .background(filled ? theme.primaryColor : Color.clear)
+            .foregroundColor(filled ? .white : theme.primaryColor)
+            .cornerRadius(AppCornerRadius.button)
+    }
 }
