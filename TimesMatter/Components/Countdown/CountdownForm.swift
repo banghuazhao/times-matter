@@ -186,6 +186,8 @@ struct CountdownFormView: View {
                  .padding()
              }
              .appBackground(theme: themeManager.current)
+            BannerView()
+                .frame(height: 50)
              .toolbar {
                  ToolbarItem(placement: .topBarLeading) {
                      Button {

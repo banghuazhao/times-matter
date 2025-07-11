@@ -9,17 +9,29 @@ import SwiftUI
 @main
 struct TimesMatterApp: App {
     @Dependency(\.themeManager) var themeManager
+    @StateObject private var openAd = OpenAd()
 
     init() {
         prepareDependencies {
             $0.defaultDatabase = try! appDatabase()
         }
+        openAd.requestAppOpenAd()
     }
 
     var body: some Scene {
         WindowGroup {
             content
                 .preferredColorScheme(themeManager.darkModeEnabled ? .dark : .light)
+                .onAppear {
+                              // Load the first ad on initial launch
+                              openAd.requestAppOpenAd()
+                          }
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
+                               openAd.appHasEnterBackgroundBefore = true
+                           }
+                           .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                               openAd.tryToPresentAd()
+                           }
         }
     }
 
