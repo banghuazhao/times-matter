@@ -58,11 +58,6 @@ class CountdownDetailModel {
         return result
     }
     
-    var formattedDate: String {
-        let df = DateFormatter()
-        df.dateFormat = "EEEE, MMM d, yyyy h:mm a"
-        return df.string(from: countdown.date)
-    }
     
     var bgColor: Color {
         Color(hex: countdown.backgroundColor)
@@ -70,31 +65,6 @@ class CountdownDetailModel {
     
     var textColor: Color {
         Color(hex: countdown.textColor)
-    }
-    
-    var repeatDescription: String? {
-        switch countdown.repeatType {
-        case .weekly:
-            let weekday = Calendar.current.component(.weekday, from: countdown.date)
-            let weekdayName = Calendar.current.weekdaySymbols[weekday - 1]
-            return "Countdown will repeat weekly on \(weekdayName)."
-        case .daily:
-            return "Countdown will repeat daily."
-        case .monthly:
-            return "Countdown will repeat monthly."
-        case .yearly:
-            return "Countdown will repeat yearly."
-        case .customDays:
-            return "Countdown will repeat every \(countdown.customInterval) days."
-        case .customWeeks:
-            return "Countdown will repeat every \(countdown.customInterval) weeks."
-        case .customMonths:
-            return "Countdown will repeat every \(countdown.customInterval) months."
-        case .customYears:
-            return "Countdown will repeat every \(countdown.customInterval) years."
-        default:
-            return nil
-        }
     }
 }
 
@@ -118,7 +88,7 @@ struct CountdownDetailView: View {
                             .font(.system(size: 32, weight: .bold))
                             .foregroundColor(model.textColor)
                             .multilineTextAlignment(.center)
-                        Text(model.formattedDate)
+                        Text(model.countdown.timeSummary)
                             .font(.system(size: 18))
                             .foregroundColor(model.textColor.opacity(0.9))
                     }
@@ -128,19 +98,13 @@ struct CountdownDetailView: View {
                             timerBlock(value: comp.value, label: comp.label)
                         }
                     }
-                    .padding(.horizontal, 24)
                     .padding(.vertical, 12)
+                    .padding(.horizontal, AppSpacing.medium)
                     .background(RoundedRectangle(cornerRadius: 16).fill(Color.black.opacity(0.18)))
-                    // Repeat info
-                    if let repeatDesc = model.repeatDescription {
-                        Text(repeatDesc)
-                            .font(.system(size: 18))
-                            .foregroundColor(.white)
-                            .padding(.top, 16)
-                    }
                 }
                 Spacer(minLength: 0)
             }
+            .padding(.horizontal, AppSpacing.medium)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .toolbar {

@@ -23,20 +23,12 @@ struct CountdownRow: View {
                     .minimumScaleFactor(0.5)
                     .foregroundColor(Color(hex: countdown.textColor))
                     .lineLimit(1)
-                // Date
-                HStack {
-                    Text(countdown.date, style: .date)
-                        .font(AppFont.caption)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.5)
-                        .foregroundColor(Color(hex: countdown.textColor).opacity(0.8))
-                    
-                    if countdown.isFavorite {
-                        Image(systemName: "heart.fill")
-                            .font(AppFont.caption)
-                            .foregroundColor(.red)
-                    }                    
-                }
+                // Secondary description: always show timeSummary
+                Text(countdown.timeSummary)
+                    .font(AppFont.caption)
+                    .foregroundColor(Color(hex: countdown.textColor))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
             }
             .padding(.leading, AppSpacing.small)
             .padding(.vertical, AppSpacing.smallMedium)

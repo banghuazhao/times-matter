@@ -39,6 +39,38 @@ enum RepeatType: String, Codable, CaseIterable, QueryBindable {
     case customWeeks
     case customMonths
     case customYears
+    
+    var displayName: String {
+        switch self {
+        case .nonRepeating: return "No Repeat"
+        case .daily: return "Daily"
+        case .weekly: return "Weekly"
+        case .monthly: return "Monthly"
+        case .yearly: return "Yearly"
+        case .customDays, .customWeeks, .customMonths, .customYears: return "Custom"
+        }
+    }
+    
+    var unitSingular: String {
+        switch self {
+        case .customDays, .daily: return "day"
+        case .customWeeks, .weekly: return "week"
+        case .customMonths, .monthly: return "month"
+        case .customYears, .yearly: return "year"
+        default: return ""
+        }
+    }
+    
+    var isCustom: Bool {
+        switch self {
+        case .customDays, .customWeeks, .customMonths, .customYears: return true
+        default: return false
+        }
+    }
+    
+    static var allCasesToChoose: [RepeatType] {
+        [.nonRepeating, .daily, .weekly, .monthly, .yearly, .customDays]
+    }
 }
 
 // MARK: - Compact Time Unit Enum
@@ -71,6 +103,68 @@ enum CompactTimeUnit: String, Codable, CaseIterable, QueryBindable {
             return "Month"
         case .years:
             return "Year"
+        }
+    }
+}
+
+extension Countdown {
+    /// Returns a summary string for display: repeat info if repeating, otherwise the formatted date.
+    var timeSummary: String {
+        let timeFormatter = DateFormatter()
+        timeFormatter.locale = Locale.current
+        timeFormatter.dateFormat = "h:mm a"
+        let timeString = timeFormatter.string(from: date)
+        switch repeatType {
+        case .nonRepeating:
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale.current
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .short
+            return dateFormatter.string(from: date)
+        case .daily:
+            return "Every day at \(timeString)"
+        case .weekly:
+            let weekday = Calendar.current.component(.weekday, from: date)
+            let weekdayName = Calendar.current.weekdaySymbols[weekday - 1]
+            return "Every week on \(weekdayName) at \(timeString)"
+        case .monthly:
+            let day = Calendar.current.component(.day, from: date)
+            return "Every month on day \(day) at \(timeString)"
+        case .yearly:
+            let month = Calendar.current.component(.month, from: date)
+            let day = Calendar.current.component(.day, from: date)
+            let monthName = DateFormatter().monthSymbols[month - 1]
+            return "Every year on \(monthName) \(day) at \(timeString)"
+        case .customDays:
+            if customInterval == 1 {
+                return "Every day at \(timeString)"
+            } else {
+                return "Every \(customInterval) days at \(timeString)"
+            }
+        case .customWeeks:
+            let weekday = Calendar.current.component(.weekday, from: date)
+            let weekdayName = Calendar.current.weekdaySymbols[weekday - 1]
+            if customInterval == 1 {
+                return "Every week on \(weekdayName) at \(timeString)"
+            } else {
+                return "Every \(customInterval) weeks on \(weekdayName) at \(timeString)"
+            }
+        case .customMonths:
+            let day = Calendar.current.component(.day, from: date)
+            if customInterval == 1 {
+                return "Every month on day \(day) at \(timeString)"
+            } else {
+                return "Every \(customInterval) months on day \(day) at \(timeString)"
+            }
+        case .customYears:
+            let month = Calendar.current.component(.month, from: date)
+            let day = Calendar.current.component(.day, from: date)
+            let monthName = DateFormatter().monthSymbols[month - 1]
+            if customInterval == 1 {
+                return "Every year on \(monthName) \(day) at \(timeString)"
+            } else {
+                return "Every \(customInterval) years on \(monthName) \(day) at \(timeString)"
+            }
         }
     }
 }

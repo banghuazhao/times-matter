@@ -80,6 +80,9 @@
     "Countdowns" : {
 
     },
+    "Custom Repeat" : {
+
+    },
     "Dark Mode" : {
 
     },
@@ -126,6 +129,9 @@
 
     },
     "hours" : {
+
+    },
+    "Interval" : {
 
     },
     "Less than 1 day" : {
@@ -179,6 +185,9 @@
     "Remove from Favorites" : {
 
     },
+    "Repeat" : {
+
+    },
     "Sample Button" : {
 
     },
@@ -222,6 +231,9 @@
 
     },
     "Times Matter  |  Smart Reminders" : {
+
+    },
+    "Unit" : {
 
     },
     "Upcoming" : {
