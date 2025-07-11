@@ -7,36 +7,79 @@
 import SwiftUI
 import Dependencies
 import SwiftNavigation
+import SharingGRDB
+import EasyToast
 
 @Observable
 @MainActor
 class CountdownFormModel: HashableObject {
     var countdown: Countdown.Draft
     
+    @ObservationIgnored
+    @FetchAll(Category.all, animation: .default) var allCategories
+    
+    @ObservationIgnored
+    @Dependency(\.appRatingService) var appRatingService
+    
+    @ObservationIgnored
+    @Dependency(\.defaultDatabase) var database
+    
     var displayMock: Countdown {
         countdown.mock
     }
     
     let isEdit: Bool
+    let onSave: ((Countdown) -> Void)?
     
     @CasePathable
     enum Route {
         case showCompactTimeFormatInfo
+        case selectCategory
     }
     var route: Route?
     
+    var showTitleEmptyToast = false
     
-    init(countdown: Countdown.Draft) {
+    init(countdown: Countdown.Draft, onSave: ((Countdown) -> Void)? = nil) {
         self.countdown = countdown
+        self.onSave = onSave
         isEdit = countdown.id != nil
     }
     
-    func onTapSave() async {
+    func onTapSave() {
+        guard !countdown.title.isEmpty else {
+            showTitleEmptyToast = true
+            return
+        }
         
+        withErrorReporting {
+            let updatedCountDown = try database.write { [countdown] db in
+                try Countdown
+                    .upsert { countdown }
+                    .returning { $0 }
+                    .fetchOne(db)
+            }
+            
+            guard let updatedCountDown else { return }
+            appRatingService.incrementPrepareTriggerCount()
+            
+            onSave?(updatedCountDown)
+        }
     }
     
     func onTapEventGallery() {
         
+    }
+    
+    func onTapSelectCategory() {
+        route = .selectCategory
+    }
+    
+    func onSelectCategory(_ category: Category?) {
+        countdown.categoryID = category?.id
+        Task {
+            route = nil
+        }
     }
 }
 
@@ -86,8 +129,33 @@ struct CountdownFormView: View {
                         
                         Divider()
                         
-                                                 // Compact Time Unit Field
-                         VStack(alignment: .leading, spacing: AppSpacing.smallMedium) {
+                        // Category Selection
+                        HStack(spacing: AppSpacing.smallMedium) {
+                            Text("Category")
+                                .font(AppFont.subheadlineSemibold)
+                                .foregroundColor(themeManager.current.textPrimary)
+                            
+                            Spacer()
+                            
+                            Button {
+                                model.onTapSelectCategory()
+                            } label: {
+                                HStack {
+                                    if let selectedCategory = model.allCategories.first(where: { $0.id == model.countdown.categoryID }) {
+                                        Text(selectedCategory.icon)
+                                        Text(selectedCategory.title)
+                                    } else {
+                                        Text("📅")
+                                        Text("All")
+                                    }
+                                }
+                            }
+                            .buttonStyle(.appRect)
+                        }
+                        
+                        Divider()
+                        
+                        VStack(alignment: .leading, spacing: AppSpacing.smallMedium) {
                              HStack {
                                  Text("Compact Time Format")
                                      .font(AppFont.subheadlineSemibold)
@@ -114,38 +182,47 @@ struct CountdownFormView: View {
                              .pickerStyle(.segmented)
                              .tint(themeManager.current.primaryColor)
                          }
+                     }
+                     .appCardStyle()
+                 }
+                 .padding()
+             }
+             .appBackground(theme: themeManager.current)
+             .toolbar {
+                 ToolbarItem(placement: .topBarLeading) {
+                     Button {
+                         dismiss()
+                     } label: {
+                         Text("Dismiss")
+                     }
+                     .buttonStyle(.appRect)
+                 }
+                 ToolbarItem(placement: .topBarTrailing) {
+                     Button {
+                         model.onTapSave()
+                     } label: {
+                         Text(model.isEdit ? String(localized: "Update") : String(localized: "Save"))
+                     }.buttonStyle(.appRect)
+                 }
+             }
+             .navigationTitle(
+                 model.isEdit
+                 ? String(localized: "Edit Countdown")
+                 : String(localized: "New Countdown")
+             )
+             .scrollDismissesKeyboard(.immediately)
+             .navigationBarTitleDisplayMode(.inline)
+             .sheet(isPresented: Binding($model.route.selectCategory)) {
+                 CategorySelectionSheet(
+                    selectedCategory: model.countdown.categoryID,
+                    onSelect: { category in
+                        model.onSelectCategory(category)
                     }
-                    .appCardStyle()
-                }
-                .padding()
-            }
-            .appBackground(theme: themeManager.current)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Text("Dismiss")
-                    }
-                    .buttonStyle(.appRect)
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        Task {
-                            await model.onTapSave()
-                        }
-                    } label: {
-                        Text(model.isEdit ? String(localized: "Update") : String(localized: "Save"))
-                    }.buttonStyle(.appRect)
-                }
-            }
-            .navigationTitle(
-                model.isEdit
-                ? String(localized: "Edit Countdown")
-                : String(localized: "New Countdown")
-            )
-            .scrollDismissesKeyboard(.immediately)
-            .navigationBarTitleDisplayMode(.inline)
+                 )
+                 .presentationDetents([.medium, .large])
+                 .presentationDragIndicator(.visible)
+             }
+             .easyToast(isPresented: $model.showTitleEmptyToast, message: String(localized:"Event title is empty"))
         }
     }
 }

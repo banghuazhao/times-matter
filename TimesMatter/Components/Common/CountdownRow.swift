@@ -1,34 +1,49 @@
 import SwiftUI
 import Dependencies
+import SharingGRDB
 
 struct CountdownRow: View {
     let countdown: Countdown
     
     @Dependency(\.timerService) var timerService
+    @FetchAll(Category.all, animation: .default) var allCategories
     
     var body: some View {
         HStack(spacing: 0) {
             // Icon
             Text(countdown.icon)
-                .font(.system(size: 36))
-                .frame(width: 50, height: 50)
-                .background(Color.clear)
-                .padding(.leading, AppSpacing.small)
+                .font(.system(size: 32))
+                .padding(.leading, AppSpacing.smallMedium)
             
             VStack(alignment: .leading, spacing: 4) {
                 // Title
                 Text(countdown.title)
-                    .font(AppFont.title2)
+                    .font(AppFont.title3)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .foregroundColor(Color(hex: countdown.textColor))
                     .lineLimit(1)
                 // Date
-                Text(countdown.date, style: .date)
-                    .font(AppFont.subheadline)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
-                    .foregroundColor(Color(hex: countdown.textColor).opacity(0.8))
+                HStack {
+                    Text(countdown.date, style: .date)
+                        .font(AppFont.caption)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                        .foregroundColor(Color(hex: countdown.textColor).opacity(0.8))
+                    
+                    if countdown.isFavorite {
+                        Image(systemName: "heart.fill")
+                            .font(AppFont.caption)
+                            .foregroundColor(.red)
+                    }
+                    
+                    if let categoryID = countdown.categoryID,
+                       let category = allCategories.first(where: { $0.id == categoryID }) {
+                        Text(category.icon)
+                            .font(AppFont.caption)
+                    }
+                    
+                }
             }
             .padding(.leading, AppSpacing.small)
             .padding(.vertical, AppSpacing.smallMedium)
@@ -50,7 +65,7 @@ struct CountdownRow: View {
                     .foregroundColor(countdown.textColor.toColor.opacity(0.8))
             }
             .frame(width: 80)
-            .frame(minHeight: 50)
+            .frame(minHeight: 46)
             .padding(.vertical, AppSpacing.smallMedium)
             .padding(.horizontal, AppSpacing.smallMedium)
             .background(

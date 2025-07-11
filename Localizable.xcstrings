@@ -17,6 +17,24 @@
     "1 day or more" : {
 
     },
+    "2/10" : {
+
+    },
+    "3/5" : {
+
+    },
+    "7" : {
+
+    },
+    "12" : {
+
+    },
+    "Achievements" : {
+
+    },
+    "Add to Favorites" : {
+
+    },
     "All" : {
 
     },
@@ -27,6 +45,24 @@
 
     },
     "Birthday" : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Categories" : {
+
+    },
+    "Category" : {
+
+    },
+    "Category name" : {
+
+    },
+    "Check-ins" : {
+
+    },
+    "Checkin History" : {
 
     },
     "Compact Time Format" : {
@@ -44,7 +80,16 @@
     "days" : {
       "comment" : "Plural day unit"
     },
+    "Delete" : {
+
+    },
+    "Delete ‘%@’?" : {
+
+    },
     "Dismiss" : {
+
+    },
+    "Edit" : {
 
     },
     "Edit Countdown" : {
@@ -56,16 +101,25 @@
     "Event Time" : {
 
     },
+    "Event title is empty" : {
+
+    },
     "Filter By" : {
 
     },
     "Gallery" : {
 
     },
+    "Habits" : {
+
+    },
     "hour" : {
 
     },
     "hours" : {
+
+    },
+    "Icon" : {
 
     },
     "Less than 1 day" : {
@@ -86,7 +140,16 @@
     "months" : {
       "comment" : "Plural month unit"
     },
+    "More Features" : {
+
+    },
+    "My Stats" : {
+
+    },
     "New Countdown" : {
+
+    },
+    "Note: When a category is deleted, all countdowns in that category will be moved to 'All' category." : {
 
     },
     "Now" : {
@@ -104,6 +167,9 @@
     "Reminders" : {
 
     },
+    "Remove from Favorites" : {
+
+    },
     "Save" : {
 
     },
@@ -111,6 +177,9 @@
 
     },
     "seconds" : {
+
+    },
+    "Settings" : {
 
     },
     "Shows hours, minutes, or seconds" : {
@@ -122,19 +191,25 @@
     "Sort By" : {
 
     },
-    "Statistics" : {
+    "Theme Color" : {
+
+    },
+    "This will permanently delete the countdown ‘%@’. This action cannot be undone. Are you sure you want to proceed?" : {
 
     },
     "Time Unit" : {
 
     },
-    "Times Matter  |  Remind Your Life" : {
+    "Times Matter  |  Smart Reminders" : {
 
     },
     "Upcoming" : {
 
     },
     "Update" : {
+
+    },
+    "Upgrade to Premium" : {
 
     },
     "v%@  Check for Updates" : {
@@ -154,6 +229,9 @@
     },
     "years" : {
       "comment" : "Plural year unit"
+    },
+    "Your Name" : {
+
     }
   },
   "version" : "1.0"

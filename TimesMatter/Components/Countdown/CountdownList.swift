@@ -20,6 +20,7 @@ class CountdownListModel {
     @Shared(.appStorage("selectedCategory")) var selectedCategory: Category.ID?
 
     // MARK: Filter & Order State
+
     enum OrderType: String, CaseIterable, Identifiable {
         case `default`, futureToPast, pastToFuture
         var id: String { rawValue }
@@ -31,6 +32,7 @@ class CountdownListModel {
             }
         }
     }
+
     enum FilterOption: String, CaseIterable, Identifiable {
         case all, favorites, inThePast, inTheFuture
         var id: String { rawValue }
@@ -43,11 +45,12 @@ class CountdownListModel {
             }
         }
     }
+
     @ObservationIgnored
     @Shared(.appStorage("countdownOrderType")) var orderType: OrderType = .default
     @ObservationIgnored
     @Shared(.appStorage("countdownFilterOption")) var filterOption: FilterOption = .all
-    
+
     @ObservationIgnored
     @Dependency(\.timerService) var timerService
 
@@ -98,6 +101,7 @@ class CountdownListModel {
         case countdownForm(CountdownFormModel)
         case countdownDetail(CountdownDetailModel)
         case selectCategory
+        case showDeleteConfirmation(Countdown)
     }
 
     var route: Route?
@@ -112,7 +116,10 @@ class CountdownListModel {
         route = .countdownForm(
             CountdownFormModel(
                 countdown: Countdown.Draft()
-            )
+            ) { [weak self] _ in
+                guard let self else { return }
+                route = nil
+            }
         )
     }
 
@@ -136,9 +143,48 @@ class CountdownListModel {
             $orderType.withLock { $0 = order }
         }
     }
+
     func onSelectFilter(_ option: FilterOption) {
         withAnimation {
             $filterOption.withLock { $0 = option }
+        }
+    }
+
+    // MARK: Context Menu Actions
+
+    @ObservationIgnored
+    @Dependency(\.defaultDatabase) var database
+
+    func onEditCountdown(_ countdown: Countdown) {
+        route = .countdownForm(
+            CountdownFormModel(
+                countdown: Countdown.Draft(countdown)
+            ) { [weak self] _ in
+                guard let self else { return }
+                route = nil
+            }
+        )
+    }
+
+    func onToggleFavorite(_ countdown: Countdown) {
+        withErrorReporting {
+            var newCountdown = countdown
+            newCountdown.isFavorite.toggle()
+            try database.write { db in
+                try Countdown
+                    .update(newCountdown)
+                    .execute(db)
+            }
+        }
+    }
+
+    func onDeleteCountdown(_ countdown: Countdown) {
+        withErrorReporting {
+            try database.write { db in
+                try Countdown
+                    .delete(countdown)
+                    .execute(db)
+            }
         }
     }
 }
@@ -165,6 +211,12 @@ struct CountdownListView: View {
                                         .onTapGesture {
                                             model.onTapCountDown(countdown)
                                         }
+                                        .countdownContextMenu(
+                                            countdown: countdown,
+                                            onEdit: { model.onEditCountdown(countdown) },
+                                            onToggleFavorite: { model.onToggleFavorite(countdown) },
+                                            onDelete: { model.onDeleteCountdown(countdown) }
+                                        )
                                 }
                             }
                         }
@@ -178,6 +230,12 @@ struct CountdownListView: View {
                                         .onTapGesture {
                                             model.onTapCountDown(countdown)
                                         }
+                                        .countdownContextMenu(
+                                            countdown: countdown,
+                                            onEdit: { model.onEditCountdown(countdown) },
+                                            onToggleFavorite: { model.onToggleFavorite(countdown) },
+                                            onDelete: { model.onDeleteCountdown(countdown) }
+                                        )
                                 }
                             }
                         }
@@ -187,6 +245,12 @@ struct CountdownListView: View {
                                 .onTapGesture {
                                     model.onTapCountDown(countdown)
                                 }
+                                .countdownContextMenu(
+                                    countdown: countdown,
+                                    onEdit: { model.onEditCountdown(countdown) },
+                                    onToggleFavorite: { model.onToggleFavorite(countdown) },
+                                    onDelete: { model.onDeleteCountdown(countdown) }
+                                )
                         }
                     }
                 }
@@ -234,7 +298,7 @@ struct CountdownListView: View {
                         .font(AppFont.headline)
                         .frame(width: 38, height: 38)
                         .background(
-                            (themeManager.current.primaryColor.opacity(0.1))
+                            themeManager.current.primaryColor.opacity(0.1)
                         )
                         .foregroundColor(themeManager.current.primaryColor)
                         .clipShape(Circle())
@@ -271,7 +335,6 @@ struct CountdownListView: View {
             }
             .sheet(isPresented: Binding($model.route.selectCategory)) {
                 CategorySelectionSheet(
-                    categories: model.allCategories,
                     selectedCategory: model.selectedCategory,
                     onSelect: { category in
                         model.onSelectCategory(category)
@@ -280,54 +343,68 @@ struct CountdownListView: View {
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
             }
+            .alert(
+                item: $model.route.showDeleteConfirmation,
+                title: { countdown in
+                    Text(String(localized: "Delete ‘\(countdown.truncatedTitle)’?"))
+                },
+                actions: { countdown in
+                    Button("Delete", role: .destructive) {
+                        model.onDeleteCountdown(countdown)
+                    }
+                    Button("Cancel", role: .cancel) {}
+                },
+                message: { countdown in
+                    Text(String(localized: "This will permanently delete the countdown ‘\(countdown.truncatedTitle)’. This action cannot be undone. Are you sure you want to proceed?"))
+                }
+            )
         }
     }
 }
 
-struct CategorySelectionSheet: View {
-    let categories: [Category]
-    let selectedCategory: Category.ID?
-    let onSelect: (Category?) -> Void
-    
-    @Dependency(\.themeManager) var themeManager
 
-    var body: some View {
-            List {
-                // 'All' option
-                Button {
-                    onSelect(nil)
-                } label: {
-                    HStack {
-                        Text("📅")
-                        Text("All")
-                        Spacer()
-                        if selectedCategory == nil {
-                            Image(systemName: "checkmark")
-                                .foregroundColor(themeManager.current.primaryColor)
-                        }
-                    }
-                    .contentShape(Rectangle()) // Make the whole row tappable
-                }
-                .buttonStyle(.plain)
+// MARK: - Reusable Context Menu Modifier
 
-                // Category options
-                ForEach(categories) { category in
-                    Button {
-                        onSelect(category)
-                    } label: {
-                        HStack {
-                            Text(category.icon)
-                            Text(category.title)
-                            Spacer()
-                            if category.id == selectedCategory {
-                                Image(systemName: "checkmark")
-                                    .foregroundColor(themeManager.current.primaryColor)
-                            }
-                        }
-                        .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                }
+struct CountdownContextMenu: ViewModifier {
+    let countdown: Countdown
+    let onEdit: () -> Void
+    let onToggleFavorite: () -> Void
+    let onDelete: () -> Void
+
+    func body(content: Content) -> some View {
+        content.contextMenu {
+            Button(action: onEdit) {
+                Label("Edit", systemImage: "pencil")
             }
+
+            Button(action: onToggleFavorite) {
+                Label(
+                    countdown.isFavorite ? "Remove from Favorites" : "Add to Favorites",
+                    systemImage: countdown.isFavorite ? "heart.slash" : "heart"
+                )
+            }
+
+            Divider()
+
+            Button(role: .destructive, action: onDelete) {
+                Label("Delete", systemImage: "trash")
+            }
+        }
+    }
+}
+
+extension View {
+    func countdownContextMenu(
+        countdown: Countdown,
+        onEdit: @escaping () -> Void,
+        onToggleFavorite: @escaping () -> Void,
+        onDelete: @escaping () -> Void
+    ) -> some View {
+        modifier(CountdownContextMenu(
+            countdown: countdown,
+            onEdit: onEdit,
+            onToggleFavorite: onToggleFavorite,
+            onDelete: onDelete
+        ))
     }
 }

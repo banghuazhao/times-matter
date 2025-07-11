@@ -12,6 +12,7 @@
 		996833A82E1CD1AF00D314BA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 996833A72E1CD1AF00D314BA /* Localizable.xcstrings */; };
 		996833DD2E1CF5C900D314BA /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 996833DC2E1CF5C900D314BA /* SwiftUINavigation */; };
 		996834522E1D267E00D314BA /* MoreApps in Frameworks */ = {isa = PBXBuildFile; productRef = 996834512E1D267E00D314BA /* MoreApps */; };
+		99AD2D4F2E20B96800699F68 /* EasyToast in Frameworks */ = {isa = PBXBuildFile; productRef = 99AD2D4E2E20B96800699F68 /* EasyToast */; };
 		99BABECB2E1C924900895B3B /* SharingGRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 99BABECA2E1C924900895B3B /* SharingGRDB */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99AD2D4F2E20B96800699F68 /* EasyToast in Frameworks */,
 				996833DD2E1CF5C900D314BA /* SwiftUINavigation in Frameworks */,
 				99BABECB2E1C924900895B3B /* SharingGRDB in Frameworks */,
 				4144A1582E1CF92500DEB393 /* (null) in Frameworks */,
@@ -131,6 +133,7 @@
 				996833DC2E1CF5C900D314BA /* SwiftUINavigation */,
 				418CB51C2E1D210200E4AF36 /* MoreApps */,
 				996834512E1D267E00D314BA /* MoreApps */,
+				99AD2D4E2E20B96800699F68 /* EasyToast */,
 			);
 			productName = TimesMatter;
 			productReference = 99BABCEA2E1BAFEE00895B3B /* TimesMatter.app */;
@@ -192,6 +195,7 @@
 				99BABEC92E1C924900895B3B /* XCRemoteSwiftPackageReference "sharing-grdb" */,
 				996833DB2E1CF5C900D314BA /* XCRemoteSwiftPackageReference "swift-navigation" */,
 				996834502E1D267E00D314BA /* XCLocalSwiftPackageReference "TimesMatter/Modules/MoreApps" */,
+				99AD2D4B2E20B70A00699F68 /* XCRemoteSwiftPackageReference "EasyToast" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 99BABCEB2E1BAFEE00895B3B /* Products */;
@@ -511,6 +515,14 @@
 				minimumVersion = 2.3.1;
 			};
 		};
+		99AD2D4B2E20B70A00699F68 /* XCRemoteSwiftPackageReference "EasyToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/banghuazhao/EasyToast";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.0;
+			};
+		};
 		99BABEC92E1C924900895B3B /* XCRemoteSwiftPackageReference "sharing-grdb" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/sharing-grdb";
@@ -534,6 +546,11 @@
 		996834512E1D267E00D314BA /* MoreApps */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MoreApps;
+		};
+		99AD2D4E2E20B96800699F68 /* EasyToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 99AD2D4B2E20B70A00699F68 /* XCRemoteSwiftPackageReference "EasyToast" */;
+			productName = EasyToast;
 		};
 		99BABECA2E1C924900895B3B /* SharingGRDB */ = {
 			isa = XCSwiftPackageProductDependency;

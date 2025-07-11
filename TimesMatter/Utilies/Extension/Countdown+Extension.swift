@@ -8,6 +8,10 @@ import Foundation
 // MARK: - Countdown Computed Properties & Logic
 
 extension Countdown {
+    var truncatedTitle: String {
+        title.count > 20 ? title.prefix(20) + "…" : title
+    }
+    
     // MARK: Next Occurrence
 
     /// Computed property for next occurrence date (for repeating countdowns)
