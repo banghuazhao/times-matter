@@ -103,7 +103,7 @@ struct MeView: View {
                     moreFeatureView
                     // Others section
                     othersView(openURL: openURL)
-                    Spacer().frame(height: 10)
+                    Spacer().frame(height: 5)
 
                     // App info section (moved below othersView)
                     VStack(spacing: 4) {
@@ -122,13 +122,16 @@ struct MeView: View {
                                 .underline()
                         }
                     }
-                .padding(.top, 10)
+                .padding(.top, -12)
                 }
                 .padding(.vertical)
+                
+                BannerView()
+                    .frame(height: 50)
             }
             .background(Color(.systemGroupedBackground))
-            .navigationTitle("Me")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationTitle("Me View")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
     
