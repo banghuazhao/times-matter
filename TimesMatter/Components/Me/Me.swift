@@ -56,14 +56,14 @@ struct MeView: View {
                                     VStack {
                                         Text("3/5")
                                             .font(.headline)
-                                        Text("Habits")
+                                        Text("Categories")
                                             .font(.caption)
                                     }
                                     Divider()
                                     VStack {
                                         Text("12")
                                             .font(.headline)
-                                        Text("Check-ins")
+                                        Text("Countdowns")
                                             .font(.caption)
                                     }
                                     Divider()
@@ -73,13 +73,7 @@ struct MeView: View {
                                         Text("Reminders")
                                             .font(.caption)
                                     }
-                                    Divider()
-                                    VStack {
-                                        Text("2/10")
-                                            .font(.headline)
-                                        Text("Achievements")
-                                            .font(.caption)
-                                    }
+                                    
                                 }
                                 .padding(.top, 8)
                                 // Placeholder for purchase button
@@ -210,19 +204,10 @@ struct MeView: View {
                     featureItem(icon: "gear", title: String(localized: "Settings"))
                 }
                 NavigationLink(destination: Text("Coming Soon")) {
-                    featureItem(icon: "clock", title: String(localized: "Checkin History"))
-                }
-                NavigationLink(destination: Text("Coming Soon")) {
                     featureItem(icon: "bell", title: String(localized: "Reminders"))
                 }
-                NavigationLink(destination: Text("Coming Soon")) {
-                    featureItem(icon: "trophy", title: String(localized: "Achievements"))
-                }
-                NavigationLink(destination:Text("Coming Soon")) {
+                NavigationLink(destination: ThemeColorView()) {
                     featureItem(icon: "paintbrush.fill", title: String(localized: "Theme Color"))
-                }
-                NavigationLink(destination: Text("Coming Soon")) {
-                    featureItem(icon: "chart.bar.fill", title: String(localized: "My Stats"))
                 }
             }
         }

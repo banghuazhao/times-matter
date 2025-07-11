@@ -17,9 +17,6 @@
     "1 day or more" : {
 
     },
-    "2/10" : {
-
-    },
     "3/5" : {
 
     },
@@ -27,9 +24,6 @@
 
     },
     "12" : {
-
-    },
-    "Achievements" : {
 
     },
     "Add to Favorites" : {
@@ -50,6 +44,9 @@
     "Cancel" : {
 
     },
+    "categories" : {
+
+    },
     "Categories" : {
 
     },
@@ -59,13 +56,10 @@
     "Category name" : {
 
     },
-    "Check-ins" : {
-
-    },
-    "Checkin History" : {
-
-    },
     "Checkin Sound" : {
+
+    },
+    "Choose Theme Color" : {
 
     },
     "Coming Soon" : {
@@ -119,9 +113,6 @@
     "Gallery" : {
 
     },
-    "Habits" : {
-
-    },
     "hour" : {
 
     },
@@ -152,9 +143,6 @@
     "More Features" : {
 
     },
-    "My Stats" : {
-
-    },
     "New Countdown" : {
 
     },
@@ -173,10 +161,19 @@
     "Please describe your issue below" : {
 
     },
+    "Preview" : {
+
+    },
     "Reminders" : {
 
     },
     "Remove from Favorites" : {
+
+    },
+    "Sample Button" : {
+
+    },
+    "Sample Card" : {
 
     },
     "Save" : {
@@ -186,6 +183,9 @@
 
     },
     "seconds" : {
+
+    },
+    "Select your preferred primary color for the app" : {
 
     },
     "Settings" : {
@@ -201,6 +201,9 @@
 
     },
     "Theme Color" : {
+
+    },
+    "This is how your selected theme color will look throughout the app." : {
 
     },
     "This will permanently delete the countdown ‘%@’. This action cannot be undone. Are you sure you want to proceed?" : {
