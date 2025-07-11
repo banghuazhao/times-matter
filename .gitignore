@@ -141,3 +141,4 @@ logs/
 .env.development
 .env.test
 .env.production 
+TimesMatter/Config/Release.xcconfig
