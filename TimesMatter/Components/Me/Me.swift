@@ -11,36 +11,114 @@ import MoreApps
 
 struct MeView: View {
     @Environment(\.openURL) private var openURL
+    @AppStorage("userName") private var userName: String = String(localized: "Your Name")
+    @AppStorage("userAvatar") private var userAvatar: String = "😀"
+    @State private var showPurchaseSheet = false
+    @State private var showEmojiPicker = false
+    @Dependency(\.themeManager) var themeManager
+    
     
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(spacing: 24) {
-                    // Stats section
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Statistics")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.primary)
-                        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 24) {
-                            statView(title: "Total Countdowns", value: "0")
-                            statView(title: "Active", value: "0")
-                            statView(title: "Completed", value: "0")
+                VStack(spacing: AppSpacing.large) {
+                    // Me Section
+                    VStack(alignment: .leading, spacing: AppSpacing.medium) {
+                        HStack(spacing: AppSpacing.medium) {
+                            Button(action: { showEmojiPicker = true }) {
+                                Text(userAvatar)
+                                    .font(.system(size: 40))
+                                    .frame(width: 50, height: 50)
+                                    .background(themeManager.current.card)
+                                    .clipShape(Circle())
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .sheet(isPresented: $showEmojiPicker) {
+                                EmojiPickerView(selectedEmoji: $userAvatar, title: "Choose your avatar")
+                                .presentationDetents([.medium])
+                                .presentationDragIndicator(.visible)
+                            }
+                            VStack(alignment: .leading, spacing: 4) {
+                                TextField("Your Name", text: $userName)
+                                    .font(AppFont.headline)
+                                    .fontWeight(.bold)
+                                    .padding(AppSpacing.small)
+                                    .background(themeManager.current.background)
+                                    .cornerRadius(AppCornerRadius.button)
+                                    .lineLimit(1)
+                            }
+                            Spacer()
                         }
+                        // Stats Section hardcoded for now
+                        HStack(spacing: AppSpacing.small) {
+                            VStack(spacing: 8) {
+                                HStack {
+                                    VStack {
+                                        Text("3/5")
+                                            .font(.headline)
+                                        Text("Habits")
+                                            .font(.caption)
+                                    }
+                                    Divider()
+                                    VStack {
+                                        Text("12")
+                                            .font(.headline)
+                                        Text("Check-ins")
+                                            .font(.caption)
+                                    }
+                                    Divider()
+                                    VStack {
+                                        Text("7")
+                                            .font(.headline)
+                                        Text("Reminders")
+                                            .font(.caption)
+                                    }
+                                    Divider()
+                                    VStack {
+                                        Text("2/10")
+                                            .font(.headline)
+                                        Text("Achievements")
+                                            .font(.caption)
+                                    }
+                                }
+                                .padding(.top, 8)
+                                // Placeholder for purchase button
+                                HStack {
+                                    Spacer()
+                                    Button(action: {
+                                        // Show purchase sheet placeholder
+                                    }) {
+                                        Text("Upgrade to Premium")
+                                            .font(.body)
+                                            .foregroundColor(.blue)
+                                            .padding(.vertical, 8)
+                                            .padding(.horizontal)
+                                            .background(Color(.systemGray6))
+                                            .cornerRadius(10)
+                                    }
+                                    Spacer()
+                                }
+                            }
+                        }
+                        .padding(.top, AppSpacing.small)
                     }
+                    .appCardStyle(theme: themeManager.current)
                     .padding(.horizontal)
-
+                    
+                    //more feature section
+                    moreFeatureView
                     // Others section
                     othersView(openURL: openURL)
+                    Spacer().frame(height: 10)
 
                     // App info section (moved below othersView)
                     VStack(spacing: 4) {
-                        Text("Times Matter  |  Remind Your Life")
+                        Text("Times Matter  |  Smart Reminders")
                             .font(.footnote)
                             .fontWeight(.semibold)
                             .foregroundColor(.gray)
                         Button {
-                            if let url = URL(string: "https://apps.apple.com/app/id1234567890") {
+                            if let url = URL(string: "https://apps.apple.com/app/id6748243795") {
                                 openURL(url)
                             }
                         } label: {
@@ -120,6 +198,54 @@ struct MeView: View {
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(12)
         .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+    }
+
+    private var moreFeatureView: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.medium) {
+            Text(String(localized: "More Features"))
+                .appSectionHeader(theme: themeManager.current)
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
+                NavigationLink(destination: MeView()) {
+                    featureItem(icon: "gear", title: String(localized: "Settings"))
+                }
+                NavigationLink(destination: MeView()) {
+                    featureItem(icon: "clock", title: String(localized: "Checkin History"))
+                }
+                NavigationLink(destination: MeView()) {
+                    featureItem(icon: "bell", title: String(localized: "Reminders"))
+                }
+                NavigationLink(destination: MeView()) {
+                    featureItem(icon: "trophy", title: String(localized: "Achievements"))
+                }
+                NavigationLink(destination: MeView()) {
+                    featureItem(icon: "paintbrush.fill", title: String(localized: "Theme Color"))
+                }
+                NavigationLink(destination: MeView()) {
+                    featureItem(icon: "chart.bar.fill", title: String(localized: "My Stats"))
+                }
+            }
+        }
+        .padding(.horizontal)
+    }
+
+    private func featureItem(icon: String, title: String) -> some View {
+        VStack(spacing: AppSpacing.small) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(themeManager.current.primaryColor)
+                .frame(width: 36, height: 36)
+                .clipShape(Circle())
+            Text(title)
+                .font(AppFont.caption)
+                .foregroundColor(themeManager.current.textPrimary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(AppSpacing.small)
+        .background(themeManager.current.card)
+        .cornerRadius(AppCornerRadius.card)
+        .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
     }
 }
 

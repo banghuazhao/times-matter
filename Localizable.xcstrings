@@ -17,6 +17,21 @@
     "📅" : {
 
     },
+    "2/10" : {
+
+    },
+    "3/5" : {
+
+    },
+    "7" : {
+
+    },
+    "12" : {
+
+    },
+    "Achievements" : {
+
+    },
     "All" : {
 
     },
@@ -24,6 +39,15 @@
 
     },
     "Birthday" : {
+
+    },
+    "Category" : {
+
+    },
+    "Check-ins" : {
+
+    },
+    "Checkin History" : {
 
     },
     "CountDown Detail" : {
@@ -42,6 +66,9 @@
       "comment" : "Plural day unit"
     },
     "Filter By" : {
+
+    },
+    "Habits" : {
 
     },
     "hour" : {
@@ -65,6 +92,12 @@
     "months" : {
       "comment" : "Plural month unit"
     },
+    "More Features" : {
+
+    },
+    "My Stats" : {
+
+    },
     "Now" : {
 
     },
@@ -86,16 +119,22 @@
     "seconds" : {
 
     },
+    "Settings" : {
+
+    },
     "Sort By" : {
 
     },
-    "Statistics" : {
+    "Theme Color" : {
 
     },
-    "Times Matter  |  Remind Your Life" : {
+    "Times Matter  |  Smart Reminders" : {
 
     },
     "Upcoming" : {
+
+    },
+    "Upgrade to Premium" : {
 
     },
     "v%@  Check for Updates" : {
@@ -115,6 +154,9 @@
     },
     "years" : {
       "comment" : "Plural year unit"
+    },
+    "Your Name" : {
+
     }
   },
   "version" : "1.0"
