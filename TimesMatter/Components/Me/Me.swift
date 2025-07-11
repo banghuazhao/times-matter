@@ -130,7 +130,7 @@ struct MeView: View {
                     .frame(height: 50)
             }
             .background(Color(.systemGroupedBackground))
-            .navigationTitle("Me")
+            .navigationTitle("Me View")
             .navigationBarTitleDisplayMode(.inline)
         }
     }
