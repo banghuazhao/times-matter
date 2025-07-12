@@ -231,6 +231,7 @@ extension Countdown.Draft {
             isArchived: isArchived,
             repeatType: repeatType,
             repeatTime: repeatTime,
+            backgroundImageName: backgroundImageName,
             compactTimeUnit: compactTimeUnit
         )
     }

@@ -21,7 +21,7 @@ struct Countdown: Identifiable {
     var isArchived: Bool = false
     var repeatType: RepeatType = .nonRepeating
     var repeatTime: Int = 1
-    // Compact format: single time unit selection
+    var backgroundImageName: String? = nil
     var compactTimeUnit: CompactTimeUnit = .days
 }
 

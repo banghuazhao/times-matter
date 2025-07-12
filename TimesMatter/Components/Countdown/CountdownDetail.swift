@@ -69,12 +69,26 @@ class CountdownDetailModel {
 }
 
 struct CountdownDetailView: View {
-    @State var model: CountdownDetailModel
+    @Bindable var model: CountdownDetailModel
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         ZStack {
-            model.bgColor.ignoresSafeArea()
+            if let bgName = model.countdown.backgroundImageName, !bgName.isEmpty {
+                if let uiImage = UIImage(contentsOfFile: bgName) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                        .ignoresSafeArea()
+                } else {
+                    Image(bgName, bundle: .main)
+                        .resizable()
+                        .scaledToFill()
+                        .ignoresSafeArea()
+                }
+            } else {
+                model.bgColor.ignoresSafeArea()
+            }
             VStack {
                 Spacer(minLength: 0)
                 VStack(spacing: 32) {

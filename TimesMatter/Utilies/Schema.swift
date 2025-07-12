@@ -56,6 +56,7 @@ func appDatabase() throws -> any DatabaseWriter {
              "isArchived" INTEGER NOT NULL DEFAULT 0,
              "repeatType" TEXT NOT NULL DEFAULT 'none',
              "repeatTime" INTEGER NOT NULL DEFAULT 1,
+             "backgroundImageName" TEXT,
              "compactTimeUnit" TEXT NOT NULL DEFAULT 'days'
             ) STRICT 
             """

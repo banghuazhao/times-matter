@@ -56,6 +56,9 @@
     "Automatically adjusts time display based on remaining duration for better readability." : {
 
     },
+    "Background & Text Color" : {
+
+    },
     "Cancel" : {
 
     },
@@ -63,6 +66,9 @@
 
     },
     "Category" : {
+
+    },
+    "Change" : {
 
     },
     "Checkin Sound" : {
@@ -84,6 +90,9 @@
 
     },
     "Custom Repeat" : {
+
+    },
+    "Customize Background" : {
 
     },
     "Dark Mode" : {
@@ -176,6 +185,12 @@
     "Past" : {
 
     },
+    "Pick Background Color" : {
+
+    },
+    "Pick Text Color" : {
+
+    },
     "Please describe your issue below" : {
 
     },
@@ -221,6 +236,9 @@
     "Sort By" : {
 
     },
+    "Tab" : {
+
+    },
     "Theme Color" : {
 
     },
@@ -246,6 +264,9 @@
 
     },
     "Upgrade to Premium" : {
+
+    },
+    "Use Color (No Image)" : {
 
     },
     "v%@  Check for Updates" : {

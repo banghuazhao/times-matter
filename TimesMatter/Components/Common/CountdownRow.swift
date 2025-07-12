@@ -59,9 +59,24 @@ struct CountdownRow: View {
             )
         }
         .background(
-            RoundedRectangle(cornerRadius: AppCornerRadius.card)
-                .fill(Color(hex: countdown.backgroundColor))
+            Group {
+                if let bgName = countdown.backgroundImageName, !bgName.isEmpty {
+                    if let uiImage = UIImage(contentsOfFile: bgName) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFill()
+                    } else {
+                        Image(bgName, bundle: .main)
+                            .resizable()
+                            .scaledToFill()
+                    }
+                } else {
+                    Color(hex: countdown.backgroundColor)
+                }
+            }
         )
+        .clipped()
+        .clipShape(RoundedRectangle(cornerRadius: AppCornerRadius.card))
         .shadow(color: countdown.backgroundColor.toColor.opacity(0.08), radius: 8, x: 0, y: 4)
     }
 }

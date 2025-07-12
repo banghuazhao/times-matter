@@ -5,33 +5,34 @@
 
 import SharingGRDB
 import SwiftUI
+import GoogleMobileAds
 
 @main
 struct TimesMatterApp: App {
     @Dependency(\.themeManager) var themeManager
     @StateObject private var openAd = OpenAd()
+    @Environment(\.scenePhase) private var scenePhase
 
     init() {
+        MobileAds.shared.start(completionHandler: nil)
         prepareDependencies {
             $0.defaultDatabase = try! appDatabase()
         }
-        openAd.requestAppOpenAd()
     }
 
     var body: some Scene {
         WindowGroup {
             content
                 .preferredColorScheme(themeManager.darkModeEnabled ? .dark : .light)
-                .onAppear {
-                              // Load the first ad on initial launch
-                              openAd.requestAppOpenAd()
-                          }
-                .onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
-                               openAd.appHasEnterBackgroundBefore = true
-                           }
-                           .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                               openAd.tryToPresentAd()
-                           }
+                .onChange(of: scenePhase) { _, newPhase in
+                    print("scenePhase: \(newPhase)")
+                    if newPhase == .active {
+                        openAd.tryToPresentAd()
+                        openAd.appHasEnterBackgroundBefore = false
+                    } else if newPhase == .background {
+                        openAd.appHasEnterBackgroundBefore = true
+                    }
+                }
         }
     }
 

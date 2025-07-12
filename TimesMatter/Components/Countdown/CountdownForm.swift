@@ -9,6 +9,7 @@ import Dependencies
 import SwiftNavigation
 import SharingGRDB
 import EasyToast
+import PhotosUI
 
 @Observable
 @MainActor
@@ -87,6 +88,7 @@ class CountdownFormModel: HashableObject {
 struct CountdownFormView: View {
     @State var model: CountdownFormModel
     @State private var showingTimeFormatPopover = false
+    @State private var showingBackgroundSheet = false
     @Dependency(\.themeManager) var themeManager
     
     @Environment(\.dismiss) var dismiss
@@ -206,6 +208,31 @@ struct CountdownFormView: View {
                             .buttonStyle(.appRect)
                         }
                         
+                        Divider()
+                        
+                        // Background & Text Color Row
+                        HStack(spacing: AppSpacing.smallMedium) {
+                            Text("Background & Text Color")
+                                .font(AppFont.subheadlineSemibold)
+                                .foregroundColor(textPrimaryColor)
+                            Spacer()
+                            Button {
+                                showingBackgroundSheet = true
+                            } label: {
+                                Text("Change")
+                            }
+                            .buttonStyle(.appRect)
+                        }
+                        .sheet(isPresented: $showingBackgroundSheet) {
+                            ChangeBackgroundSheet(
+                                model: ChangeBackgroundSheetModel(
+                                    countdown: model.countdown
+                                ) { newCountdown in
+                                    model.countdown = newCountdown
+                                }
+                            )
+                        }
+
                         Divider()
                         
                         VStack(alignment: .leading, spacing: AppSpacing.smallMedium) {
