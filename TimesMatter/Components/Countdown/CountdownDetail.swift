@@ -96,6 +96,7 @@ struct CountdownDetailView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
+        let scale = model.isPreview ? 0.6 : 1.0
         ZStack {
             if let bgName = model.countdown.backgroundImageName, !bgName.isEmpty {
                 if let uiImage = UIImage(contentsOfFile: bgName) {
@@ -114,34 +115,34 @@ struct CountdownDetailView: View {
             }
             VStack {
                 Spacer(minLength: 0)
-                VStack(spacing: 32) {
+                VStack(spacing: 32 * scale) {
                     // Title and date
-                    VStack(spacing: 8) {
+                    VStack(spacing: 8 * scale) {
                         Text(model.countdown.icon)
-                            .font(.system(size: 32, weight: .bold))
+                            .font(.system(size: 32 * scale, weight: .bold))
                             .multilineTextAlignment(.center)
 
                         Text(model.countdown.title)
-                            .font(.system(size: 32, weight: .bold))
+                            .font(.system(size: 32 * scale, weight: .bold))
                             .foregroundColor(model.textColor)
                             .multilineTextAlignment(.center)
                         Text(model.countdown.timeSummary)
-                            .font(.system(size: 18))
+                            .font(.system(size: 18 * scale))
                             .foregroundColor(model.textColor.opacity(0.9))
                     }
 
-                    HStack(spacing: 5) {
+                    HStack(spacing: 5 * scale) {
                         ForEach(Array(model.timeLeftComponentsFull.enumerated()), id: \ .offset) { _, comp in
-                            timerBlock(value: comp.value, label: comp.label)
+                            timerBlock(value: comp.value, label: comp.label, scale: scale)
                         }
                     }
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, AppSpacing.medium)
-                    .background(RoundedRectangle(cornerRadius: 16).fill(Color.black.opacity(0.18)))
+                    .padding(.vertical, 12 * scale)
+                    .padding(.horizontal, AppSpacing.medium * scale)
+                    .background(RoundedRectangle(cornerRadius: 16 * scale).fill(Color.black.opacity(0.18)))
                 }
                 Spacer(minLength: 0)
             }
-            .padding(.horizontal, AppSpacing.medium)
+            .padding(.horizontal, AppSpacing.medium * scale)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .toolbar {
@@ -170,16 +171,21 @@ struct CountdownDetailView: View {
 
     // Helper for timer block
     @ViewBuilder
-    private func timerBlock(value: Int, label: String) -> some View {
+    private func timerBlock(value: Int, label: String, scale: CGFloat) -> some View {
         VStack {
             Text("\(value)")
-                .font(.system(size: 32, weight: .bold, design: .monospaced))
+                .font(.system(size: 32 * scale, weight: .bold, design: .monospaced))
                 .foregroundColor(model.textColor)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
             Text(value == 1 && value == 0 ? String(label.dropLast()) : label)
-                .font(AppFont.caption)
+                .font(AppFont.caption) // If AppFont.caption is not dynamic, consider scaling it as well
+                .font(.system(size: 14 * scale))
                 .foregroundColor(model.textColor)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
         }
-        .frame(minWidth: 56)
+        .frame(minWidth: 56 * scale)
     }
 }
 

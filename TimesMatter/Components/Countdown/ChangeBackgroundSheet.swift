@@ -15,10 +15,21 @@ class ChangeBackgroundSheetModel {
     var selectedPhoto: PhotosPickerItem? = nil
     
     enum Tab: String, CaseIterable, Identifiable {
-        case image = "Image"
+        case image = "Background Image"
         case backgroundColor = "Background Color"
         case textColor = "Text Color"
+        case icon = "Icon"
+        case layout = "Layout"
         var id: String { rawValue }
+        var iconName: String {
+            switch self {
+            case .image: return "photo.on.rectangle"
+            case .backgroundColor: return "paintpalette"
+            case .textColor: return "textformat"
+            case .icon: return "face.smiling"
+            case .layout: return "rectangle.3.offgrid"
+            }
+        }
     }
 
     // Predefined images from the Backgrounds folder
@@ -51,6 +62,10 @@ class ChangeBackgroundSheetModel {
         return false
     }
     
+    var primaryColor: Color {
+        themeManager.current.primaryColor
+    }
+    
     var previewCountdown: Countdown {
         countdown.mock
     }
@@ -70,6 +85,7 @@ class ChangeBackgroundSheetModel {
     }
     
     func selectPredefinedImage(_ imageName: String) {
+        removeOldImageIfNeed()
         countdown.backgroundImageName = imageName
     }
     
@@ -95,15 +111,28 @@ class ChangeBackgroundSheetModel {
     
     // MARK: - Private Methods
     private func loadPhoto(_ photo: PhotosPickerItem) async {
-        if let data = try? await photo.loadTransferable(type: Data.self), 
-           let uiImage = UIImage(data: data) {
-            // Save to temp directory and set backgroundImageName to a unique path
-            let filename = "custom_bg_\(UUID().uuidString).jpg"
-            let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
-            if let jpegData = uiImage.jpegData(compressionQuality: 0.95) {
-                try? jpegData.write(to: url)
-                countdown.backgroundImageName = url.path
-            }
+        guard let data = try? await photo.loadTransferable(type: Data.self),
+        let uiImage = UIImage(data: data) else { return }
+        
+        // Delete old custom image file if it exists
+        removeOldImageIfNeed()
+        
+        // Resize image if needed (max 1080px)
+        let resizedImage = uiImage.resizedToFit(maxDimension: 1080)
+        // Save to temp directory and set backgroundImageName to a unique path
+        let filename = "custom_bg_\(UUID().uuidString).jpg"
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+        if let jpegData = resizedImage.jpegData(compressionQuality: 0.95) {
+            try? jpegData.write(to: url)
+            countdown.backgroundImageName = url.path
+        }
+    }
+    
+    private func removeOldImageIfNeed() {
+        if let oldImagePath = countdown.backgroundImageName,
+           oldImagePath.hasPrefix(FileManager.default.temporaryDirectory.path),
+           oldImagePath.contains("custom_bg_") {
+            try? FileManager.default.removeItem(atPath: oldImagePath)
         }
     }
 }
@@ -116,73 +145,26 @@ struct ChangeBackgroundSheet: View {
         NavigationStack {
             VStack(spacing: AppSpacing.large) {
                 // Preview Countdown Detail View
-                CountdownDetailView(
-                    model: CountdownDetailModel(countdown: model.previewCountdown, isPreview: true)
-                )
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .padding(.horizontal, 20)
+                GeometryReader { geometry in
+                    let height = geometry.size.height
+                    let width = geometry.size.height * 0.55
+                    HStack {
+                        Spacer()
+                        CountdownDetailView(
+                            model: CountdownDetailModel(countdown: model.previewCountdown, isPreview: true)
+                        )
+                        .frame(width: width, height: height)
+                        .clipShape(RoundedRectangle(cornerRadius: AppCornerRadius.card))
+                        .contentShape(RoundedRectangle(cornerRadius: AppCornerRadius.card))
+                        .padding(.horizontal, 20)
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
                 
                 switch model.selectedTab {
                 case .image:
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 12) {
-                            PhotosPicker(selection: Binding(
-                                get: { model.selectedPhoto },
-                                set: { model.selectPhoto($0) }
-                            ), matching: .images, photoLibrary: .shared()) {
-                                if let backgroundImageName = model.countdown.backgroundImageName,
-                                   let uiImage = UIImage(contentsOfFile: backgroundImageName) {
-                                    ZStack(alignment: .topTrailing) {
-                                        Image(uiImage: uiImage)
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fill)
-                                            .frame(width: 75, height: 100)
-                                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 12)
-                                                    .stroke(Color.accentColor, lineWidth: 2)
-                                            )
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .foregroundColor(.accentColor)
-                                            .offset(x: -4, y: 4)
-                                    }
-                                } else {
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(Color.gray.opacity(0.2))
-                                        .frame(width: 75, height: 100)
-                                        .overlay(
-                                            Image(systemName: "photo")
-                                                .font(.system(size: 20))
-                                                .foregroundColor(.gray)
-                                        )
-                                }
-                            }
-                            
-                            ForEach(model.predefinedImages, id: \.self) { name in
-                                ZStack(alignment: .topTrailing) {
-                                    Image(name, bundle: .main)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 75, height: 100)
-                                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 12)
-                                                .stroke(model.countdown.backgroundImageName == name ? Color.accentColor : Color.clear, lineWidth: 2)
-                                        )
-                                        .onTapGesture {
-                                            model.selectPredefinedImage(name)
-                                        }
-                                    if model.countdown.backgroundImageName == name {
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .foregroundColor(.accentColor)
-                                            .offset(x: -4, y: 4)
-                                    }
-                                }
-                            }
-                        }
-                        .padding(.horizontal, AppSpacing.medium)
-                    }
-                    .frame(height: 100)
+                    backgroundImage
                 case .backgroundColor:
                     VStack(spacing: 24) {
                         ColorPicker("Pick Background Color", selection: Binding(
@@ -211,19 +193,40 @@ struct ChangeBackgroundSheet: View {
                         .frame(height: 60)
                         .padding(.horizontal, 40)
                     }
+                case .icon:
+                    EmptyView()
+                case .layout:
+                    EmptyView()
                 }
 
                 // Tabs
-                Picker("Tab", selection: Binding(
-                    get: { model.selectedTab },
-                    set: { model.selectTab($0) }
-                )) {
-                    ForEach(ChangeBackgroundSheetModel.Tab.allCases) { tab in
-                        Text(tab.rawValue).tag(tab)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: AppSpacing.smallMedium) {
+                        ForEach(ChangeBackgroundSheetModel.Tab.allCases) { tab in
+                            Button(action: {
+                                model.selectTab(tab)
+                            }) {
+                                VStack(spacing: 4) {
+                                    Image(systemName: tab.iconName)
+                                        .font(.system(size: 22, weight: .semibold))
+                                        .foregroundColor(model.selectedTab == tab ? model.primaryColor : .gray)
+                                    Text(tab.rawValue)
+                                        .font(.system(size: 13, weight: .medium))
+                                        .foregroundColor(model.selectedTab == tab ? model.primaryColor : .gray)
+                                        .lineLimit(2)
+                                }
+                                .frame(width: 70)
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, AppSpacing.small)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(model.selectedTab == tab ? model.primaryColor.opacity(0.12) : Color.clear)
+                                )
+                            }
+                        }
                     }
+                    .padding(.horizontal, 20)
                 }
-                .pickerStyle(.segmented)
-                .padding(.horizontal, 20)
             }
             .background(model.themeManager.current.background)
             .navigationTitle("Customize Background")
@@ -249,6 +252,69 @@ struct ChangeBackgroundSheet: View {
                 }
             }
         }
+    }
+    
+    
+    private var backgroundImage: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                PhotosPicker(selection: Binding(
+                    get: { model.selectedPhoto },
+                    set: { model.selectPhoto($0) }
+                ), matching: .images, photoLibrary: .shared()) { [model] in
+                    if let backgroundImageName = model.countdown.backgroundImageName,
+                       let uiImage = UIImage(contentsOfFile: backgroundImageName) {
+                        ZStack(alignment: .topTrailing) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 75, height: 100)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(model.primaryColor, lineWidth: 2)
+                                )
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(model.primaryColor)
+                                .offset(x: -4, y: 4)
+                        }
+                    } else {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.gray.opacity(0.2))
+                            .frame(width: 75, height: 100)
+                            .overlay(
+                                Image(systemName: "photo")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.gray)
+                            )
+                    }
+                }
+                
+                ForEach(model.predefinedImages, id: \.self) { name in
+                    ZStack(alignment: .topTrailing) {
+                        Image(name, bundle: .main)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 75, height: 100)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(model.countdown.backgroundImageName == name ? model.primaryColor : Color.clear, lineWidth: 2)
+                            )
+                            .onTapGesture {
+                                model.selectPredefinedImage(name)
+                            }
+                        if model.countdown.backgroundImageName == name {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(model.primaryColor)
+                                .offset(x: -4, y: 4)
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, AppSpacing.medium)
+        }
+        .frame(height: 100)
     }
 }
 
