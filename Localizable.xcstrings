@@ -14,10 +14,16 @@
     "%lld" : {
 
     },
+    "• " : {
+
+    },
     "⏰ Reminders" : {
 
     },
     "⏱️ Enter New Category" : {
+
+    },
+    "✨ Thanks for unlocking the full experience." : {
 
     },
     "🎂 Birthday" : {
@@ -35,6 +41,9 @@
     "🥳 Anniversary" : {
 
     },
+    "$5.99 - Upgrade to Premium" : {
+
+    },
     "1 day or more" : {
 
     },
@@ -45,6 +54,9 @@
 
     },
     "12" : {
+
+    },
+    "Ad-free experience" : {
 
     },
     "Add to Favorites" : {
@@ -81,6 +93,12 @@
 
     },
     "Compact Time Format" : {
+
+    },
+    "Contact Support" : {
+
+    },
+    "Continue" : {
 
     },
     "Countdowns" : {
@@ -120,6 +138,9 @@
 
     },
     "Edit Countdown" : {
+
+    },
+    "Enjoy an ad-free experience with Premium!" : {
 
     },
     "Enter event title" : {
@@ -173,6 +194,9 @@
     "New Countdown" : {
 
     },
+    "No Ads: " : {
+
+    },
     "Note: When a category is deleted, all countdowns in that category will be moved to '📅 All' category." : {
 
     },
@@ -197,6 +221,9 @@
     "Preview" : {
 
     },
+    "Privacy Policy" : {
+
+    },
     "Reminders" : {
 
     },
@@ -213,6 +240,9 @@
 
     },
     "Save" : {
+
+    },
+    "Say goodbye to ads and hello to smoother event tracking." : {
 
     },
     "second" : {
@@ -281,11 +311,17 @@
     "weeks" : {
       "comment" : "Plural week unit"
     },
+    "Welcome, Premium user!" : {
+
+    },
     "year" : {
       "comment" : "Singular year unit"
     },
     "years" : {
       "comment" : "Plural year unit"
+    },
+    "You're All Set!" : {
+
     },
     "Your Name" : {
 

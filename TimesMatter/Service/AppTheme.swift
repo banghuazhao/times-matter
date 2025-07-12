@@ -25,7 +25,7 @@ enum ThemeColor: String, CaseIterable {
     var primaryColor: Color {
         switch self {
         case .default:
-            return Color(red: 1.0, green: 0.47, blue: 0.18) // #FF772F - Orange
+            return Color(red: 0.914, green: 0.420, blue: 0.369) 
         case .blue:
             return Color(red: 0.0, green: 0.48, blue: 1.0) // #007AFF - Blue
         case .green:
