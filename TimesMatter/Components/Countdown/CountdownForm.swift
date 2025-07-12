@@ -174,6 +174,9 @@ struct CountdownFormView: View {
                                     isSelected: isCustomRepeatTime,
                                     primaryColor: primaryColor
                                 ) {
+                                    if model.countdown.repeatType == .nonRepeating {
+                                        model.countdown.repeatType = .daily
+                                    }
                                     model.route = .showingCustomRepeatSheet
                                 }
                             }
@@ -282,7 +285,7 @@ struct CountdownFormView: View {
                      repeatType: $model.countdown.repeatType,
                      repeatTime: $model.countdown.repeatTime
                  )
-                 .presentationDetents([.medium])
+                 .presentationDetents([.medium, .large])
              }
              .easyToast(isPresented: $model.showTitleEmptyToast, message: String(localized:"Event title is empty"))
         }
@@ -342,36 +345,136 @@ struct CustomRepeatButton: View {
 struct CustomRepeatSheet: View {
     @Binding var repeatType: RepeatType
     @Binding var repeatTime: Int
+    @Environment(\.dismiss) var dismiss
+    @Dependency(\.themeManager) var themeManager
     
     private let unitTypes: [RepeatType] = [.daily, .weekly, .monthly, .yearly]
     
+    private var primaryColor: Color {
+        themeManager.current.primaryColor
+    }
+    
+    private var textPrimaryColor: Color {
+        themeManager.current.textPrimary
+    }
+    
+    private var backgroundColor: Color {
+        themeManager.current.background
+    }
+    
     var body: some View {
-        VStack(spacing: 24) {
-            Text("Custom Repeat")
-                .font(.title2)
-                .padding(.top, 24)
-            HStack(spacing: 0) {
-                Picker("Interval", selection: $repeatTime) {
-                    ForEach(1...999, id: \.self) { i in
-                        if i == 1 {
-                            Text("Every").tag(i)
-                        } else {
-                            Text("Every \(i)").tag(i)
+        NavigationStack {
+            VStack(spacing: 0) {
+                // Header
+                HStack {
+                    Text("Custom Repeat")
+                        .font(AppFont.title2)
+                        .foregroundColor(textPrimaryColor)
+                    
+                    Spacer()
+                    
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.title2)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.top, 16)
+                .padding(.bottom, 24)
+                
+                // Content
+                VStack(spacing: 20) {
+                    // Picker Container
+                    VStack(spacing: 16) {
+                        HStack(spacing: 0) {
+                            // Interval Picker
+                            VStack(spacing: 8) {
+                                Text("Interval")
+                                    .font(AppFont.caption)
+                                    .foregroundColor(.secondary)
+                                    .textCase(.uppercase)
+                                    .tracking(0.5)
+                                
+                                Picker("Interval", selection: $repeatTime) {
+                                    ForEach(1...99, id: \.self) { i in
+                                        Text("\(i)")
+                                            .font(AppFont.title3)
+                                            .tag(i)
+                                    }
+                                }
+                                .pickerStyle(.wheel)
+                                .frame(maxWidth: 100, maxHeight: 180)
+                                .clipped()
+                            }
+                            
+                            // Unit Picker
+                            VStack(spacing: 8) {
+                                Text("Unit")
+                                    .font(AppFont.caption)
+                                    .foregroundColor(.secondary)
+                                    .textCase(.uppercase)
+                                    .tracking(0.5)
+                                
+                                Picker("Unit", selection: $repeatType) {
+                                    ForEach(unitTypes, id: \.self) { type in
+                                        Text(repeatTime == 1 ? type.singleRepeatTimeName : type.multipleRepeatTimeName)
+                                            .font(AppFont.title3)
+                                            .tag(type)
+                                    }
+                                }
+                                .pickerStyle(.wheel)
+                                .frame(maxWidth: 150, maxHeight: 180)
+                                .clipped()
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                    }
+                    .padding(.vertical, 24)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(backgroundColor)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                            )
+                    )
+                    .padding(.horizontal, 20)
+                    
+                    // Preview
+                    if repeatType != .nonRepeating {
+                        VStack(spacing: 8) {
+                            Text("Preview")
+                                .font(AppFont.caption)
+                                .foregroundColor(.secondary)
+                                .textCase(.uppercase)
+                                .tracking(0.5)
+                            
+                            
+                            Text(repeatSummary)
+                                .font(AppFont.subheadline)
+                                .foregroundColor(textPrimaryColor)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 20)
                         }
                     }
+                    
+                    Spacer()
                 }
-                .pickerStyle(.wheel)
-                .frame(maxWidth: 100)
-                
-                Picker("Unit", selection: $repeatType) {
-                    ForEach(unitTypes, id: \.self) { type in
-                        Text(repeatTime == 1 ? type.singleRepeatTimeName : type.multipleRepeatTimeName).tag(type)
-                    }
-                }
-                .pickerStyle(.wheel)
-                .frame(maxWidth: 120)
+                .padding(.bottom, 20)
             }
-            .frame(height: 180)
+            .background(backgroundColor)
+            .navigationBarHidden(true)
+        }
+    }
+    
+    var repeatSummary: String {
+        if repeatTime == 1 {
+            "This event will repeat every \(repeatType.singleRepeatTimeName.lowercased())"
+        } else {
+            "This event will repeat every \(repeatTime) \(repeatType.multipleRepeatTimeName.lowercased())"
         }
     }
 }

@@ -11,11 +11,88 @@ extension Countdown {
     var truncatedTitle: String {
         title.count > 20 ? title.prefix(20) + "…" : title
     }
-    
+
     var isCustomRepeatTime: Bool {
         repeatTime > 1
     }
-    
+
+    /// Returns a summary string for display: repeat info if repeating, otherwise the formatted date.
+    var timeSummary: String {
+        let timeFormatter = DateFormatter()
+        timeFormatter.locale = Locale.current
+        timeFormatter.dateFormat = "h:mm a"
+        let timeString = timeFormatter.string(from: date)
+        switch repeatType {
+        case .nonRepeating:
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale.current
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .short
+            return dateFormatter.string(from: date)
+        case .daily:
+            if repeatTime == 1 {
+                return "Every day at \(timeString)"
+            } else {
+                return "Every \(repeatTime) days at \(timeString)"
+            }
+        case .weekly:
+            let weekday = Calendar.current.component(.weekday, from: date)
+            let weekdayName = Calendar.current.weekdaySymbols[weekday - 1]
+            if repeatTime == 1 {
+                return "Every week on \(weekdayName) at \(timeString)"
+            } else {
+                return "Every \(repeatTime) weeks on \(weekdayName) at \(timeString)"
+            }
+        case .monthly:
+            let day = Calendar.current.component(.day, from: date)
+            if repeatTime == 1 {
+                return "Every month on day \(day) at \(timeString)"
+            } else {
+                return "Every \(repeatTime) months on day \(day) at \(timeString)"
+            }
+        case .yearly:
+            let month = Calendar.current.component(.month, from: date)
+            let day = Calendar.current.component(.day, from: date)
+            let monthName = DateFormatter().monthSymbols[month - 1]
+            if repeatTime == 1 {
+                return "Every year on \(monthName) \(day) at \(timeString)"
+            } else {
+                return "Every \(repeatTime) years on \(monthName) \(day) at \(timeString)"
+            }
+        }
+    }
+
+//    var repeatSummary: String {
+//        switch repeatType {
+//        case .nonRepeating:
+//            return "No repeat"
+//        case .daily:
+//            if repeatTime == 1 {
+//                return "Every day "
+//            } else {
+//                return "Every \(repeatTime) days"
+//            }
+//        case .weekly:
+//            if repeatTime == 1 {
+//                return "Every week"
+//            } else {
+//                return "Every \(repeatTime) weeks"
+//            }
+//        case .monthly:
+//            if repeatTime == 1 {
+//                return "Every month"
+//            } else {
+//                return "Every \(repeatTime) months"
+//            }
+//        case .yearly:
+//            if repeatTime == 1 {
+//                return "Every year"
+//            } else {
+//                return "Every \(repeatTime) years"
+//            }
+//        }
+//    }
+
     // MARK: Next Occurrence
 
     /// Computed property for next occurrence date (for repeating countdowns)
@@ -78,7 +155,7 @@ extension Countdown {
         let calendar = Calendar.current
         let value: Int
         let component: Calendar.Component
-        
+
         if absInterval < 60 {
             // Less than 1 minute: show seconds
             value = Swift.max(Int(absInterval), 0)
