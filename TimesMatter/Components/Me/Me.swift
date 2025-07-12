@@ -13,6 +13,7 @@ struct MeView: View {
     @Environment(\.openURL) private var openURL
     @AppStorage("userName") private var userName: String = String(localized: "Your Name")
     @AppStorage("userAvatar") private var userAvatar: String = "😀"
+    @Dependency(\.purchaseManager) var purchaseManager
     @State private var showPurchaseSheet = false
     @State private var showEmojiPicker = false
     @Dependency(\.themeManager) var themeManager
@@ -77,20 +78,31 @@ struct MeView: View {
                                 }
                                 .padding(.top, 8)
                                 // Placeholder for purchase button
-                                HStack {
-                                    Spacer()
+                                if !purchaseManager.isPremiumUserPurchased {
                                     Button(action: {
-                                        // Show purchase sheet placeholder
+                                        showPurchaseSheet = true
                                     }) {
-                                        Text("Upgrade to Premium")
-                                            .font(.body)
-                                            .foregroundColor(.blue)
-                                            .padding(.vertical, 8)
-                                            .padding(.horizontal)
-                                            .background(Color(.systemGray6))
-                                            .cornerRadius(10)
+                                        Text(String(localized: "Upgrade to Premium"))
+                                            .appButtonStyle(theme: themeManager.current)
                                     }
-                                    Spacer()
+                                } else {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "crown.fill")
+                                            .foregroundColor(.yellow)
+                                            .font(.title3)
+                                        Text(String(localized: "Welcome, Premium user!"))
+                                            .font(.headline)
+                                            .foregroundColor(themeManager.current.primaryColor)
+                                    }
+                                    .padding(.vertical, 8)
+                                    .padding(.horizontal, 16)
+                                    .background(themeManager.current.card)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: AppCornerRadius.button)
+                                            .stroke(themeManager.current.primaryColor, lineWidth: 1.5)
+                                    )
+                                    .cornerRadius(AppCornerRadius.button)
+                                    .shadow(color: AppShadow.card.color, radius: 4, x: 0, y: 2)
                                 }
                             }
                         }
@@ -126,8 +138,13 @@ struct MeView: View {
                 }
                 .padding(.vertical)
                 
-                BannerView()
-                    .frame(height: 50)
+                if !purchaseManager.isPremiumUserPurchased {
+                    BannerView()
+                        .frame(height: 50)
+                }
+            }
+            .sheet(isPresented: $showPurchaseSheet) {
+                PurchaseSheet()
             }
             .background(Color(.systemGroupedBackground))
             .navigationTitle("Me View")
