@@ -7,13 +7,13 @@ import SwiftUI
 class ChangeBackgroundSheetModel {
     var countdown: Countdown.Draft
     let onSelect: (Countdown.Draft) -> Void
-    
+
     @ObservationIgnored
     @Dependency(\.themeManager) var themeManager
-    
+
     var selectedTab: Tab = .image
-    var selectedPhoto: PhotosPickerItem? = nil
-    
+    var selectedPhoto: PhotosPickerItem?
+
     enum Tab: String, CaseIterable, Identifiable {
         case image = "Background Image"
         case backgroundColor = "Background Color"
@@ -47,7 +47,26 @@ class ChangeBackgroundSheetModel {
         "tree_sister",
         "birthday",
         "relationship",
-        "history"
+        "history",
+    ]
+
+    // Predefined background colors
+    let predefinedColors: [(name: String, color: Color)] = [
+        ("Blue", Color(hex: 0xFF6B9DCC)),
+        ("Green", Color(hex: 0xFF2ECC71CC)),
+        ("Purple", Color(hex: 0xFF9B59B6CC)),
+        ("Orange", Color(hex: 0xFFE67E22CC)),
+        ("Red", Color(hex: 0xFFE74C3CCC)),
+        ("Pink", Color(hex: 0xFFE91E63CC)),
+        ("Teal", Color(hex: 0xFF4ECDC4CC)),
+        ("Yellow", Color(hex: 0xFFF1C40FCC)),
+        ("Brown", Color(hex: 0xFF8B4513CC)),
+        ("Gray", Color(hex: 0xFF95A5A6CC)),
+        ("Dark Blue", Color(hex: 0xFF34495ECC)),
+        ("Dark Green", Color(hex: 0xFF27AE60CC)),
+        ("Dark Purple", Color(hex: 0xFF8E44ADCC)),
+        ("Dark Red", Color(hex: 0xFFC0392BCC)),
+        ("Black", Color(hex: 0xFF2C3E50CC)),
     ]
 
     init(countdown: Countdown.Draft, onSelect: @escaping (Countdown.Draft) -> Void) {
@@ -61,20 +80,21 @@ class ChangeBackgroundSheetModel {
         }
         return false
     }
-    
+
     var primaryColor: Color {
         themeManager.current.primaryColor
     }
-    
+
     var previewCountdown: Countdown {
         countdown.mock
     }
-    
+
     // MARK: - Actions
+
     func selectTab(_ tab: Tab) {
         selectedTab = tab
     }
-    
+
     func selectPhoto(_ photo: PhotosPickerItem?) {
         selectedPhoto = photo
         if let photo {
@@ -83,40 +103,41 @@ class ChangeBackgroundSheetModel {
             }
         }
     }
-    
+
     func selectPredefinedImage(_ imageName: String) {
         removeOldImageIfNeed()
         countdown.backgroundImageName = imageName
     }
-    
+
     func removeCustomImage() {
         countdown.backgroundImageName = nil
     }
-    
+
     func updateBackgroundColor(_ color: Color) {
         countdown.backgroundColor = color.hexIntWithAlpha
     }
-    
+
     func updateTextColor(_ color: Color) {
         countdown.textColor = color.hexIntWithAlpha
     }
-    
+
     func useColorOnly() {
         countdown.backgroundImageName = nil
     }
-    
+
     func applyChanges() {
         onSelect(countdown)
     }
-    
+
     // MARK: - Private Methods
+
     private func loadPhoto(_ photo: PhotosPickerItem) async {
         guard let data = try? await photo.loadTransferable(type: Data.self),
-        let uiImage = UIImage(data: data) else { return }
-        
+              let uiImage = UIImage(data: data) else { return }
+
         // Delete old custom image file if it exists
         removeOldImageIfNeed()
-        
+
         // Resize image if needed (max 1080px)
         let resizedImage = uiImage.resizedToFit(maxDimension: 1080)
         // Save to temp directory and set backgroundImageName to a unique path
@@ -127,7 +148,7 @@ class ChangeBackgroundSheetModel {
             countdown.backgroundImageName = url.path
         }
     }
-    
+
     private func removeOldImageIfNeed() {
         if let oldImagePath = countdown.backgroundImageName,
            oldImagePath.hasPrefix(FileManager.default.temporaryDirectory.path),
@@ -161,28 +182,12 @@ struct ChangeBackgroundSheet: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                
+
                 switch model.selectedTab {
                 case .image:
                     backgroundImage
                 case .backgroundColor:
-                    VStack(spacing: 24) {
-                        ColorPicker("Pick Background Color", selection: Binding(
-                            get: { model.countdown.backgroundColor.toColor },
-                            set: { model.updateBackgroundColor($0) }
-                        ))
-                        .labelsHidden()
-                        .frame(height: 60)
-                        .padding(.horizontal, 40)
-                        Button("Use Color (No Image)") {
-                            model.useColorOnly()
-                        }
-                        .font(.headline)
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.accentColor.opacity(0.1))
-                        .cornerRadius(12)
-                    }
+                    backgroundColor
                 case .textColor:
                     VStack(spacing: 24) {
                         ColorPicker("Pick Text Color", selection: Binding(
@@ -211,7 +216,7 @@ struct ChangeBackgroundSheet: View {
                                         .font(.system(size: 22, weight: .semibold))
                                         .foregroundColor(model.selectedTab == tab ? model.primaryColor : .gray)
                                     Text(tab.rawValue)
-                                        .font(.system(size: 13, weight: .medium))
+                                        .font(AppFont.footnote)
                                         .foregroundColor(model.selectedTab == tab ? model.primaryColor : .gray)
                                         .lineLimit(2)
                                 }
@@ -253,11 +258,10 @@ struct ChangeBackgroundSheet: View {
             }
         }
     }
-    
-    
+
     private var backgroundImage: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
+            HStack(spacing: AppSpacing.small) {
                 PhotosPicker(selection: Binding(
                     get: { model.selectedPhoto },
                     set: { model.selectPhoto($0) }
@@ -268,7 +272,7 @@ struct ChangeBackgroundSheet: View {
                             Image(uiImage: uiImage)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
-                                .frame(width: 75, height: 100)
+                                .frame(width: 66, height: 100)
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 12)
@@ -281,7 +285,7 @@ struct ChangeBackgroundSheet: View {
                     } else {
                         RoundedRectangle(cornerRadius: 12)
                             .fill(Color.gray.opacity(0.2))
-                            .frame(width: 75, height: 100)
+                            .frame(width: 66, height: 100)
                             .overlay(
                                 Image(systemName: "photo")
                                     .font(.system(size: 20))
@@ -289,13 +293,13 @@ struct ChangeBackgroundSheet: View {
                             )
                     }
                 }
-                
+
                 ForEach(model.predefinedImages, id: \.self) { name in
                     ZStack(alignment: .topTrailing) {
                         Image(name, bundle: .main)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(width: 75, height: 100)
+                            .frame(width: 66, height: 100)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
@@ -307,6 +311,56 @@ struct ChangeBackgroundSheet: View {
                         if model.countdown.backgroundImageName == name {
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundColor(model.primaryColor)
+                                .offset(x: -4, y: 4)
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, AppSpacing.medium)
+        }
+        .frame(height: 100)
+    }
+
+    @ViewBuilder
+    private var backgroundColor: some View {
+        // Use Color (No Image) button
+        if model.countdown.backgroundImageName != nil {
+            Button {
+                model.useColorOnly()
+            } label: {
+                Text("Use Color (No Image)")
+            }
+            .buttonStyle(.appRect)
+        }
+        
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: AppSpacing.small) {
+                VStack(spacing: 12) {
+                    ColorPicker("Pick Background Color", selection: Binding(
+                        get: { model.countdown.backgroundColor.toColor },
+                        set: { model.updateBackgroundColor($0) }
+                    ))
+                    .labelsHidden()
+                }
+                .frame(width: 60, height: 100)
+
+                ForEach(model.predefinedColors, id: \.name) { colorOption in
+                    ZStack(alignment: .topTrailing) {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(colorOption.color)
+                            .frame(width: 66, height: 100)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(model.countdown.backgroundColor == colorOption.color.hexIntWithAlpha ? model.primaryColor : Color.clear, lineWidth: 2)
+                            )
+                            .onTapGesture {
+                                model.updateBackgroundColor(colorOption.color)
+                            }
+
+                        if model.countdown.backgroundColor == colorOption.color.hexIntWithAlpha {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.white)
+                                .background(Circle().fill(Color.black.opacity(0.3)))
                                 .offset(x: -4, y: 4)
                         }
                     }
