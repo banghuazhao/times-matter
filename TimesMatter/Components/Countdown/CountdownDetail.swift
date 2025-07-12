@@ -156,7 +156,7 @@ struct CountdownDetailView: View {
                 isFavorite: true,
                 isArchived: false,
                 repeatType: .nonRepeating,
-                customInterval: 1,
+                repeatTime: 1,
                 compactTimeUnit: .days
             )
         )

@@ -104,8 +104,8 @@ struct CountdownStore {
             backgroundColor: 0xFF1ABC9CCC,
             textColor: 0xFFFFFFFFFF,
             isFavorite: false,
-            repeatType: .customMonths,
-            customInterval: 6
+            repeatType: .monthly,
+            repeatTime: 12
         ),
 
         .init(
@@ -116,8 +116,8 @@ struct CountdownStore {
             backgroundColor: 0xFFE67E22CC,
             textColor: 0xFFFFFFFFFF,
             isFavorite: false,
-            repeatType: .customMonths,
-            customInterval: 12
+            repeatType: .monthly,
+            repeatTime: 12
         ),
 
         // Personal countdowns

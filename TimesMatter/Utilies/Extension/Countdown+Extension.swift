@@ -12,6 +12,10 @@ extension Countdown {
         title.count > 20 ? title.prefix(20) + "…" : title
     }
     
+    var isCustomRepeatTime: Bool {
+        repeatTime > 1
+    }
+    
     // MARK: Next Occurrence
 
     /// Computed property for next occurrence date (for repeating countdowns)
@@ -28,42 +32,26 @@ extension Countdown {
         case .nonRepeating:
             return nil
         case .daily:
-            nextDate = calendar.date(byAdding: .day, value: 1, to: date) ?? date
+            nextDate = calendar.date(byAdding: .day, value: repeatTime, to: date) ?? date
         case .weekly:
-            nextDate = calendar.date(byAdding: .weekOfYear, value: 1, to: date) ?? date
+            nextDate = calendar.date(byAdding: .weekOfYear, value: repeatTime, to: date) ?? date
         case .monthly:
-            nextDate = calendar.date(byAdding: .month, value: 1, to: date) ?? date
+            nextDate = calendar.date(byAdding: .month, value: repeatTime, to: date) ?? date
         case .yearly:
-            nextDate = calendar.date(byAdding: .year, value: 1, to: date) ?? date
-        case .customDays:
-            nextDate = calendar.date(byAdding: .day, value: customInterval, to: date) ?? date
-        case .customWeeks:
-            nextDate = calendar.date(byAdding: .weekOfYear, value: customInterval, to: date) ?? date
-        case .customMonths:
-            nextDate = calendar.date(byAdding: .month, value: customInterval, to: date) ?? date
-        case .customYears:
-            nextDate = calendar.date(byAdding: .year, value: customInterval, to: date) ?? date
+            nextDate = calendar.date(byAdding: .year, value: repeatTime, to: date) ?? date
         }
 
         // Keep adding intervals until we get a future date
         while nextDate <= now {
             switch repeatType {
             case .daily:
-                nextDate = calendar.date(byAdding: .day, value: 1, to: nextDate) ?? nextDate
+                nextDate = calendar.date(byAdding: .day, value: repeatTime, to: nextDate) ?? nextDate
             case .weekly:
-                nextDate = calendar.date(byAdding: .weekOfYear, value: 1, to: nextDate) ?? nextDate
+                nextDate = calendar.date(byAdding: .weekOfYear, value: repeatTime, to: nextDate) ?? nextDate
             case .monthly:
-                nextDate = calendar.date(byAdding: .month, value: 1, to: nextDate) ?? nextDate
+                nextDate = calendar.date(byAdding: .month, value: repeatTime, to: nextDate) ?? nextDate
             case .yearly:
-                nextDate = calendar.date(byAdding: .year, value: 1, to: nextDate) ?? nextDate
-            case .customDays:
-                nextDate = calendar.date(byAdding: .day, value: customInterval, to: nextDate) ?? nextDate
-            case .customWeeks:
-                nextDate = calendar.date(byAdding: .weekOfYear, value: customInterval, to: nextDate) ?? nextDate
-            case .customMonths:
-                nextDate = calendar.date(byAdding: .month, value: customInterval, to: nextDate) ?? nextDate
-            case .customYears:
-                nextDate = calendar.date(byAdding: .year, value: customInterval, to: nextDate) ?? nextDate
+                nextDate = calendar.date(byAdding: .year, value: repeatTime, to: nextDate) ?? nextDate
             case .nonRepeating:
                 return nil
             }
@@ -165,7 +153,7 @@ extension Countdown.Draft {
             isFavorite: isFavorite,
             isArchived: isArchived,
             repeatType: repeatType,
-            customInterval: customInterval,
+            repeatTime: repeatTime,
             compactTimeUnit: compactTimeUnit
         )
     }

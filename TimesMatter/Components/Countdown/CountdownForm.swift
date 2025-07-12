@@ -35,6 +35,7 @@ class CountdownFormModel: HashableObject {
     enum Route {
         case showCompactTimeFormatInfo
         case selectCategory
+        case showingCustomRepeatSheet
     }
     var route: Route?
     
@@ -86,17 +87,32 @@ class CountdownFormModel: HashableObject {
 struct CountdownFormView: View {
     @State var model: CountdownFormModel
     @State private var showingTimeFormatPopover = false
-    @State private var showingCustomRepeatSheet = false
     @Dependency(\.themeManager) var themeManager
     
     @Environment(\.dismiss) var dismiss
+    
+    // Computed properties to simplify complex expressions
+    private var isCustomRepeatTime: Bool {
+        model.countdown.mock.isCustomRepeatTime
+    }
+    
+    private var primaryColor: Color {
+        themeManager.current.primaryColor
+    }
+    
+    private var textPrimaryColor: Color {
+        themeManager.current.textPrimary
+    }
+    
+    private var secondaryGrayColor: Color {
+        themeManager.current.secondaryGray
+    }
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: AppSpacing.large) {
-                    CountdownRow(
-                        countdown: model.displayMock)
+                    CountdownRow(countdown: model.displayMock)
                     
                     // Form Section
                     VStack(spacing: AppSpacing.smallMedium) {
@@ -105,7 +121,7 @@ struct CountdownFormView: View {
                            
                             TextField("Enter event title", text: $model.countdown.title)
                                 .font(AppFont.subheadlineSemibold)
-                                .foregroundColor(themeManager.current.textPrimary)
+                                .foregroundColor(textPrimaryColor)
                             
                             Button {
                                 model.onTapEventGallery()
@@ -124,7 +140,7 @@ struct CountdownFormView: View {
                                 displayedComponents: [.date, .hourAndMinute]
                             )
                             .datePickerStyle(.compact)
-                            .tint(themeManager.current.primaryColor)
+                            .tint(primaryColor)
                         }
                         .font(AppFont.subheadlineSemibold)
                         
@@ -134,29 +150,31 @@ struct CountdownFormView: View {
                         VStack(alignment: .leading, spacing: AppSpacing.smallMedium) {
                             Text("Repeat")
                                 .font(AppFont.subheadlineSemibold)
-                                .foregroundColor(themeManager.current.textPrimary)
+                                .foregroundColor(textPrimaryColor)
                                 
-                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 90, maximum: 140), spacing: AppSpacing.small)], alignment: .leading, spacing: AppSpacing.small) {
-                                ForEach(RepeatType.allCasesToChoose, id: \ .self) { type in
-                                    Button(action: {
-                                        if type.isCustom {
-                                            showingCustomRepeatSheet = true
-                                        }
+                            LazyVGrid(
+                                columns: [
+                                    GridItem(.adaptive(minimum: 90, maximum: 140), spacing: AppSpacing.small)
+                                ],
+                                alignment: .leading,
+                                spacing: AppSpacing.small
+                            ) {
+                                ForEach(RepeatType.allCasesToChoose, id: \.self) { type in
+                                    RepeatTypeButton(
+                                        type: type,
+                                        isSelected: !isCustomRepeatTime && model.countdown.repeatType == type,
+                                        primaryColor: primaryColor
+                                    ) {
                                         model.countdown.repeatType = type
-                                    }) {
-                                        Text(type.displayName)
-                                            .font(AppFont.subheadline)
-                                            .padding(.horizontal, 12)
-                                            .padding(.vertical, 6)
-                                            .frame(maxWidth: .infinity)
-                                            .background(model.countdown.repeatType == type ? themeManager.current.primaryColor : .clear)
-                                            .foregroundColor(model.countdown.repeatType == type ? .white : themeManager.current.primaryColor)
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 8)
-                                                    .stroke(themeManager.current.primaryColor, lineWidth: 1)
-                                            )
-                                            .cornerRadius(8)
+                                        model.countdown.repeatTime = 1
                                     }
+                                }
+                                
+                                CustomRepeatButton(
+                                    isSelected: isCustomRepeatTime,
+                                    primaryColor: primaryColor
+                                ) {
+                                    model.route = .showingCustomRepeatSheet
                                 }
                             }
                         }
@@ -167,7 +185,7 @@ struct CountdownFormView: View {
                         HStack(spacing: AppSpacing.smallMedium) {
                             Text("Category")
                                 .font(AppFont.subheadlineSemibold)
-                                .foregroundColor(themeManager.current.textPrimary)
+                                .foregroundColor(textPrimaryColor)
                             
                             Spacer()
                             
@@ -191,13 +209,13 @@ struct CountdownFormView: View {
                              HStack {
                                  Text("Compact Time Format")
                                      .font(AppFont.subheadlineSemibold)
-                                     .foregroundColor(themeManager.current.textPrimary)
+                                     .foregroundColor(textPrimaryColor)
                                  
                                  Button {
                                      model.route = .showCompactTimeFormatInfo
                                  } label: {
                                      Image(systemName: "questionmark.circle")
-                                         .foregroundColor(themeManager.current.secondaryGray)
+                                         .foregroundColor(secondaryGrayColor)
                                          .font(AppFont.subheadline)
                                  }
                                  .popover(isPresented: Binding($model.route.showCompactTimeFormatInfo)) {
@@ -212,16 +230,17 @@ struct CountdownFormView: View {
                                  }
                              }
                              .pickerStyle(.segmented)
-                             .tint(themeManager.current.primaryColor)
+                             .tint(primaryColor)
                          }
                      }
                      .appCardStyle()
                  }
                  .padding()
+                
+                BannerView()
+                    .frame(height: 50)
              }
              .appBackground(theme: themeManager.current)
-            BannerView()
-                .frame(height: 50)
              .toolbar {
                  ToolbarItem(placement: .topBarLeading) {
                      Button {
@@ -258,13 +277,63 @@ struct CountdownFormView: View {
                  .presentationDetents([.fraction(0.7), .large])
                  .presentationDragIndicator(.visible)
              }
-             .sheet(isPresented: $showingCustomRepeatSheet) {
+             .sheet(isPresented: Binding($model.route.showingCustomRepeatSheet)) {
                  CustomRepeatSheet(
                      repeatType: $model.countdown.repeatType,
-                     customInterval: $model.countdown.customInterval
+                     repeatTime: $model.countdown.repeatTime
                  )
+                 .presentationDetents([.medium])
              }
              .easyToast(isPresented: $model.showTitleEmptyToast, message: String(localized:"Event title is empty"))
+        }
+    }
+}
+
+// MARK: - Helper Views
+
+struct RepeatTypeButton: View {
+    let type: RepeatType
+    let isSelected: Bool
+    let primaryColor: Color
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text(type.displayName)
+                .font(AppFont.subheadline)
+                .padding(.horizontal, AppSpacing.smallMedium)
+                .padding(.vertical, 6)
+                .frame(maxWidth: .infinity)
+                .background(isSelected ? primaryColor : .clear)
+                .foregroundColor(isSelected ? .white : primaryColor)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(primaryColor, lineWidth: 1)
+                )
+                .cornerRadius(8)
+        }
+    }
+}
+
+struct CustomRepeatButton: View {
+    let isSelected: Bool
+    let primaryColor: Color
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            Text("Custom")
+                .font(AppFont.subheadline)
+                .padding(.horizontal, AppSpacing.smallMedium)
+                .padding(.vertical, 6)
+                .frame(maxWidth: .infinity)
+                .background(isSelected ? primaryColor : .clear)
+                .foregroundColor(isSelected ? .white : primaryColor)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(primaryColor, lineWidth: 1)
+                )
+                .cornerRadius(8)
         }
     }
 }
@@ -272,12 +341,9 @@ struct CountdownFormView: View {
 // Custom Repeat Sheet
 struct CustomRepeatSheet: View {
     @Binding var repeatType: RepeatType
-    @Binding var customInterval: Int
-    @Environment(\.dismiss) var dismiss
-    @State private var selectedUnit: RepeatType = .customDays
-    @State private var selectedInterval: Int = 1
+    @Binding var repeatTime: Int
     
-    private let unitTypes: [RepeatType] = [.customDays, .customWeeks, .customMonths, .customYears]
+    private let unitTypes: [RepeatType] = [.daily, .weekly, .monthly, .yearly]
     
     var body: some View {
         VStack(spacing: 24) {
@@ -285,35 +351,27 @@ struct CustomRepeatSheet: View {
                 .font(.title2)
                 .padding(.top, 24)
             HStack(spacing: 0) {
-                Picker("Interval", selection: $selectedInterval) {
+                Picker("Interval", selection: $repeatTime) {
                     ForEach(1...999, id: \.self) { i in
-                        Text("\(i)").tag(i)
+                        if i == 1 {
+                            Text("Every").tag(i)
+                        } else {
+                            Text("Every \(i)").tag(i)
+                        }
                     }
                 }
                 .pickerStyle(.wheel)
                 .frame(maxWidth: 100)
                 
-                Picker("Unit", selection: $selectedUnit) {
+                Picker("Unit", selection: $repeatType) {
                     ForEach(unitTypes, id: \.self) { type in
-                        Text(type.unitSingular).tag(type)
+                        Text(repeatTime == 1 ? type.singleRepeatTimeName : type.multipleRepeatTimeName).tag(type)
                     }
                 }
                 .pickerStyle(.wheel)
                 .frame(maxWidth: 120)
             }
             .frame(height: 180)
-            
-            Button("Done") {
-                customInterval = selectedInterval
-                repeatType = selectedUnit
-                dismiss()
-            }
-            .buttonStyle(.appRect)
-            .padding(.bottom, 24)
-        }
-        .onAppear {
-            selectedInterval = customInterval
-            selectedUnit = unitTypes.contains(repeatType) ? repeatType : .customDays
         }
     }
 }

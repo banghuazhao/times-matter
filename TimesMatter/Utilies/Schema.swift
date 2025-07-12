@@ -55,7 +55,7 @@ func appDatabase() throws -> any DatabaseWriter {
              "isFavorite" INTEGER NOT NULL DEFAULT 0, 
              "isArchived" INTEGER NOT NULL DEFAULT 0,
              "repeatType" TEXT NOT NULL DEFAULT 'none',
-             "customInterval" INTEGER NOT NULL DEFAULT 1,
+             "repeatTime" INTEGER NOT NULL DEFAULT 1,
              "compactTimeUnit" TEXT NOT NULL DEFAULT 'days'
             ) STRICT 
             """

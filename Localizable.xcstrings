@@ -80,6 +80,9 @@
     "Countdowns" : {
 
     },
+    "Custom" : {
+
+    },
     "Custom Repeat" : {
 
     },
@@ -117,6 +120,12 @@
 
     },
     "Event title is empty" : {
+
+    },
+    "Every" : {
+
+    },
+    "Every %lld" : {
 
     },
     "Filter By" : {

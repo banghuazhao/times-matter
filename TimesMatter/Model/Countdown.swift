@@ -20,7 +20,7 @@ struct Countdown: Identifiable {
     var isFavorite: Bool = false
     var isArchived: Bool = false
     var repeatType: RepeatType = .nonRepeating
-    var customInterval: Int = 1
+    var repeatTime: Int = 1
     // Compact format: single time unit selection
     var compactTimeUnit: CompactTimeUnit = .days
 }
@@ -35,10 +35,6 @@ enum RepeatType: String, Codable, CaseIterable, QueryBindable {
     case weekly
     case monthly
     case yearly
-    case customDays
-    case customWeeks
-    case customMonths
-    case customYears
     
     var displayName: String {
         switch self {
@@ -47,29 +43,31 @@ enum RepeatType: String, Codable, CaseIterable, QueryBindable {
         case .weekly: return "Weekly"
         case .monthly: return "Monthly"
         case .yearly: return "Yearly"
-        case .customDays, .customWeeks, .customMonths, .customYears: return "Custom"
         }
     }
     
-    var unitSingular: String {
+    var singleRepeatTimeName: String {
         switch self {
-        case .customDays, .daily: return "day"
-        case .customWeeks, .weekly: return "week"
-        case .customMonths, .monthly: return "month"
-        case .customYears, .yearly: return "year"
-        default: return ""
+        case .nonRepeating: return "No Repeat"
+        case .daily: return "Day"
+        case .weekly: return "Week"
+        case .monthly: return "Month"
+        case .yearly: return "Year"
         }
     }
     
-    var isCustom: Bool {
+    var multipleRepeatTimeName: String {
         switch self {
-        case .customDays, .customWeeks, .customMonths, .customYears: return true
-        default: return false
+        case .nonRepeating: return "No Repeat"
+        case .daily: return "Days"
+        case .weekly: return "Weeks"
+        case .monthly: return "Months"
+        case .yearly: return "Years"
         }
     }
     
     static var allCasesToChoose: [RepeatType] {
-        [.nonRepeating, .daily, .weekly, .monthly, .yearly, .customDays]
+        [.nonRepeating, .daily, .weekly, .monthly, .yearly]
     }
 }
 
@@ -122,48 +120,34 @@ extension Countdown {
             dateFormatter.timeStyle = .short
             return dateFormatter.string(from: date)
         case .daily:
-            return "Every day at \(timeString)"
+            if repeatTime == 1 {
+                return "Every day at \(timeString)"
+            } else {
+                return "Every \(repeatTime) days at \(timeString)"
+            }
         case .weekly:
             let weekday = Calendar.current.component(.weekday, from: date)
             let weekdayName = Calendar.current.weekdaySymbols[weekday - 1]
-            return "Every week on \(weekdayName) at \(timeString)"
+            if repeatTime == 1 {
+                return "Every week on \(weekdayName) at \(timeString)"
+            } else {
+                return "Every \(repeatTime) weeks on \(weekdayName) at \(timeString)"
+            }
         case .monthly:
             let day = Calendar.current.component(.day, from: date)
-            return "Every month on day \(day) at \(timeString)"
+            if repeatTime == 1 {
+                return "Every month on day \(day) at \(timeString)"
+            } else {
+                return "Every \(repeatTime) months on day \(day) at \(timeString)"
+            }
         case .yearly:
             let month = Calendar.current.component(.month, from: date)
             let day = Calendar.current.component(.day, from: date)
             let monthName = DateFormatter().monthSymbols[month - 1]
-            return "Every year on \(monthName) \(day) at \(timeString)"
-        case .customDays:
-            if customInterval == 1 {
-                return "Every day at \(timeString)"
-            } else {
-                return "Every \(customInterval) days at \(timeString)"
-            }
-        case .customWeeks:
-            let weekday = Calendar.current.component(.weekday, from: date)
-            let weekdayName = Calendar.current.weekdaySymbols[weekday - 1]
-            if customInterval == 1 {
-                return "Every week on \(weekdayName) at \(timeString)"
-            } else {
-                return "Every \(customInterval) weeks on \(weekdayName) at \(timeString)"
-            }
-        case .customMonths:
-            let day = Calendar.current.component(.day, from: date)
-            if customInterval == 1 {
-                return "Every month on day \(day) at \(timeString)"
-            } else {
-                return "Every \(customInterval) months on day \(day) at \(timeString)"
-            }
-        case .customYears:
-            let month = Calendar.current.component(.month, from: date)
-            let day = Calendar.current.component(.day, from: date)
-            let monthName = DateFormatter().monthSymbols[month - 1]
-            if customInterval == 1 {
+            if repeatTime == 1 {
                 return "Every year on \(monthName) \(day) at \(timeString)"
             } else {
-                return "Every \(customInterval) years on \(monthName) \(day) at \(timeString)"
+                return "Every \(repeatTime) years on \(monthName) \(day) at \(timeString)"
             }
         }
     }
