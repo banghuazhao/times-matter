@@ -75,9 +75,9 @@ struct CountdownRow: View {
                 }
             }
         )
-        .clipped()
         .clipShape(RoundedRectangle(cornerRadius: AppCornerRadius.card))
         .shadow(color: countdown.backgroundColor.toColor.opacity(0.08), radius: 8, x: 0, y: 4)
+        .contentShape(RoundedRectangle(cornerRadius: AppCornerRadius.card))
     }
 }
 

@@ -5,32 +5,43 @@
 
 import Dependencies
 import SwiftUI
+import SwiftUINavigation
 
 @Observable
 @MainActor
 class CountdownDetailModel {
-    let countdown: Countdown
+    var countdown: Countdown
+    let isPreview: Bool
+
+    @CasePathable
+    enum Route {
+        case edit(CountdownFormModel)
+    }
+
+    var route: Route?
+
     @ObservationIgnored
     @Dependency(\.timerService) var timerService
-    
-    init(countdown: Countdown) {
+
+    init(countdown: Countdown, isPreview: Bool = false) {
         self.countdown = countdown
+        self.isPreview = isPreview
     }
-    
+
     // New: Helper to compute time left with years
     var timeLeftComponentsFull: [(value: Int, label: String)] {
         let now = timerService.currentTime
         let targetDate = if countdown.repeatType == .nonRepeating {
             countdown.date
-        }  else {
-            (countdown.nextOccurrence ?? countdown.date)
+        } else {
+            countdown.nextOccurrence ?? countdown.date
         }
-        var interval = max(targetDate.timeIntervalSince(now), 0)
+        var interval = abs(targetDate.timeIntervalSince(now))
         let secondsInYear = 31536000.0 // 365 days
         let secondsInDay = 86400.0
         let secondsInHour = 3600.0
         let secondsInMinute = 60.0
-        
+
         let years = Int(interval / secondsInYear)
         interval -= Double(years) * secondsInYear
         let days = Int(interval / secondsInDay)
@@ -40,7 +51,7 @@ class CountdownDetailModel {
         let minutes = Int(interval / secondsInMinute)
         interval -= Double(minutes) * secondsInMinute
         let seconds = Int(interval)
-        
+
         var result: [(Int, String)] = []
         if years > 0 {
             result.append((years, "years"))
@@ -57,21 +68,33 @@ class CountdownDetailModel {
         result.append((seconds, "seconds"))
         return result
     }
-    
-    
+
     var bgColor: Color {
         Color(hex: countdown.backgroundColor)
     }
-    
+
     var textColor: Color {
         Color(hex: countdown.textColor)
+    }
+
+    func onTapEdit() {
+        route = .edit(
+            CountdownFormModel(
+                countdown: Countdown.Draft(countdown),
+                onSave: { [weak self] newCountdown in
+                    guard let self else { return }
+                    countdown = newCountdown
+                    route = nil
+                }
+            )
+        )
     }
 }
 
 struct CountdownDetailView: View {
     @Bindable var model: CountdownDetailModel
     @Environment(\.dismiss) private var dismiss
-    
+
     var body: some View {
         ZStack {
             if let bgName = model.countdown.backgroundImageName, !bgName.isEmpty {
@@ -106,9 +129,9 @@ struct CountdownDetailView: View {
                             .font(.system(size: 18))
                             .foregroundColor(model.textColor.opacity(0.9))
                     }
-                    // Countdown timer
+
                     HStack(spacing: 5) {
-                        ForEach(Array(model.timeLeftComponentsFull.enumerated()), id: \ .offset) { idx, comp in
+                        ForEach(Array(model.timeLeftComponentsFull.enumerated()), id: \ .offset) { _, comp in
                             timerBlock(value: comp.value, label: comp.label)
                         }
                     }
@@ -122,23 +145,29 @@ struct CountdownDetailView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .toolbar {
-            ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action: { /* Share action */ }) {
-                    Image(systemName: "square.and.arrow.up")
-                }
-                Button(action: { /* Edit action */ }) {
-                    Text("Edit")
-                }
-                Button(action: { /* More action */ }) {
-                    Image(systemName: "ellipsis.circle")
+            if !model.isPreview {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button {
+                    } label: {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                    .buttonStyle(.appCircular)
+
+                    Button {
+                        model.onTapEdit()
+                    } label: {
+                        Image(systemName: "pencil")
+                    }
+                    .buttonStyle(.appCircular)
                 }
             }
         }
-        .tint(model.textColor)
         .toolbar(.hidden, for: .tabBar)
-        .navigationBarTint(UIColor(model.textColor))
+        .sheet(item: $model.route.edit, id: \.self) { model in
+            CountdownFormView(model: model)
+        }
     }
-    
+
     // Helper for timer block
     @ViewBuilder
     private func timerBlock(value: Int, label: String) -> some View {
@@ -157,7 +186,7 @@ struct CountdownDetailView: View {
 #Preview {
     let dateComponents = DateComponents(year: 1, day: 0, hour: 1, minute: 4, second: 5)
     let futureDate = Calendar.current.date(byAdding: dateComponents, to: Date())!
-    
+
     CountdownDetailView(
         model: CountdownDetailModel(
             countdown: Countdown(

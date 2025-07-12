@@ -23,12 +23,20 @@ class ChangeBackgroundSheetModel {
 
     // Predefined images from the Backgrounds folder
     let predefinedImages = [
-        "image_event",
-        "image_holiday",
-        "image_more2",
-        "image_more3",
-        "image_more4",
-        "image_more5",
+        "aurora",
+        "holiday",
+        "mercer_bay",
+        "mt_cook",
+        "mt_eden",
+        "shakespeare",
+        "wanaka_tree",
+        "star",
+        "taupo",
+        "tekapo",
+        "tree_sister",
+        "birthday",
+        "relationship",
+        "history"
     ]
 
     init(countdown: Countdown.Draft, onSelect: @escaping (Countdown.Draft) -> Void) {
@@ -109,7 +117,7 @@ struct ChangeBackgroundSheet: View {
             VStack(spacing: AppSpacing.large) {
                 // Preview Countdown Detail View
                 CountdownDetailView(
-                    model: CountdownDetailModel(countdown: model.previewCountdown)
+                    model: CountdownDetailModel(countdown: model.previewCountdown, isPreview: true)
                 )
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .padding(.horizontal, 20)
