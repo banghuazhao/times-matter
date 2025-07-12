@@ -11,7 +11,7 @@ class ChangeBackgroundSheetModel {
     @ObservationIgnored
     @Dependency(\.themeManager) var themeManager
 
-    var selectedTab: Tab = .image
+    var selectedTab: Tab = .textColor
     var selectedPhoto: PhotosPickerItem?
 
     enum Tab: String, CaseIterable, Identifiable {
@@ -69,6 +69,161 @@ class ChangeBackgroundSheetModel {
         ("Black", Color(hex: 0xFF2C3E50CC)),
     ]
 
+    // Predefined text colors
+    let predefinedTextColors: [(name: String, color: Color)] = [
+        ("White", Color(hex: 0xFFFFFFFF)),
+        ("Black", Color(hex: 0x000000FF)),
+        ("Light Gray", Color(hex: 0xD3D3D3FF)),
+        ("Blue", Color(hex: 0x007AFFFF)),
+        ("Green", Color(hex: 0x34C759FF)),
+        ("Purple", Color(hex: 0xAF5CF7FF)),
+        ("Orange", Color(hex: 0xFF9500FF)),
+        ("Red", Color(hex: 0xFF3B30FF)),
+        ("Pink", Color(hex: 0xFF2D92FF)),
+        ("Teal", Color(hex: 0x5AC8FAFF)),
+        ("Yellow", Color(hex: 0xFFCC00FF)),
+        ("Brown", Color(hex: 0x8B4513FF)),
+        ("Gold", Color(hex: 0xFFD700FF)),
+        ("Silver", Color(hex: 0xC0C0C0FF)),
+        ("Cyan", Color(hex: 0x00FFFFFF)),
+        ("Magenta", Color(hex: 0xFF00FFFF)),
+        ("Lime", Color(hex: 0x32CD32FF)),
+        ("Navy", Color(hex: 0x000080FF)),
+        ("Maroon", Color(hex: 0x800000FF)),
+    ]
+    
+    // Predefined emojis
+    let predefinedEmojis: [(name: String, emoji: String)] = [
+        ("Clock", "⏰"),
+        ("Calendar", "📅"),
+        ("Heart", "❤️"),
+        ("Star", "⭐"),
+        ("Cake", "🎂"),
+        ("Gift", "🎁"),
+        ("Party", "🎉"),
+        ("Fireworks", "🎆"),
+        ("Balloon", "🎈"),
+        ("Music", "🎵"),
+        ("Car", "🚗"),
+        ("Plane", "✈️"),
+        ("Ship", "🚢"),
+        ("Train", "🚂"),
+        ("Bike", "🚲"),
+        ("House", "🏠"),
+        ("Office", "🏢"),
+        ("School", "🎓"),
+        ("Work", "💼"),
+        ("Study", "📚"),
+        ("Game", "🎮"),
+        ("Movie", "🎬"),
+        ("Book", "📖"),
+        ("Phone", "📱"),
+        ("Computer", "💻"),
+        ("Camera", "📷"),
+        ("Food", "🍕"),
+        ("Drink", "☕"),
+        ("Sport", "⚽"),
+        ("Fitness", "💪"),
+        ("Nature", "🌲"),
+        ("Beach", "🏖️"),
+        ("Mountain", "⛰️"),
+        ("Sun", "☀️"),
+        ("Moon", "🌙"),
+        ("Rainbow", "🌈"),
+        ("Flower", "🌸"),
+        ("Tree", "🌳"),
+        ("Animal", "🐶"),
+        ("Bird", "🐦"),
+        ("Fish", "🐠"),
+        ("Bug", "🐛"),
+        ("Robot", "🤖"),
+        ("Alien", "👽"),
+        ("Ghost", "👻"),
+        ("Wizard", "🧙‍♂️"),
+        ("Princess", "👸"),
+        ("King", "👑"),
+        ("Crown", "👑"),
+        ("Diamond", "💎"),
+        ("Money", "💰"),
+        ("Shopping", "🛍️"),
+        ("Love", "💕"),
+        ("Friendship", "🤝"),
+        ("Family", "👨‍👩‍👧‍👦"),
+        ("Baby", "👶"),
+        ("Child", "🧒"),
+        ("Adult", "👨"),
+        ("Elder", "👴"),
+        ("Doctor", "👨‍⚕️"),
+        ("Teacher", "👨‍🏫"),
+        ("Artist", "🎨"),
+        ("Scientist", "🔬"),
+        ("Engineer", "⚙️"),
+        ("Chef", "👨‍🍳"),
+        ("Farmer", "👨‍🌾"),
+        ("Police", "👮"),
+        ("Firefighter", "👨‍🚒"),
+        ("Astronaut", "👨‍🚀"),
+        ("Pilot", "👨‍✈️"),
+        ("Sailor", "👨‍✈️"),
+        ("Soldier", "👨‍✈️"),
+        ("Dancer", "💃"),
+        ("Singer", "🎤"),
+        ("Actor", "🎭"),
+        ("Writer", "✍️"),
+        ("Photographer", "📸"),
+        ("Designer", "🎨"),
+        ("Programmer", "💻"),
+        ("Gamer", "🎮"),
+        ("Athlete", "🏃"),
+        ("Yoga", "🧘"),
+        ("Meditation", "🧘‍♀️"),
+        ("Prayer", "🙏"),
+        ("Religion", "⛪"),
+        ("Holiday", "🎄"),
+        ("Birthday", "🎂"),
+        ("Wedding", "💒"),
+        ("Anniversary", "💍"),
+        ("Graduation", "🎓"),
+        ("Retirement", "🏖️"),
+        ("Vacation", "✈️"),
+        ("Travel", "🗺️"),
+        ("Adventure", "🗺️"),
+        ("Exploration", "🔍"),
+        ("Discovery", "🔬"),
+        ("Innovation", "💡"),
+        ("Success", "🏆"),
+        ("Achievement", "🎯"),
+        ("Goal", "🎯"),
+        ("Dream", "💭"),
+        ("Hope", "✨"),
+        ("Faith", "🙏"),
+        ("Courage", "💪"),
+        ("Strength", "💪"),
+        ("Wisdom", "🧠"),
+        ("Knowledge", "📚"),
+        ("Learning", "🎓"),
+        ("Growth", "🌱"),
+        ("Change", "🔄"),
+        ("Progress", "📈"),
+        ("Future", "🔮"),
+        ("Past", "📜"),
+        ("Present", "🎁"),
+        ("Time", "⏱️"),
+        ("Eternity", "♾️"),
+        ("Infinity", "♾️"),
+        ("Moment", "⚡"),
+        ("Second", "⏱️"),
+        ("Minute", "⏰"),
+        ("Hour", "🕐"),
+        ("Day", "📅"),
+        ("Week", "📆"),
+        ("Month", "📅"),
+        ("Year", "📅"),
+        ("Decade", "📅"),
+        ("Century", "📅"),
+        ("Millennium", "📅"),
+    ]
+
     init(countdown: Countdown.Draft, onSelect: @escaping (Countdown.Draft) -> Void) {
         self.countdown = countdown
         self.onSelect = onSelect
@@ -119,6 +274,10 @@ class ChangeBackgroundSheetModel {
 
     func updateTextColor(_ color: Color) {
         countdown.textColor = color.hexIntWithAlpha
+    }
+    
+    func updateIcon(_ emoji: String) {
+        countdown.icon = emoji
     }
 
     func useColorOnly() {
@@ -189,17 +348,9 @@ struct ChangeBackgroundSheet: View {
                 case .backgroundColor:
                     backgroundColor
                 case .textColor:
-                    VStack(spacing: 24) {
-                        ColorPicker("Pick Text Color", selection: Binding(
-                            get: { model.countdown.textColor.toColor },
-                            set: { model.updateTextColor($0) }
-                        ))
-                        .labelsHidden()
-                        .frame(height: 60)
-                        .padding(.horizontal, 40)
-                    }
+                    textColor
                 case .icon:
-                    EmptyView()
+                    icon
                 case .layout:
                     EmptyView()
                 }
@@ -332,7 +483,7 @@ struct ChangeBackgroundSheet: View {
             }
             .buttonStyle(.appRect)
         }
-        
+
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: AppSpacing.small) {
                 VStack(spacing: 12) {
@@ -369,6 +520,115 @@ struct ChangeBackgroundSheet: View {
             .padding(.horizontal, AppSpacing.medium)
         }
         .frame(height: 100)
+    }
+
+    @ViewBuilder
+    private var textColor: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            LazyHGrid(rows: [
+                GridItem(.flexible(minimum: 50, maximum: 100)),
+                GridItem(.flexible(minimum: 50, maximum: 100)),
+            ], spacing: AppSpacing.small) {
+                ColorPicker("Pick Text Color", selection: Binding(
+                    get: { model.countdown.textColor.toColor },
+                    set: { model.updateTextColor($0) }
+                ))
+                .labelsHidden()
+
+                ForEach(model.predefinedTextColors, id: \.name) { colorOption in
+                    ZStack(alignment: .topTrailing) {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(colorOption.color)
+                            .frame(width: 50, height: 50)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(model.countdown.textColor == colorOption.color.hexIntWithAlpha ? model.primaryColor : Color.clear, lineWidth: 2)
+                            )
+                            .onTapGesture {
+                                model.updateTextColor(colorOption.color)
+                            }
+
+                        if model.countdown.textColor == colorOption.color.hexIntWithAlpha {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.white)
+                                .background(Circle().fill(Color.black.opacity(0.3)))
+                                .offset(x: -4, y: 4)
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, AppSpacing.medium)
+        }
+        .frame(height: 100)
+    }
+    
+    @ViewBuilder
+    private var icon: some View {
+        VStack(spacing: AppSpacing.medium) {
+            // Custom emoji picker
+            VStack(spacing: 12) {
+                Text("Custom Emoji")
+                    .font(AppFont.headline)
+                    .foregroundColor(model.themeManager.current.textPrimary)
+                
+                TextField("Enter emoji", text: Binding(
+                    get: { model.countdown.icon },
+                    set: { model.updateIcon($0) }
+                ))
+                .font(.system(size: 40))
+                .multilineTextAlignment(.center)
+                .frame(width: 80, height: 80)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.gray.opacity(0.1))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(model.primaryColor.opacity(0.3), lineWidth: 1)
+                )
+            }
+            
+            // Predefined emojis in two rows
+            VStack(spacing: AppSpacing.small) {
+                Text("Predefined Emojis")
+                    .font(AppFont.headline)
+                    .foregroundColor(model.themeManager.current.textPrimary)
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHGrid(rows: [
+                        GridItem(.flexible(minimum: 50, maximum: 100)),
+                        GridItem(.flexible(minimum: 50, maximum: 100)),
+                    ], spacing: AppSpacing.small) {
+                        ForEach(model.predefinedEmojis, id: \.name) { emojiOption in
+                            ZStack(alignment: .topTrailing) {
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color.gray.opacity(0.1))
+                                    .frame(width: 50, height: 50)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(model.countdown.icon == emojiOption.emoji ? model.primaryColor : Color.clear, lineWidth: 2)
+                                    )
+                                    .onTapGesture {
+                                        model.updateIcon(emojiOption.emoji)
+                                    }
+                                
+                                Text(emojiOption.emoji)
+                                    .font(.system(size: 24))
+                                
+                                if model.countdown.icon == emojiOption.emoji {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(model.primaryColor)
+                                        .background(Circle().fill(Color.white))
+                                        .offset(x: -4, y: 4)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal, AppSpacing.medium)
+                }
+                .frame(height: 100)
+            }
+        }
     }
 }
 
