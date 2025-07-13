@@ -11,7 +11,7 @@ struct CountdownStore {
         date: Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date(),
         backgroundColor: 0xFF6B9DCC,
         textColor: 0xFFFFFFFFFF,
-        backgroundImageName: "aurora"
+        backgroundImageName: "predefined_aurora"
     )
 
     static let testSecond = Countdown.Draft(
@@ -19,7 +19,7 @@ struct CountdownStore {
         date: Calendar.current.date(byAdding: .second, value: 10, to: Date()) ?? Date(),
         backgroundColor: 0xFF6B9DCC,
         textColor: 0xFFFFFFFFFF,
-        backgroundImageName: "star"
+        backgroundImageName: "predefined_star"
     )
 
     static let seed: [Countdown.Draft] = [
@@ -35,7 +35,7 @@ struct CountdownStore {
             textColor: 0xFFFFFFFFFF,
             isFavorite: true,
             repeatType: .yearly,
-            backgroundImageName: "holiday"
+            backgroundImageName: "predefined_holiday"
         ),
 
         .init(
@@ -46,7 +46,7 @@ struct CountdownStore {
             textColor: 0xFFFFFFFFFF,
             isFavorite: false,
             repeatType: .yearly,
-            backgroundImageName: "mt_cook"
+            backgroundImageName: "predefined_mt_cook"
         ),
 
         // Anniversary countdowns
@@ -58,7 +58,7 @@ struct CountdownStore {
             textColor: 0xFFFFFFFFFF,
             isFavorite: true,
             repeatType: .yearly,
-            backgroundImageName: "relationship"
+            backgroundImageName: "predefined_relationship"
         ),
 
 
@@ -71,7 +71,7 @@ struct CountdownStore {
             textColor: 0xFFFFFFFFFF,
             isFavorite: false,
             repeatType: .nonRepeating,
-            backgroundImageName: "mercer_bay"
+            backgroundImageName: "predefined_mercer_bay"
         ),
 
         .init(
@@ -94,7 +94,7 @@ struct CountdownStore {
             isFavorite: false,
             repeatType: .yearly,
             repeatTime: 2,
-            backgroundImageName: "tekapo"
+            backgroundImageName: "predefined_tekapo"
         ),
 
         .init(
@@ -116,7 +116,7 @@ struct CountdownStore {
             textColor: 0xFFFFFFFFFF,
             isFavorite: true,
             repeatType: .nonRepeating,
-            backgroundImageName: "taupo"
+            backgroundImageName: "predefined_taupo"
         ),
 
         .init(
@@ -127,7 +127,7 @@ struct CountdownStore {
             textColor: 0xFFFFFFFFFF,
             isFavorite: true,
             repeatType: .yearly,
-            backgroundImageName: "wanaka_tree"
+            backgroundImageName: "predefined_wanaka_tree"
         ),
     ]
 }

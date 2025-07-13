@@ -10,6 +10,9 @@ class ChangeBackgroundSheetModel {
 
     @ObservationIgnored
     @Dependency(\.themeManager) var themeManager
+    
+    @ObservationIgnored
+    @Dependency(\.backgroundImageManager) var backgroundImageManager
 
     var selectedTab: Tab = .textColor
     var selectedPhoto: PhotosPickerItem?
@@ -32,20 +35,20 @@ class ChangeBackgroundSheetModel {
 
     // Predefined images from the Backgrounds folder
     let predefinedImages = [
-        "aurora",
-        "holiday",
-        "mercer_bay",
-        "mt_cook",
-        "mt_eden",
-        "shakespeare",
-        "wanaka_tree",
-        "star",
-        "taupo",
-        "tekapo",
-        "tree_sister",
-        "birthday",
-        "relationship",
-        "history",
+        "predefined_aurora",
+        "predefined_holiday",
+        "predefined_mercer_bay",
+        "predefined_mt_cook",
+        "predefined_mt_eden",
+        "predefined_shakespeare",
+        "predefined_wanaka_tree",
+        "predefined_star",
+        "predefined_taupo",
+        "predefined_tekapo",
+        "predefined_tree_sister",
+        "predefined_birthday",
+        "predefined_relationship",
+        "predefined_history",
     ]
 
     init(countdown: Countdown.Draft, onSelect: @escaping (Countdown.Draft) -> Void) {
@@ -88,10 +91,6 @@ class ChangeBackgroundSheetModel {
         countdown.backgroundImageName = imageName
     }
 
-    func removeCustomImage() {
-        countdown.backgroundImageName = nil
-    }
-
     func updateBackgroundColor(_ color: Color) {
         countdown.backgroundColor = color.hexIntWithAlpha
     }
@@ -112,27 +111,26 @@ class ChangeBackgroundSheetModel {
 
     private func loadPhoto(_ photo: PhotosPickerItem) async {
         guard let data = try? await photo.loadTransferable(type: Data.self),
-              let uiImage = UIImage(data: data) else { return }
+              let uiImage = UIImage(data: data) else { 
+            return
+        }
 
         // Delete old custom image file if it exists
         removeOldImageIfNeed()
 
-        // Resize image if needed (max 1080px)
-        let resizedImage = uiImage.resizedToFit(maxDimension: 1080)
-        // Save to temp directory and set backgroundImageName to a unique path
-        let filename = "custom_bg_\(UUID().uuidString).jpg"
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
-        if let jpegData = resizedImage.jpegData(compressionQuality: 0.95) {
-            try? jpegData.write(to: url)
-            countdown.backgroundImageName = url.path
+        if let imagePath = try? backgroundImageManager.saveCustomBackgroundImage(uiImage) {
+            countdown.backgroundImageName = imagePath
         }
     }
 
     private func removeOldImageIfNeed() {
-        if let oldImagePath = countdown.backgroundImageName,
-           oldImagePath.hasPrefix(FileManager.default.temporaryDirectory.path),
-           oldImagePath.contains("custom_bg_") {
-            try? FileManager.default.removeItem(atPath: oldImagePath)
+        if let oldImagePath = countdown.backgroundImageName {
+            do {
+                try backgroundImageManager.deleteCustomBackgroundImage(at: oldImagePath)
+            } catch {
+                // Don't show error for cleanup failures, just log them
+                print("Failed to delete old custom background image: \(error.localizedDescription)")
+            }
         }
     }
 }
@@ -140,7 +138,7 @@ class ChangeBackgroundSheetModel {
 struct ChangeBackgroundSheet: View {
     @State var model: ChangeBackgroundSheetModel
     @Environment(\.dismiss) var dismiss
-
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: AppSpacing.large) {
@@ -161,7 +159,7 @@ struct ChangeBackgroundSheet: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-
+                
                 switch model.selectedTab {
                 case .image:
                     backgroundImage
@@ -172,7 +170,7 @@ struct ChangeBackgroundSheet: View {
                 case .layout:
                     EmptyView()
                 }
-
+                
                 // Tabs
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: AppSpacing.smallMedium) {
@@ -214,7 +212,7 @@ struct ChangeBackgroundSheet: View {
                     }
                     .buttonStyle(.appCircular)
                 }
-
+                
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         model.applyChanges()

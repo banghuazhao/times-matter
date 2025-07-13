@@ -105,10 +105,14 @@ struct CountdownDetailView: View {
                         .scaledToFill()
                         .ignoresSafeArea()
                 } else {
-                    Image(bgName, bundle: .main)
-                        .resizable()
-                        .scaledToFill()
-                        .ignoresSafeArea()
+                    if let _ = UIImage(named: bgName, in: .main, with: nil) {
+                        Image(bgName, bundle: .main)
+                            .resizable()
+                            .scaledToFill()
+                            .ignoresSafeArea()
+                    } else {
+                        model.bgColor.ignoresSafeArea()
+                    }
                 }
             } else {
                 model.bgColor.ignoresSafeArea()

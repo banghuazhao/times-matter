@@ -56,14 +56,21 @@ struct CountdownRow: View {
         .background(
             Group {
                 if let bgName = countdown.backgroundImageName, !bgName.isEmpty {
+                    // Check if it's a custom image (file path)
                     if let uiImage = UIImage(contentsOfFile: bgName) {
                         Image(uiImage: uiImage)
                             .resizable()
                             .scaledToFill()
                     } else {
-                        Image(bgName, bundle: .main)
-                            .resizable()
-                            .scaledToFill()
+                        // Try to load as predefined image from bundle
+                        if let _ = UIImage(named: bgName, in: .main, with: nil) {
+                            Image(bgName, bundle: .main)
+                                .resizable()
+                                .scaledToFill()
+                        } else {
+                            // Fallback to background color if image not found
+                            Color(hex: countdown.backgroundColor)
+                        }
                     }
                 } else {
                     Color(hex: countdown.backgroundColor)
