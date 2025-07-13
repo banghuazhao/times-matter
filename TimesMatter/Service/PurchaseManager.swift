@@ -18,7 +18,7 @@ final class PurchaseManager {
     @ObservationIgnored
     @Shared(.appStorage("isPremiumUserPurchased")) var isPremiumUserPurchased: Bool = false
     
-    private let productID = "premium_user"
+    private let productID = "paid_user"
     var premiumProduct: Product?
     
     // MARK: - Public Interface

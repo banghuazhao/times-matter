@@ -75,22 +75,52 @@ struct PurchaseSheet: View {
                     .padding(.horizontal)
 
                     // Purchase button
-                    Button(action: {
-                        // Placeholder action for upgrade
-                        print("Upgrade to Premium tapped")
-                    }) {
-                        HStack {
-                            Text("$5.99 - Upgrade to Premium")
-                                .font(.subheadline)
+                    if let product = purchaseManager.premiumProduct {
+                        if purchaseManager.isPremiumUserPurchased {
+                            Text("You are now Premium user!")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
+                                .padding(.bottom, 12)
+                        } else {
+                            Button(action: {
+                                Task {
+                                    isPurchasing = true
+                                    let result = await purchaseManager.purchasePremium()
+                                    switch result {
+                                    case .success:
+                                        showSuccessModal = true
+                                    case .failure(let error):
+                                        print("Purchase failed: \(error.localizedDescription)")
+                                    }
+                                    isPurchasing = false
+                                }
+                            }) {
+                                HStack {
+                                    if isPurchasing {
+                                        ProgressView()
+                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                            .scaleEffect(0.8)
+                                    }
+                                    Text("\(product.displayPrice) - Upgrade to Premium")
+                                        .font(.subheadline)
+                                }
+                                .padding(.vertical, 12)
+                                .padding(.horizontal, 20)
+                                .background(themeManager.current.primaryColor)
+                                .foregroundColor(.white)
+                                .cornerRadius(16)
+                            }
+                            .padding(.horizontal)
+                            .disabled(isPurchasing)
                         }
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 20)
-                        .background(themeManager.current.primaryColor)
-                        .foregroundColor(.white)
-                        .cornerRadius(16)
+                    } else {
+                        ProgressView()
+                        Text("Loading product...")
+                                    .foregroundColor(.gray)
+                                    .padding(.top, 4)
                     }
-                    .padding(.horizontal)
-                    .disabled(isPurchasing)
                     // Links
                     VStack(spacing: 16) {
                         Button("Restore Purchases") {
@@ -126,6 +156,9 @@ struct PurchaseSheet: View {
         }
         .task {
             await purchaseManager.loadPremiumProduct()
+        }
+        .onAppear {
+            isPurchasing = false
         }
     }
 }
