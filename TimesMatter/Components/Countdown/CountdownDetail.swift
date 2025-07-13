@@ -153,9 +153,13 @@ struct CountdownDetailView: View {
                             .font(.system(size: 32 * scale, weight: .bold))
                             .foregroundColor(model.textColor)
                             .multilineTextAlignment(.center)
+                            .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
+
                         Text(model.countdown.timeSummary)
                             .font(.system(size: 18 * scale))
                             .foregroundColor(model.textColor.opacity(0.9))
+                            .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
+
                     }
 
                     HStack(spacing: 5 * scale) {
