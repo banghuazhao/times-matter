@@ -305,7 +305,7 @@
     "This is how your selected theme color will look throughout the app." : {
 
     },
-    "This will permanently delete the countdown ‘%@’. This action cannot be undone. Are you sure you want to proceed?" : {
+    "This will permanently delete ‘%@’. This action cannot be undone. Are you sure you want to proceed?" : {
 
     },
     "Time Unit" : {

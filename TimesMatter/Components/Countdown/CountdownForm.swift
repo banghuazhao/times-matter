@@ -216,30 +216,6 @@ struct CountdownFormView: View {
                         
                         Divider()
                         
-                        // Category Selection
-                        HStack(spacing: AppSpacing.smallMedium) {
-                            Text("Category")
-                                .font(AppFont.subheadlineSemibold)
-                                .foregroundColor(textPrimaryColor)
-                            
-                            Spacer()
-                            
-                            Button {
-                                model.onTapSelectCategory()
-                            } label: {
-                                HStack {
-                                    if let selectedCategory = model.allCategories.first(where: { $0.id == model.countdown.categoryID }) {
-                                        Text(selectedCategory.title)
-                                    } else {
-                                        Text("📅 All")
-                                    }
-                                }
-                            }
-                            .buttonStyle(.appRect)
-                        }
-                        
-                        Divider()
-                        
                         // Background & Text Color Row
                         HStack(spacing: AppSpacing.smallMedium) {
                             Text("Background & Text Color")
@@ -294,6 +270,30 @@ struct CountdownFormView: View {
                              .pickerStyle(.segmented)
                              .tint(primaryColor)
                          }
+                        
+                        Divider()
+                        
+                        // Category Selection
+                        HStack(spacing: AppSpacing.smallMedium) {
+                            Text("Category")
+                                .font(AppFont.subheadlineSemibold)
+                                .foregroundColor(textPrimaryColor)
+                            
+                            Spacer()
+                            
+                            Button {
+                                model.onTapSelectCategory()
+                            } label: {
+                                HStack {
+                                    if let selectedCategory = model.allCategories.first(where: { $0.id == model.countdown.categoryID }) {
+                                        Text(selectedCategory.title)
+                                    } else {
+                                        Text("📅 All")
+                                    }
+                                }
+                            }
+                            .buttonStyle(.appRect)
+                        }
                      }
                      .appCardStyle()
                  }

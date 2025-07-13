@@ -3,6 +3,16 @@ import UserNotifications
 
 class ReminderNotificationManager {
     static let shared = ReminderNotificationManager()
+    
+    @discardableResult
+    func requestPermission() async -> Bool {
+        do {
+            return try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
+        } catch {
+            print("Failed to request notification permission: \(error)")
+            return false
+        }
+    }
 
     func scheduleNotification(for countdown: Countdown) {
         let reminder = countdown.reminder
@@ -55,4 +65,16 @@ class ReminderNotificationManager {
     func removeNotification(for countdown: Countdown) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["countdown_\(countdown.id)"])
     }
-} 
+    
+    func printAllNotifications() async {
+        let notifications = await UNUserNotificationCenter.current().pendingNotificationRequests()
+        for notification in notifications {
+            print("Notification ID: \(notification.identifier)")
+            if let content = notification.content as? UNMutableNotificationContent {
+                print("Title: \(content.title)")
+                print("Body: \(content.body)")
+                print("Trigger: \(String(describing: notification.trigger))")
+            }
+        }
+    }
+}

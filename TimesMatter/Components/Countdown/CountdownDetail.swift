@@ -12,20 +12,26 @@ import SwiftUINavigation
 class CountdownDetailModel {
     var countdown: Countdown
     let isPreview: Bool
+    let onDelete: (() -> Void)?
 
     @CasePathable
     enum Route {
         case edit(CountdownFormModel)
+        case showDeleteAlert
     }
 
     var route: Route?
 
     @ObservationIgnored
     @Dependency(\.timerService) var timerService
+    
+    @ObservationIgnored
+    @Dependency(\.defaultDatabase) var database
 
-    init(countdown: Countdown, isPreview: Bool = false) {
+    init(countdown: Countdown, isPreview: Bool = false, onDelete: (() -> Void)? = nil) {
         self.countdown = countdown
         self.isPreview = isPreview
+        self.onDelete = onDelete
     }
 
     // New: Helper to compute time left with years
@@ -88,6 +94,24 @@ class CountdownDetailModel {
                 }
             )
         )
+    }
+    
+    func onTapDelete() {
+        route = .showDeleteAlert
+    }
+    
+    func onDeleteCountdown() {
+        withErrorReporting {
+            try database.write { db in
+                try Countdown
+                    .delete(countdown)
+                    .execute(db)
+            }
+            
+            ReminderNotificationManager.shared.removeNotification(for: countdown)
+            
+            onDelete?()
+        }
     }
 }
 
@@ -155,24 +179,44 @@ struct CountdownDetailView: View {
             if !model.isPreview {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
+                        model.onTapDelete()
+                    } label: {
+                        Image(systemName: "trash")
+                    }
+                    .buttonStyle(.appWhiteCircular)
+                    
+                    Button {
                     } label: {
                         Image(systemName: "square.and.arrow.up")
                     }
-                    .buttonStyle(.appCircular)
+                    .buttonStyle(.appWhiteCircular)
 
                     Button {
                         model.onTapEdit()
                     } label: {
                         Image(systemName: "pencil")
                     }
-                    .buttonStyle(.appCircular)
+                    .buttonStyle(.appWhiteCircular)
                 }
             }
         }
         .toolbar(.hidden, for: .tabBar)
+        .navigationBarTint(.white)
         .sheet(item: $model.route.edit, id: \.self) { model in
             CountdownFormView(model: model)
         }
+        .alert(
+            "Delete ‘\(model.countdown.truncatedTitle)’?",
+            isPresented: Binding($model.route.showDeleteAlert),
+            actions: {
+                Button("Delete", role: .destructive) {
+                    model.onDeleteCountdown()
+                }
+                Button("Cancel", role: .cancel) {}
+            }, message: {
+                Text(String(localized: "This will permanently delete ‘\(model.countdown.truncatedTitle)’. This action cannot be undone. Are you sure you want to proceed?"))
+            }
+        )
     }
 
     // Helper for timer block

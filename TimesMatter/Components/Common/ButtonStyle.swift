@@ -29,6 +29,20 @@ struct AppCircularButtonStyle: ButtonStyle {
     }
 }
 
+struct AppWhiteCircularButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(AppFont.headline)
+            .frame(width: 38, height: 38)
+            .background(
+                Color.black.opacity(0.1)
+            )
+            .foregroundColor(Color.white)
+            .clipShape(Circle())
+            .opacity(configuration.isPressed ? 0.7 : 1.0)
+    }
+}
+
 struct AppRectButtonStyle: ButtonStyle {
     let theme: AppTheme
     
@@ -54,6 +68,12 @@ struct AppRectButtonStyle: ButtonStyle {
 extension ButtonStyle where Self == AppCircularButtonStyle {
     static var appCircular: AppCircularButtonStyle {
         AppCircularButtonStyle()
+    }
+}
+
+extension ButtonStyle where Self == AppWhiteCircularButtonStyle {
+    static var appWhiteCircular: AppWhiteCircularButtonStyle {
+        AppWhiteCircularButtonStyle()
     }
 }
 

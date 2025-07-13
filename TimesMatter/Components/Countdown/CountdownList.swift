@@ -108,7 +108,10 @@ class CountdownListModel {
 
     func onTapCountDown(_ countdown: Countdown) {
         route = .countdownDetail(
-            CountdownDetailModel(countdown: countdown)
+            CountdownDetailModel(countdown: countdown) { [weak self] in
+                guard let self else { return }
+                route = nil
+            }
         )
     }
 
@@ -185,6 +188,8 @@ class CountdownListModel {
                     .delete(countdown)
                     .execute(db)
             }
+            
+            ReminderNotificationManager.shared.removeNotification(for: countdown)
         }
     }
 }
@@ -254,7 +259,8 @@ struct CountdownListView: View {
                         }
                     }
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, AppSpacing.medium)
+                .padding(.bottom, AppSpacing.medium)
             }
             .appBackground()
             .navigationBarTitleDisplayMode(.inline)
@@ -349,7 +355,7 @@ struct CountdownListView: View {
                     Button("Cancel", role: .cancel) {}
                 },
                 message: { countdown in
-                    Text(String(localized: "This will permanently delete the countdown ‘\(countdown.truncatedTitle)’. This action cannot be undone. Are you sure you want to proceed?"))
+                    Text(String(localized: "This will permanently delete ‘\(countdown.truncatedTitle)’. This action cannot be undone. Are you sure you want to proceed?"))
                 }
             )
         }
