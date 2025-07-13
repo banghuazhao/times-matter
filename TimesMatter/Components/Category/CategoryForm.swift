@@ -81,6 +81,7 @@ struct CategoryFormView: View {
                 Section {
                     if !model.isEditing {
                         Button {
+                            Haptics.shared.vibrateIfEnabled()
                             model.onSelect(nil)
                             dismiss()
                         } label: {
@@ -108,6 +109,7 @@ struct CategoryFormView: View {
                                 )
                                 Spacer()
                                 Button(role: .destructive) {
+                                    Haptics.shared.vibrateIfEnabled()
                                     model.onTapDeleteCategory(category)
                                 } label: {
                                     Image(systemName: "trash")
@@ -115,6 +117,7 @@ struct CategoryFormView: View {
                             }
                         } else {
                             Button {
+                                Haptics.shared.vibrateIfEnabled()
                                 model.onSelect(category)
                             } label: {
                                 HStack {
@@ -130,6 +133,7 @@ struct CategoryFormView: View {
                             .buttonStyle(.plain)
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) {
+                                    Haptics.shared.vibrateIfEnabled()
                                     model.onTapDeleteCategory(category)
                                 } label: {
                                     Label("Delete", systemImage: "trash")
@@ -142,6 +146,7 @@ struct CategoryFormView: View {
                         TextField("⏱️ Enter New Category", text: $model.newCategory.title)
                         Spacer()
                         Button {
+                            Haptics.shared.vibrateIfEnabled()
                             model.onTapAddCategory()
                         } label: {
                             Image(systemName: "plus")
@@ -163,12 +168,14 @@ struct CategoryFormView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
+                        Haptics.shared.vibrateIfEnabled()
                         dismiss()
                     }
                     .buttonStyle(.appRect)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(model.isEditing ? "Done" : "Edit") {
+                        Haptics.shared.vibrateIfEnabled()
                         withAnimation {
                             model.isEditing.toggle()
                         }

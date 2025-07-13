@@ -37,6 +37,7 @@ struct ReminderSheet: View {
             HStack(spacing: 0) {
                 ForEach([0, 1], id: \.self) { tab in
                     Button(action: {
+                        Haptics.shared.vibrateIfEnabled()
                         withAnimation(.easeInOut(duration: 0.2)) {
                             stopSound()
                             selectedTab = tab
@@ -180,7 +181,10 @@ struct ReminderTypeCard: View {
     @Dependency(\.themeManager) var themeManager
 
     var body: some View {
-        Button(action: onTap) {
+        Button(action: { 
+            Haptics.shared.vibrateIfEnabled()
+            onTap() 
+        }) {
             Text(type.displayName)
                 .font(AppFont.caption)
                 .foregroundColor(isSelected ? .white : themeManager.current.primaryColor)
@@ -211,7 +215,10 @@ struct ReminderTimeCard: View {
     @Dependency(\.themeManager) var themeManager
 
     var body: some View {
-        Button(action: onTap) {
+        Button(action: { 
+            Haptics.shared.vibrateIfEnabled()
+            onTap() 
+        }) {
             Text(time.displayName)
                 .font(AppFont.caption)
                 .foregroundColor(isSelected ? .white : themeManager.current.primaryColor)
@@ -242,7 +249,10 @@ struct SoundOptionRow: View {
     @Dependency(\.themeManager) var themeManager
 
     var body: some View {
-        Button(action: onTap) {
+        Button(action: { 
+            Haptics.shared.vibrateIfEnabled()
+            onTap() 
+        }) {
             HStack(spacing: AppSpacing.medium) {
                 Image(systemName: "speaker.wave.2")
                     .font(.title3)

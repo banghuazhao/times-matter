@@ -19,6 +19,7 @@ struct CategorySelectionSheet: View {
         List {
             // 'All' option
             Button {
+                Haptics.shared.vibrateIfEnabled()
                 onSelect(nil)
             } label: {
                 HStack {
@@ -38,6 +39,7 @@ struct CategorySelectionSheet: View {
             // Category options
             ForEach(categories) { category in
                 Button {
+                    Haptics.shared.vibrateIfEnabled()
                     selectedCategory = category.id
                     onSelect(category)
                 } label: {

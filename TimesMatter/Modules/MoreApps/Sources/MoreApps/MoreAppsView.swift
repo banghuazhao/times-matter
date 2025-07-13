@@ -8,6 +8,7 @@
 #if canImport(UIKit)
 import SwiftUI
 
+
 public struct MoreAppsView: View {
     private let apps: [AppItem]
     

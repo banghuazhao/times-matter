@@ -183,6 +183,7 @@ struct CountdownDetailView: View {
             if !model.isPreview {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
                     Button {
+                        Haptics.shared.vibrateIfEnabled()
                         model.onTapDelete()
                     } label: {
                         Image(systemName: "trash")
@@ -190,12 +191,14 @@ struct CountdownDetailView: View {
                     .buttonStyle(.appWhiteCircular)
                     
                     Button {
+                        Haptics.shared.vibrateIfEnabled()
                     } label: {
                         Image(systemName: "square.and.arrow.up")
                     }
                     .buttonStyle(.appWhiteCircular)
 
                     Button {
+                        Haptics.shared.vibrateIfEnabled()
                         model.onTapEdit()
                     } label: {
                         Image(systemName: "pencil")
@@ -214,6 +217,7 @@ struct CountdownDetailView: View {
             isPresented: Binding($model.route.showDeleteAlert),
             actions: {
                 Button("Delete", role: .destructive) {
+                    Haptics.shared.vibrateIfEnabled()
                     model.onDeleteCountdown()
                 }
                 Button("Cancel", role: .cancel) {}

@@ -62,6 +62,7 @@ struct EmojiPickerView: View {
                 LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(Self.emojiByCategory[selectedCategory] ?? [], id: \.self) { emoji in
                         Button(action: {
+                            Haptics.shared.vibrateIfEnabled()
                             selectedEmoji = emoji
                         }) {
                             Text(emoji)

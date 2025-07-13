@@ -51,12 +51,16 @@ struct ThemeColorView: View {
                     VStack(spacing: AppSpacing.medium) {
                         // Sample button
                         HStack {
-                            Button(action: {}) {
-                                Text(String(localized: "Sample Button"))
-                            }
+                                                    Button(action: {
+                            Haptics.shared.vibrateIfEnabled()
+                        }) {
+                            Text(String(localized: "Sample Button"))
+                        }
                             .buttonStyle(.appRect)
                             
-                            Button(action: {}) {
+                            Button(action: {
+                                Haptics.shared.vibrateIfEnabled()
+                            }) {
                                 Image(systemName: "plus")
                             }
                             .buttonStyle(.appCircular)
@@ -101,7 +105,10 @@ struct ThemeColorCard: View {
     let onTap: () -> Void
 
     var body: some View {
-        Button(action: onTap) {
+        Button(action: { 
+            Haptics.shared.vibrateIfEnabled()
+            onTap() 
+        }) {
             VStack(spacing: AppSpacing.medium) {
                 // Color circle with icon
                 ZStack {
