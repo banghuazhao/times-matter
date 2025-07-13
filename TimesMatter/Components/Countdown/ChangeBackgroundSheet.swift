@@ -10,11 +10,11 @@ class ChangeBackgroundSheetModel {
 
     @ObservationIgnored
     @Dependency(\.themeManager) var themeManager
-    
+
     @ObservationIgnored
     @Dependency(\.backgroundImageManager) var backgroundImageManager
 
-    var selectedTab: Tab = .textColor
+    var selectedTab: Tab = .backgroundColor
     var selectedPhoto: PhotosPickerItem?
 
     enum Tab: String, CaseIterable, Identifiable {
@@ -31,6 +31,18 @@ class ChangeBackgroundSheetModel {
             case .layout: return "rectangle.3.offgrid"
             }
         }
+
+        var displayName: String {
+            switch self {
+            case .image:
+                String(localized: "Background Image")
+            case .backgroundColor:
+                String(localized: "Background Color")
+            case .textColor:
+                String(localized: "Text Color")
+            case .layout:
+                String(localized: "Layout")
+            }}
     }
 
     init(countdown: Countdown.Draft, onSelect: @escaping (Countdown.Draft) -> Void) {
@@ -90,7 +102,7 @@ class ChangeBackgroundSheetModel {
 
     private func loadPhoto(_ photo: PhotosPickerItem) async {
         guard let data = try? await photo.loadTransferable(type: Data.self),
-              let uiImage = UIImage(data: data) else { 
+              let uiImage = UIImage(data: data) else {
             return
         }
 
@@ -117,7 +129,7 @@ class ChangeBackgroundSheetModel {
 struct ChangeBackgroundSheet: View {
     @State var model: ChangeBackgroundSheetModel
     @Environment(\.dismiss) var dismiss
-    
+
     var body: some View {
         NavigationStack {
             VStack(spacing: AppSpacing.large) {
@@ -138,7 +150,7 @@ struct ChangeBackgroundSheet: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
-                
+
                 switch model.selectedTab {
                 case .image:
                     backgroundImage
@@ -149,7 +161,7 @@ struct ChangeBackgroundSheet: View {
                 case .layout:
                     layout
                 }
-                
+
                 // Tabs
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: AppSpacing.smallMedium) {
@@ -162,7 +174,7 @@ struct ChangeBackgroundSheet: View {
                                     Image(systemName: tab.iconName)
                                         .font(.system(size: 22, weight: .semibold))
                                         .foregroundColor(model.selectedTab == tab ? model.primaryColor : .gray)
-                                    Text(tab.rawValue)
+                                    Text(tab.displayName)
                                         .font(AppFont.footnote)
                                         .foregroundColor(model.selectedTab == tab ? model.primaryColor : .gray)
                                         .lineLimit(2)
@@ -193,7 +205,7 @@ struct ChangeBackgroundSheet: View {
                     }
                     .buttonStyle(.appCircular)
                 }
-                
+
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         Haptics.shared.vibrateIfEnabled()

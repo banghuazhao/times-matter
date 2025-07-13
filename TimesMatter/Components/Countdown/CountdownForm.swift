@@ -25,6 +25,9 @@ class CountdownFormModel: HashableObject {
     @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
     
+    @ObservationIgnored
+    @Dependency(\.purchaseManager) private var purchaseManager
+    
     var displayMock: Countdown {
         countdown.mock
     }
@@ -44,6 +47,10 @@ class CountdownFormModel: HashableObject {
     var route: Route?
     
     var showTitleEmptyToast = false
+    
+    var isPremiumUser: Bool {
+        purchaseManager.isPremiumUserPurchased
+    }
     
     init(countdown: Countdown.Draft, onSave: ((Countdown) -> Void)? = nil) {
         self.countdown = countdown
@@ -307,8 +314,11 @@ struct CountdownFormView: View {
                  }
                  .padding()
                 
-                BannerView()
-                    .frame(height: 50)
+                if !model.isPremiumUser {
+                    BannerView()
+                        .frame(height: 50)
+                        .padding(.bottom, AppSpacing.medium)
+                }
              }
              .appBackground(theme: themeManager.current)
              .toolbar {

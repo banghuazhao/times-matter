@@ -31,33 +31,33 @@ extension Countdown {
             return dateFormatter.string(from: date)
         case .daily:
             if repeatTime == 1 {
-                return "Every day at \(timeString)"
+                return String(localized: "Every day at \(timeString)")
             } else {
-                return "Every \(repeatTime) days at \(timeString)"
+                return String(localized: "Every \(repeatTime) days at \(timeString)")
             }
         case .weekly:
             let weekday = Calendar.current.component(.weekday, from: date)
             let weekdayName = Calendar.current.weekdaySymbols[weekday - 1]
             if repeatTime == 1 {
-                return "Every week on \(weekdayName) at \(timeString)"
+                return String(localized: "Every week on \(weekdayName) at \(timeString)")
             } else {
-                return "Every \(repeatTime) weeks on \(weekdayName) at \(timeString)"
+                return String(localized: "Every \(repeatTime) weeks on \(weekdayName) at \(timeString)")
             }
         case .monthly:
             let day = Calendar.current.component(.day, from: date)
             if repeatTime == 1 {
-                return "Every month on day \(day) at \(timeString)"
+                return String(localized: "Every month on day \(day) at \(timeString)")
             } else {
-                return "Every \(repeatTime) months on day \(day) at \(timeString)"
+                return String(localized: "Every \(repeatTime) months on day \(day) at \(timeString)")
             }
         case .yearly:
             let month = Calendar.current.component(.month, from: date)
             let day = Calendar.current.component(.day, from: date)
             let monthName = DateFormatter().monthSymbols[month - 1]
             if repeatTime == 1 {
-                return "Every year on \(monthName) \(day) at \(timeString)"
+                return String(localized: "Every year on \(monthName) \(day) at \(timeString)")
             } else {
-                return "Every \(repeatTime) years on \(monthName) \(day) at \(timeString)"
+                return String(localized: "Every \(repeatTime) years on \(monthName) \(day) at \(timeString)")
             }
         }
     }
@@ -65,15 +65,15 @@ extension Countdown {
     var notificationTitle: String {
         switch reminder.time {
         case .atEventTime:
-            "\(title) is now"
+            String(localized: "\(title) is now")
         case .fiveMinutesEarly:
-            "\(title) in 5 minutes"
+            String(localized: "\(title) in 5 minutes")
         case .thirtyMinutesEarly:
-            "\(title) in 30 minutes"
+            String(localized: "\(title) in 30 minutes")
         case .oneDayEarly:
-            "\(title) is tomorrow"
+            String(localized: "\(title) is tomorrow")
         case .threeDaysEarly:
-            "\(title) is in 3 days"
+            String(localized: "\(title) is in 3 days")
         }
     }
 
@@ -169,7 +169,7 @@ extension Countdown {
         }
 
         let unit = component.localizedUnit(for: value)
-        let label = String(localized: isFuture ? "\(unit) left" : "\(unit) ago")
+        let label = isFuture ? String(localized: "\(unit) left") : String(localized: "\(unit) ago")
         if value == 0 {
             if component == .second {
                 return ("✅", String(localized: "Now"))
@@ -235,33 +235,33 @@ extension Countdown.Draft {
             return dateFormatter.string(from: date)
         case .daily:
             if repeatTime == 1 {
-                return "Every day at \(timeString)"
+                return String(localized: "Every day at \(timeString)")
             } else {
-                return "Every \(repeatTime) days at \(timeString)"
+                return String(localized: "Every \(repeatTime) days at \(timeString)")
             }
         case .weekly:
             let weekday = Calendar.current.component(.weekday, from: date)
             let weekdayName = Calendar.current.weekdaySymbols[weekday - 1]
             if repeatTime == 1 {
-                return "Every week on \(weekdayName) at \(timeString)"
+                return String(localized: "Every week on \(weekdayName) at \(timeString)")
             } else {
-                return "Every \(repeatTime) weeks on \(weekdayName) at \(timeString)"
+                return String(localized: "Every \(repeatTime) weeks on \(weekdayName) at \(timeString)")
             }
         case .monthly:
             let day = Calendar.current.component(.day, from: date)
             if repeatTime == 1 {
-                return "Every month on day \(day) at \(timeString)"
+                return String(localized: "Every month on day \(day) at \(timeString)")
             } else {
-                return "Every \(repeatTime) months on day \(day) at \(timeString)"
+                return String(localized: "Every \(repeatTime) months on day \(day) at \(timeString)")
             }
         case .yearly:
             let month = Calendar.current.component(.month, from: date)
             let day = Calendar.current.component(.day, from: date)
             let monthName = DateFormatter().monthSymbols[month - 1]
             if repeatTime == 1 {
-                return "Every year on \(monthName) \(day) at \(timeString)"
+                return String(localized: "Every year on \(monthName) \(day) at \(timeString)")
             } else {
-                return "Every \(repeatTime) years on \(monthName) \(day) at \(timeString)"
+                return String(localized: "Every \(repeatTime) years on \(monthName) \(day) at \(timeString)")
             }
         }
     }
@@ -358,7 +358,7 @@ extension Countdown.Draft {
         }
 
         let unit = component.localizedUnit(for: value)
-        let label = String(localized: isFuture ? "\(unit) left" : "\(unit) ago")
+        let label = isFuture ? String(localized: "\(unit) left") : String(localized: "\(unit) ago")
         if value == 0 {
             if component == .second {
                 return ("✅", String(localized: "Now"))

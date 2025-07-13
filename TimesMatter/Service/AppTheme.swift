@@ -1,8 +1,9 @@
-import SwiftUI
 import Dependencies
 import Sharing
+import SwiftUI
 
 // MARK: - Theme Protocol
+
 protocol AppTheme {
     var primaryColor: Color { get }
     var secondaryGray: Color { get }
@@ -16,6 +17,7 @@ protocol AppTheme {
 }
 
 // MARK: - Theme Colors
+
 enum ThemeColor: String, CaseIterable {
     case `default` = "Default"
     case blue = "Blue"
@@ -23,11 +25,28 @@ enum ThemeColor: String, CaseIterable {
     case purple = "Purple"
     case pink = "Pink"
     case orange = "Orange"
-    
+
+    var displayName: String {
+        switch self {
+        case .`default`:
+            String(localized: "Default")
+        case .blue:
+            String(localized: "Blue")
+        case .green:
+            String(localized: "Green")
+        case .purple:
+            String(localized: "Purple")
+        case .pink:
+            String(localized: "Pink")
+        case .orange:
+            String(localized: "Orange")
+        }
+    }
+
     var primaryColor: Color {
         switch self {
         case .default:
-            return Color(red: 0.914, green: 0.420, blue: 0.369) 
+            return Color(red: 0.914, green: 0.420, blue: 0.369)
         case .blue:
             return Color(red: 0.0, green: 0.48, blue: 1.0) // #007AFF - Blue
         case .green:
@@ -40,7 +59,7 @@ enum ThemeColor: String, CaseIterable {
             return Color(red: 1.0, green: 0.58, blue: 0.0) // #FF9400 - Orange
         }
     }
-    
+
     var backgroundColor: Color {
         switch self {
         case .default:
@@ -60,6 +79,7 @@ enum ThemeColor: String, CaseIterable {
 }
 
 // MARK: - Base Theme
+
 struct BaseTheme: AppTheme {
     let primaryColor: Color
     let secondaryGray = Color(red: 0.56, green: 0.56, blue: 0.58) // #8E8E93
@@ -70,10 +90,10 @@ struct BaseTheme: AppTheme {
     let error = Color(red: 1.0, green: 0.23, blue: 0.19) // #FF3B30
     let textPrimary = Color(red: 0.11, green: 0.11, blue: 0.12) // #1C1C1E
     let textSecondary = Color(red: 0.56, green: 0.56, blue: 0.58) // #8E8E93
-    
+
     init(themeColor: ThemeColor) {
-        self.primaryColor = themeColor.primaryColor
-        self.background = themeColor.backgroundColor
+        primaryColor = themeColor.primaryColor
+        background = themeColor.backgroundColor
     }
 }
 
@@ -87,13 +107,14 @@ struct DarkBaseTheme: AppTheme {
     let error = Color(red: 1.0, green: 0.23, blue: 0.19)
     let textPrimary = Color.white
     let textSecondary = Color(red: 0.7, green: 0.7, blue: 0.75)
-    
+
     init(themeColor: ThemeColor) {
-        self.primaryColor = themeColor.primaryColor
+        primaryColor = themeColor.primaryColor
     }
 }
 
 // MARK: - Theme Manager
+
 @Observable
 class ThemeManager: ObservableObject {
     var current: AppTheme {
@@ -102,23 +123,23 @@ class ThemeManager: ObservableObject {
             DarkBaseTheme(themeColor: themeColor) :
             BaseTheme(themeColor: themeColor)
     }
-    
+
     @ObservationIgnored
     @Shared(.appStorage("darkModeEnabled")) private var darkModeEnabledStorage: Bool = false
 
     var darkModeEnabled: Bool { darkModeEnabledStorage }
-    
+
     @ObservationIgnored
     @Shared(.appStorage("selectedThemeColor")) private var selectedThemeColor: String = ThemeColor.default.rawValue
-        
+
     static let shared = ThemeManager()
-    
+
     var currentThemeColor: String {
         return selectedThemeColor
     }
-    
+
     func updateThemeColor(_ themeColorName: String) {
-        $selectedThemeColor.withLock{
+        $selectedThemeColor.withLock {
             $0 = themeColorName
         }
     }
@@ -131,6 +152,7 @@ class ThemeManager: ObservableObject {
 }
 
 // MARK: - DependencyKey for ThemeManager
+
 private enum ThemeManagerKey: DependencyKey {
     static let liveValue = ThemeManager.shared
 }
@@ -143,6 +165,7 @@ extension DependencyValues {
 }
 
 // MARK: - Typography
+
 struct AppFont {
     static let largeTitle = Font.system(size: 34, weight: .bold)
     static let title = Font.system(size: 28, weight: .semibold)
@@ -157,6 +180,7 @@ struct AppFont {
 }
 
 // MARK: - Spacing & Layout
+
 struct AppSpacing {
     static let small: CGFloat = 8
     static let smallMedium: CGFloat = 12
@@ -172,6 +196,7 @@ struct AppCornerRadius {
 }
 
 // MARK: - Shadows
+
 struct AppShadow {
     static let card = ShadowStyle(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
 }
@@ -184,38 +209,34 @@ struct ShadowStyle {
 }
 
 // MARK: - Reusable Modifiers
+
 extension View {
     func appCardStyle(theme: AppTheme = ThemeManager.shared.current) -> some View {
-        self
-            .padding(AppSpacing.medium)
+        padding(AppSpacing.medium)
             .background(theme.card)
             .cornerRadius(AppCornerRadius.card)
             .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
     }
-    
+
     func appSectionHeader(theme: AppTheme = ThemeManager.shared.current) -> some View {
-        self
-            .font(AppFont.headline)
+        font(AppFont.headline)
             .foregroundColor(theme.textPrimary)
             .padding(.vertical, AppSpacing.small)
     }
-    
+
     func appBackground(theme: AppTheme = ThemeManager.shared.current) -> some View {
-        self
-            .background(theme.background)
+        background(theme.background)
     }
-    
+
     func appInfoSection(theme: AppTheme = ThemeManager.shared.current) -> some View {
-        self
-            .padding(.vertical, AppSpacing.small)
+        padding(.vertical, AppSpacing.small)
             .padding(.horizontal, AppSpacing.medium)
             .background(theme.secondaryGray.opacity(0.1))
             .cornerRadius(AppCornerRadius.info)
     }
 
     func appButtonStyle(theme: AppTheme = ThemeManager.shared.current, filled: Bool = true) -> some View {
-        self
-            .font(AppFont.headline)
+        font(AppFont.headline)
             .padding(.vertical, AppSpacing.small)
             .padding(.horizontal, AppSpacing.large)
             .background(filled ? theme.primaryColor : Color.clear)

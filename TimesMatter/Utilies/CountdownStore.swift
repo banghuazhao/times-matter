@@ -16,7 +16,7 @@ struct CountdownStore {
     )
     
     static let christmas = Countdown.Draft(
-        title: "🎄 Christmas",
+        title: String(localized: "🎄 Christmas"),
         date: Calendar.current.nextDate(after: Date(), matching: DateComponents(month: 12, day: 25, hour: 0, minute: 0), matchingPolicy: .nextTimePreservingSmallerComponents) ?? Date(),
         categoryID: 3,
         backgroundColor: 0x9B59B6CC,
@@ -27,7 +27,7 @@ struct CountdownStore {
     )
 
     static let newYear = Countdown.Draft(
-        title: "🎆 New Year",
+        title: String(localized: "🎆 New Year"),
         date: Calendar.current.nextDate(after: Date(), matching: DateComponents(month: 1, day: 1, hour: 0, minute: 0), matchingPolicy: .nextTimePreservingSmallerComponents) ?? Date(),
         categoryID: 3,
         backgroundColor: 0x9B59B6CC,
@@ -39,7 +39,7 @@ struct CountdownStore {
     )
 
     static let longPressToEdit = Countdown.Draft(
-        title: "👆 Long press to edit",
+        title: String(localized: "👆 Long press to edit"),
         date: Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date(),
         backgroundColor: 0xFF6B9DCC,
         textColor: 0xFFFFFFFF,
@@ -50,7 +50,7 @@ struct CountdownStore {
     )
 
     static let firstUse = Countdown.Draft(
-        title: "🚀 First use this app",
+        title: String(localized: "🚀 First use this app"),
         date: Date(),
         categoryID: 1,
         backgroundColor: 0x2ECC71CC,

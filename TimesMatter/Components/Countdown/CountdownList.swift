@@ -18,7 +18,7 @@ class CountdownListModel {
 
     @ObservationIgnored
     @Shared(.appStorage("selectedCategory")) var selectedCategory: Category.ID?
-    
+
     @ObservationIgnored
     @Shared(.appStorage("isFirstLaunch")) var isFirstLaunch = true
 
@@ -29,9 +29,9 @@ class CountdownListModel {
         var id: String { rawValue }
         var label: String {
             switch self {
-            case .default: return "Default"
-            case .futureToPast: return "Date (Future → Past)"
-            case .pastToFuture: return "Date (Past → Future)"
+            case .default: return String(localized: "Default")
+            case .futureToPast: return String(localized: "Date (Future → Past)")
+            case .pastToFuture: return String(localized: "Date (Past → Future)")
             }
         }
     }
@@ -41,10 +41,10 @@ class CountdownListModel {
         var id: String { rawValue }
         var label: String {
             switch self {
-            case .all: return "All"
-            case .favorites: return "Favorites"
-            case .inThePast: return "In the Past"
-            case .inTheFuture: return "In the Future"
+            case .all: return String(localized: "All")
+            case .favorites: return String(localized: "Favorites")
+            case .inThePast: return String(localized: "In the Past")
+            case .inTheFuture: return String(localized: "In the Future")
             }
         }
     }
@@ -191,11 +191,11 @@ class CountdownListModel {
                     .delete(countdown)
                     .execute(db)
             }
-            
+
             ReminderNotificationManager.shared.removeNotification(for: countdown)
         }
     }
-    
+
     func scheduleRemindersForFirstLaunch() {
         if isFirstLaunch {
             for countdown in countdowns {
@@ -291,9 +291,9 @@ struct CountdownListView: View {
                         // Filter options
                         Section("Filter By") {
                             ForEach(CountdownListModel.FilterOption.allCases) { option in
-                                Button(action: { 
+                                Button(action: {
                                     Haptics.shared.vibrateIfEnabled()
-                                    model.onSelectFilter(option) 
+                                    model.onSelectFilter(option)
                                 }) {
                                     HStack {
                                         Text(option.label)
@@ -309,9 +309,9 @@ struct CountdownListView: View {
                         // Order options
                         Section("Sort By") {
                             ForEach(CountdownListModel.OrderType.allCases) { order in
-                                Button(action: { 
+                                Button(action: {
                                     Haptics.shared.vibrateIfEnabled()
-                                    model.onSelectOrder(order) 
+                                    model.onSelectOrder(order)
                                 }) {
                                     HStack {
                                         Text(order.label)
@@ -338,9 +338,9 @@ struct CountdownListView: View {
                     }
                 }
                 ToolbarItem(placement: .principal) {
-                    Button(action: { 
+                    Button(action: {
                         Haptics.shared.vibrateIfEnabled()
-                        model.onTapSelectCategory() 
+                        model.onTapSelectCategory()
                     }) {
                         if let selected = model.allCategories.first(where: { $0.id == model.selectedCategory }) {
                             Text(selected.title)
@@ -351,9 +351,9 @@ struct CountdownListView: View {
                     .buttonStyle(.appRect)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(action: { 
+                    Button(action: {
                         Haptics.shared.vibrateIfEnabled()
-                        model.onTapAddCountDown() 
+                        model.onTapAddCountDown()
                     }) {
                         Image(systemName: "plus")
                     }
@@ -396,7 +396,6 @@ struct CountdownListView: View {
     }
 }
 
-
 // MARK: - Reusable Context Menu Modifier
 
 struct CountdownContextMenu: ViewModifier {
@@ -407,16 +406,16 @@ struct CountdownContextMenu: ViewModifier {
 
     func body(content: Content) -> some View {
         content.contextMenu {
-            Button(action: { 
+            Button(action: {
                 Haptics.shared.vibrateIfEnabled()
-                onEdit() 
+                onEdit()
             }) {
                 Label("Edit", systemImage: "pencil")
             }
 
-            Button(action: { 
+            Button(action: {
                 Haptics.shared.vibrateIfEnabled()
-                onToggleFavorite() 
+                onToggleFavorite()
             }) {
                 Label(
                     countdown.isFavorite ? "Remove from Favorites" : "Add to Favorites",
@@ -426,9 +425,9 @@ struct CountdownContextMenu: ViewModifier {
 
             Divider()
 
-            Button(role: .destructive, action: { 
+            Button(role: .destructive, action: {
                 Haptics.shared.vibrateIfEnabled()
-                onDelete() 
+                onDelete()
             }) {
                 Label("Delete", systemImage: "trash")
             }

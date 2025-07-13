@@ -150,14 +150,14 @@ struct CountdownDetailView: View {
                     VStack(spacing: 8 * scale) {
 
                         Text(model.countdown.title)
-                            .font(.system(size: 32 * scale, weight: .bold))
+                            .font(.system(size: 28 * scale, weight: .bold))
                             .foregroundColor(model.textColor)
                             .multilineTextAlignment(.center)
                             .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
 
                         Text(model.countdown.timeSummary)
-                            .font(.system(size: 18 * scale))
-                            .foregroundColor(model.textColor.opacity(0.9))
+                            .font(.system(size: 17 * scale))
+                            .foregroundColor(model.textColor)
                             .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
 
                     }
@@ -171,6 +171,7 @@ struct CountdownDetailView: View {
                     .padding(.horizontal, AppSpacing.medium * scale)
                     .background(RoundedRectangle(cornerRadius: 16 * scale).fill(Color.black.opacity(0.18)))
                 }
+                .padding(.vertical, AppSpacing.medium * scale)
                 if model.countdown.layout != .bottom {
                     Spacer(minLength: 0)
                 }

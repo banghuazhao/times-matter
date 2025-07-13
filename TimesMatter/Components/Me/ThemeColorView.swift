@@ -13,12 +13,12 @@ struct ThemeColorView: View {
     @Environment(\.dismiss) private var dismiss
 
     private let themeColors: [ThemeColorOption] = [
-        ThemeColorOption(name: "Default", color: Color(red: 0.914, green: 0.420, blue: 0.369), icon: "flame.fill"),
-        ThemeColorOption(name: "Blue", color: Color(red: 0.0, green: 0.48, blue: 1.0), icon: "drop.fill"),
-        ThemeColorOption(name: "Green", color: Color(red: 0.20, green: 0.78, blue: 0.35), icon: "leaf.fill"),
-        ThemeColorOption(name: "Purple", color: Color(red: 0.58, green: 0.35, blue: 0.95), icon: "sparkles"),
-        ThemeColorOption(name: "Pink", color: Color(red: 0.91, green: 0.30, blue: 0.58), icon: "heart.fill"),
-        ThemeColorOption(name: "Orange", color: Color(red: 1.0, green: 0.58, blue: 0.0), icon: "sun.max.fill"),
+        ThemeColorOption(name: String(localized: "Default"), color: Color(red: 0.914, green: 0.420, blue: 0.369), icon: "flame.fill"),
+        ThemeColorOption(name: String(localized: "Blue"), color: Color(red: 0.0, green: 0.48, blue: 1.0), icon: "drop.fill"),
+        ThemeColorOption(name: String(localized: "Green"), color: Color(red: 0.20, green: 0.78, blue: 0.35), icon: "leaf.fill"),
+        ThemeColorOption(name: String(localized: "Purple"), color: Color(red: 0.58, green: 0.35, blue: 0.95), icon: "sparkles"),
+        ThemeColorOption(name: String(localized: "Pink"), color: Color(red: 0.91, green: 0.30, blue: 0.58), icon: "heart.fill"),
+        ThemeColorOption(name: String(localized: "Orange"), color: Color(red: 1.0, green: 0.58, blue: 0.0), icon: "sun.max.fill"),
     ]
 
     var body: some View {

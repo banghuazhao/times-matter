@@ -44,31 +44,31 @@ enum RepeatType: String, Codable, CaseIterable, QueryBindable {
 
     var displayName: String {
         switch self {
-        case .nonRepeating: return "No Repeat"
-        case .daily: return "Daily"
-        case .weekly: return "Weekly"
-        case .monthly: return "Monthly"
-        case .yearly: return "Yearly"
+        case .nonRepeating: return String(localized: "No Repeat")
+        case .daily: return String(localized: "Daily")
+        case .weekly: return String(localized: "Weekly")
+        case .monthly: return String(localized: "Monthly")
+        case .yearly: return String(localized: "Yearly")
         }
     }
 
     var singleRepeatTimeName: String {
         switch self {
-        case .nonRepeating: return "No Repeat"
-        case .daily: return "Day"
-        case .weekly: return "Week"
-        case .monthly: return "Month"
-        case .yearly: return "Year"
+        case .nonRepeating: return String(localized: "No Repeat")
+        case .daily: return String(localized: "Day")
+        case .weekly: return String(localized: "Week")
+        case .monthly: return String(localized: "Month")
+        case .yearly: return String(localized: "Year")
         }
     }
 
     var multipleRepeatTimeName: String {
         switch self {
-        case .nonRepeating: return "No Repeat"
-        case .daily: return "Days"
-        case .weekly: return "Weeks"
-        case .monthly: return "Months"
-        case .yearly: return "Years"
+        case .nonRepeating: return String(localized: "No Repeat")
+        case .daily: return String(localized: "Days")
+        case .weekly: return String(localized: "Weeks")
+        case .monthly: return String(localized: "Months")
+        case .yearly: return String(localized: "Years")
         }
     }
 
@@ -88,26 +88,26 @@ enum CompactTimeUnit: String, Codable, CaseIterable, QueryBindable {
     var displayName: String {
         switch self {
         case .days:
-            return "Days"
+            return String(localized: "Days")
         case .weeks:
-            return "Weeks"
+            return String(localized: "Weeks")
         case .months:
-            return "Months"
+            return String(localized: "Months")
         case .years:
-            return "Years"
+            return String(localized: "Years")
         }
     }
 
     var singularName: String {
         switch self {
         case .days:
-            return "Day"
+            return String(localized: "Day")
         case .weeks:
-            return "Week"
+            return String(localized: "Week")
         case .months:
-            return "Month"
+            return String(localized: "Month")
         case .years:
-            return "Year"
+            return String(localized: "Year")
         }
     }
 }
@@ -121,9 +121,9 @@ enum LayoutType: String, Codable, CaseIterable, QueryBindable {
 
     var displayName: String {
         switch self {
-        case .top: return "Top"
-        case .middle: return "Middle"
-        case .bottom: return "Bottom"
+        case .top: return    String(localized: "Top")
+        case .middle: return String(localized: "Middle")
+        case .bottom: return String(localized: "Bottom")
         }
     }
 
@@ -143,12 +143,12 @@ enum ReminderType: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .noReminder: return "No Reminder"
-        case .onlyOnce: return "Only Once"
-        case .everyDay: return "Every Day"
-        case .everyWeek: return "Every Week"
-        case .everyMonth: return "Every Month"
-        case .everyYear: return "Every Year"
+        case .noReminder: return String(localized: "No Reminder")
+        case .onlyOnce: return   String(localized: "Only Once")
+        case .everyDay: return   String(localized: "Every Day")
+        case .everyWeek: return  String(localized: "Every Week")
+        case .everyMonth: return String(localized: "Every Month")
+        case .everyYear: return  String(localized: "Every Year")
         }
     }
 

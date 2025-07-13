@@ -154,7 +154,7 @@ struct MeView: View {
                 }
                 .buttonStyle(PlainButtonStyle())
                 .sheet(isPresented: $model.showEmojiPicker) {
-                    EmojiPickerView(selectedEmoji: $model.userAvatar, title: "Choose your avatar")
+                    EmojiPickerView(selectedEmoji: $model.userAvatar, title: String(localized: "Choose your avatar"))
                         .presentationDetents([.medium])
                         .presentationDragIndicator(.visible)
                 }
@@ -243,22 +243,22 @@ struct MeView: View {
                 .foregroundColor(.primary)
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 24) {
                 NavigationLink(destination: MoreAppsView()) {
-                    moreItem(icon: "storefront", title: "More Apps")
+                    moreItem(icon: "storefront", title: String(localized: "More Apps"))
                     
                 }
                 Button {
                     model.onTapRateUs(openURL: openURL)
                 } label: {
-                    moreItem(icon: "star.fill", title: "Rate Us")
+                    moreItem(icon: "star.fill", title: String(localized: "Rate Us"))
                 }
                 Button {
                     model.onTapFeedback(openURL: openURL)
                 } label: {
-                    moreItem(icon: "envelope.fill", title: "Feedback")
+                    moreItem(icon: "envelope.fill", title: String(localized: "Feedback"))
                 }
                 if let appURL = model.onTapShareApp() {
                     ShareLink(item: appURL) {
-                        moreItem(icon: "square.and.arrow.up", title: "Share App")
+                        moreItem(icon: "square.and.arrow.up", title: String(localized: "Share App"))
                         
                     }
                 }
