@@ -23,6 +23,8 @@ struct Countdown: Identifiable {
     var backgroundImageName: String? = nil
     var compactTimeUnit: CompactTimeUnit = .days
     var layout: LayoutType = .middle
+    @Column(as: CountdownReminder.JSONRepresentation.self)
+    var reminder: CountdownReminder = .init()
 }
 
 // MARK: - Draft Extension
@@ -128,3 +130,56 @@ enum LayoutType: String, Codable, CaseIterable, QueryBindable {
     }
 }
 
+// MARK: - Reminder Types
+
+enum ReminderType: String, Codable, CaseIterable {
+    case noReminder, onlyOnce, everyDay, everyWeek, everyMonth, everyYear
+
+    var displayName: String {
+        switch self {
+        case .noReminder: return "No Reminder"
+        case .onlyOnce: return "Only Once"
+        case .everyDay: return "Every Day"
+        case .everyWeek: return "Every Week"
+        case .everyMonth: return "Every Month"
+        case .everyYear: return "Every Year"
+        }
+    }
+
+    var repeats: Bool {
+        switch self {
+        case .onlyOnce, .noReminder: return false
+        default: return true
+        }
+    }
+}
+
+enum ReminderTime: String, Codable, CaseIterable {
+    case atEventTime, fiveMinutesEarly, thirtyMinutesEarly, oneDayEarly, threeDaysEarly
+
+    var displayName: String {
+        switch self {
+        case .atEventTime: return String(localized: "At Event Time")
+        case .fiveMinutesEarly: return String(localized: "5 Minutes Early")
+        case .thirtyMinutesEarly: return String(localized: "30 Minutes Early")
+        case .oneDayEarly: return String(localized: "1 Day Early")
+        case .threeDaysEarly: return String(localized: "3 Days Early")
+        }
+    }
+
+    var timeInterval: TimeInterval {
+        switch self {
+        case .atEventTime: return 0
+        case .fiveMinutesEarly: return -5 * 60
+        case .thirtyMinutesEarly: return -30 * 60
+        case .oneDayEarly: return -24 * 60 * 60
+        case .threeDaysEarly: return -3 * 24 * 60 * 60
+        }
+    }
+}
+
+struct CountdownReminder: Codable, Equatable {
+    var type: ReminderType = .onlyOnce
+    var time: ReminderTime = .atEventTime
+    var soundName: String = "Default"
+}

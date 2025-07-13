@@ -38,6 +38,7 @@ class CountdownFormModel: HashableObject {
         case selectCategory
         case showingCustomRepeatSheet
         case showingBackgroundSheet
+        case showingReminderSheet
     }
     var route: Route?
     
@@ -66,6 +67,8 @@ class CountdownFormModel: HashableObject {
             guard let updatedCountDown else { return }
             appRatingService.incrementPrepareTriggerCount()
             
+            ReminderNotificationManager.shared.removeNotification(for: updatedCountDown)
+            ReminderNotificationManager.shared.scheduleNotification(for: updatedCountDown)
             onSave?(updatedCountDown)
         }
     }
@@ -190,7 +193,27 @@ struct CountdownFormView: View {
                                 }
                             }
                         }
-                       
+                        Divider()
+                        // Reminder Row
+                        HStack(spacing: AppSpacing.smallMedium) {
+                            Text("Reminder")
+                                .font(AppFont.subheadlineSemibold)
+                                .foregroundColor(textPrimaryColor)
+                            Spacer()
+                            Button {
+                                model.route = .showingReminderSheet
+                            } label: {
+                                Text(model.countdown.reminder.type.displayName)
+                            }
+                            .buttonStyle(.appRect)
+                        }
+                        .sheet(
+                            isPresented: Binding($model.route.showingReminderSheet)
+                        ) {
+                            ReminderSheet(reminder: $model.countdown.reminder)
+                                .presentationDetents([.medium, .large])
+                        }
+                        
                         Divider()
                         
                         // Category Selection

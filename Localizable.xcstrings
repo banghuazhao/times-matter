@@ -224,10 +224,37 @@
     "Privacy Policy" : {
 
     },
+    "Reminder" : {
+
+    },
+    "Reminder Settings" : {
+
+    },
+    "Reminder Time" : {
+
+    },
+    "Reminder Type" : {
+
+    },
     "Reminders" : {
 
     },
     "Remove from Favorites" : {
+
+    },
+    "At Event Time" : {
+
+    },
+    "5 Minutes Early" : {
+
+    },
+    "30 Minutes Early" : {
+
+    },
+    "1 Day Early" : {
+
+    },
+    "3 Days Early" : {
 
     },
     "Repeat" : {
@@ -267,6 +294,9 @@
 
     },
     "Sort By" : {
+
+    },
+    "Sound" : {
 
     },
     "Support for future updates" : {
