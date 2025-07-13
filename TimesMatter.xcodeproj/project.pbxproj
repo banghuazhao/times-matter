@@ -12,6 +12,7 @@
 		993AD8B02E2112BC006637CC /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 993AD8AF2E2112BC006637CC /* GoogleMobileAds */; };
 		996833DD2E1CF5C900D314BA /* SwiftUINavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 996833DC2E1CF5C900D314BA /* SwiftUINavigation */; };
 		996834522E1D267E00D314BA /* MoreApps in Frameworks */ = {isa = PBXBuildFile; productRef = 996834512E1D267E00D314BA /* MoreApps */; };
+		99772B042E23B63D00907F5A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99772B032E23B63D00907F5A /* StoreKit.framework */; };
 		99AD2D4F2E20B96800699F68 /* EasyToast in Frameworks */ = {isa = PBXBuildFile; productRef = 99AD2D4E2E20B96800699F68 /* EasyToast */; };
 		99BABECB2E1C924900895B3B /* SharingGRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 99BABECA2E1C924900895B3B /* SharingGRDB */; };
 /* End PBXBuildFile section */
@@ -27,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		99772B032E23B63D00907F5A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		99BABCEA2E1BAFEE00895B3B /* TimesMatter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimesMatter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99BABCFA2E1BAFF000895B3B /* TimesMatterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimesMatterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -68,6 +70,7 @@
 				99AD2D4F2E20B96800699F68 /* EasyToast in Frameworks */,
 				996833DD2E1CF5C900D314BA /* SwiftUINavigation in Frameworks */,
 				99BABECB2E1C924900895B3B /* SharingGRDB in Frameworks */,
+				99772B042E23B63D00907F5A /* StoreKit.framework in Frameworks */,
 				4144A1582E1CF92500DEB393 /* (null) in Frameworks */,
 				996834522E1D267E00D314BA /* MoreApps in Frameworks */,
 				418CB51D2E1D210200E4AF36 /* MoreApps in Frameworks */,
@@ -88,6 +91,7 @@
 		4144A1562E1CF92500DEB393 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				99772B032E23B63D00907F5A /* StoreKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -396,6 +400,7 @@
 				INFOPLIST_FILE = TimesMatter/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "";
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -408,7 +413,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.appsbay.TimesMatter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.appsbay.TimesMatter1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -428,6 +433,7 @@
 				INFOPLIST_FILE = TimesMatter/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "";
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "This identifier will be used to deliver personalized ads to you.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -440,7 +446,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.appsbay.TimesMatter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.appsbay.TimesMatter1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

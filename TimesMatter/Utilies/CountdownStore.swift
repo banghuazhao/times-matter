@@ -21,10 +21,9 @@ struct CountdownStore {
         categoryID: 3,
         backgroundColor: 0x9B59B6CC,
         textColor: 0xFFFFFFFF,
-        isFavorite: true,
         repeatType: .yearly,
         backgroundImageName: "predefined_holiday",
-        reminder: .init(type: .everyYear, time: .oneDayEarly)
+        reminder: .init(type: .everyYear, time: .oneDayEarly, soundName: "Merry Christmas.mp3")
     )
 
     static let newYear = Countdown.Draft(
@@ -56,7 +55,6 @@ struct CountdownStore {
         categoryID: 1,
         backgroundColor: 0x2ECC71CC,
         textColor: 0xFFFFFFFF,
-        isFavorite: false,
         repeatType: .yearly,
         backgroundImageName: "predefined_aurora",
         reminder: .init(type: .everyYear, time: .atEventTime, soundName: "Sunny Step.mp3")

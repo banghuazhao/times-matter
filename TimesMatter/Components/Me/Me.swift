@@ -128,6 +128,7 @@ struct MeView: View {
                 }
                 .padding(.vertical)
             }
+            .scrollDismissesKeyboard(.immediately)
             .sheet(isPresented: $model.showPurchaseSheet) {
                 PurchaseSheet()
             }

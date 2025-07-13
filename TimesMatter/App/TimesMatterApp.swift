@@ -62,12 +62,18 @@ struct TimesMatterApp: App {
         TabView {
             Tab {
                 CountdownListView()
+                    .onAppear {
+                        AdManager.requestATTPermission(with: 3)
+                    }
             } label: {
                 Label("Countdowns", systemImage: "calendar")
             }
 
             Tab {
                 MeView()
+                    .onAppear {
+                        AdManager.requestATTPermission(with: 1)
+                    }
             } label: {
                 Label("Me", systemImage: "person.fill")
             }
@@ -80,10 +86,16 @@ struct TimesMatterApp: App {
                 .tabItem {
                     Label("Countdowns", systemImage: "calendar")
                 }
+                .onAppear {
+                    AdManager.requestATTPermission(with: 3)
+                }
 
             MeView()
                 .tabItem {
                     Label("Me", systemImage: "list.bullet")
+                }
+                .onAppear {
+                    AdManager.requestATTPermission(with: 1)
                 }
         }
     }
