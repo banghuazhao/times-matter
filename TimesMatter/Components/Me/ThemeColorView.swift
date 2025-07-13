@@ -81,10 +81,10 @@ struct ThemeColorView: View {
                 }
                 .padding(.horizontal)
             }
-            .background(themeManager.current.background.ignoresSafeArea())
             .navigationTitle("Theme Color")
             .navigationBarTitleDisplayMode(.inline)
         }
+        .background(themeManager.current.background)
     }
 }
 

@@ -21,6 +21,8 @@ enum ThemeColor: String, CaseIterable {
     case blue = "Blue"
     case green = "Green"
     case purple = "Purple"
+    case pink = "Pink"
+    case orange = "Orange"
     
     var primaryColor: Color {
         switch self {
@@ -32,6 +34,27 @@ enum ThemeColor: String, CaseIterable {
             return Color(red: 0.20, green: 0.78, blue: 0.35) // #34C759 - Green
         case .purple:
             return Color(red: 0.58, green: 0.35, blue: 0.95) // #AF5CF7 - Purple
+        case .pink:
+            return Color(red: 0.91, green: 0.30, blue: 0.58) // #E84D94 - Pink
+        case .orange:
+            return Color(red: 1.0, green: 0.58, blue: 0.0) // #FF9400 - Orange
+        }
+    }
+    
+    var backgroundColor: Color {
+        switch self {
+        case .default:
+            return Color(red: 0.98, green: 0.95, blue: 0.94) // Light warm background
+        case .blue:
+            return Color(red: 0.95, green: 0.97, blue: 1.0) // Light blue background
+        case .green:
+            return Color(red: 0.94, green: 0.98, blue: 0.95) // Light green background
+        case .purple:
+            return Color(red: 0.97, green: 0.95, blue: 1.0) // Light purple background
+        case .pink:
+            return Color(red: 0.99, green: 0.95, blue: 0.97) // Light pink background
+        case .orange:
+            return Color(red: 1.0, green: 0.97, blue: 0.94) // Light orange background
         }
     }
 }
@@ -40,7 +63,7 @@ enum ThemeColor: String, CaseIterable {
 struct BaseTheme: AppTheme {
     let primaryColor: Color
     let secondaryGray = Color(red: 0.56, green: 0.56, blue: 0.58) // #8E8E93
-    let background = Color(hex: 0xF4F2F3FF) // #F2F2F7
+    let background: Color
     let card = Color.white
     let success = Color(red: 0.20, green: 0.78, blue: 0.35) // #34C759
     let warning = Color(red: 1.0, green: 0.80, blue: 0.0) // #FFCC00
@@ -50,6 +73,7 @@ struct BaseTheme: AppTheme {
     
     init(themeColor: ThemeColor) {
         self.primaryColor = themeColor.primaryColor
+        self.background = themeColor.backgroundColor
     }
 }
 
