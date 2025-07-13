@@ -2,23 +2,96 @@
 // Created by Banghua Zhao on 08/07/2025
 // Copyright Apps Bay Limited. All rights reserved.
 //
-  
 
-import SwiftUI
 import Dependencies
-import SharingGRDB
 import MoreApps
+import SharingGRDB
+import SwiftUI
+
+@Observable
+@MainActor
+class MeViewModel: HashableObject {
+    @ObservationIgnored
+    @Shared(.appStorage("userName")) var userName: String = String(localized: "Your Name")
+    @ObservationIgnored
+    @Shared(.appStorage("userAvatar")) var userAvatar: String = "😀"
+
+    @ObservationIgnored
+    @FetchAll(Countdown.all) var allCountdown
+
+    @ObservationIgnored
+    @FetchAll(Category.all) var allCategory
+
+    @ObservationIgnored
+    @Dependency(\.purchaseManager) var purchaseManager
+
+    @ObservationIgnored
+    @Dependency(\.themeManager) var themeManager
+
+    @ObservationIgnored
+    @Dependency(\.appRatingService) var appRatingService
+
+    var showPurchaseSheet = false
+    var showEmojiPicker = false
+
+    var countdownCount: String {
+        "\(allCountdown.count)"
+    }
+
+    var categoryCount: String {
+        "\(allCategory.count)"
+    }
+
+    var appVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+    }
+
+    var appName: String {
+        Bundle.main.infoDictionary?["CFBundleName"] as? String ?? "Unknown"
+    }
+
+    var appBuild: String {
+        Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "no app build version"
+    }
+
+    var isPremiumUser: Bool {
+        purchaseManager.isPremiumUserPurchased
+    }
+
+    func onTapPurchase() {
+        showPurchaseSheet = true
+    }
+
+    func onTapEmojiPicker() {
+        showEmojiPicker = true
+    }
+
+    func onTapRateUs(openURL: OpenURLAction) {
+        if let url = URL(string: "https://itunes.apple.com/app/id\(Constants.AppID.thisAppID)?action=write-review") {
+            openURL(url)
+        }
+    }
+
+    func onTapFeedback(openURL: OpenURLAction) {
+        let email = SupportEmail()
+        email.send(openURL: openURL)
+    }
+
+    func onTapCheckForUpdates(openURL: OpenURLAction) {
+        if let url = URL(string: "https://apps.apple.com/app/id\(Constants.AppID.thisAppID)") {
+            openURL(url)
+        }
+    }
+
+    func onTapShareApp() -> URL? {
+        URL(string: "https://itunes.apple.com/app/id\(Constants.AppID.thisAppID)")
+    }
+}
 
 struct MeView: View {
+    @State private var model = MeViewModel()
     @Environment(\.openURL) private var openURL
-    @AppStorage("userName") private var userName: String = String(localized: "Your Name")
-    @AppStorage("userAvatar") private var userAvatar: String = "😀"
-    @Dependency(\.purchaseManager) var purchaseManager
-    @State private var showPurchaseSheet = false
-    @State private var showEmojiPicker = false
-    @Dependency(\.themeManager) var themeManager
-    
-    
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -26,95 +99,81 @@ struct MeView: View {
                     // Me Section
                     VStack(alignment: .leading, spacing: AppSpacing.medium) {
                         HStack(spacing: AppSpacing.medium) {
-                            Button(action: { showEmojiPicker = true }) {
-                                Text(userAvatar)
+                            Button(action: { model.onTapEmojiPicker() }) {
+                                Text(model.userAvatar)
                                     .font(.system(size: 40))
                                     .frame(width: 50, height: 50)
-                                    .background(themeManager.current.card)
+                                    .background(model.themeManager.current.card)
                                     .clipShape(Circle())
                             }
                             .buttonStyle(PlainButtonStyle())
-                            .sheet(isPresented: $showEmojiPicker) {
-                                EmojiPickerView(selectedEmoji: $userAvatar, title: "Choose your avatar")
-                                .presentationDetents([.medium])
-                                .presentationDragIndicator(.visible)
+                            .sheet(isPresented: $model.showEmojiPicker) {
+                                EmojiPickerView(selectedEmoji: $model.userAvatar, title: "Choose your avatar")
+                                    .presentationDetents([.medium])
+                                    .presentationDragIndicator(.visible)
                             }
                             VStack(alignment: .leading, spacing: 4) {
-                                TextField("Your Name", text: $userName)
+                                TextField("Your Name", text: $model.userName)
                                     .font(AppFont.headline)
                                     .fontWeight(.bold)
                                     .padding(AppSpacing.small)
-                                    .background(themeManager.current.background)
+                                    .background(model.themeManager.current.background)
                                     .cornerRadius(AppCornerRadius.button)
                                     .lineLimit(1)
                             }
                             Spacer()
                         }
-                        // Stats Section hardcoded for now
-                        HStack(spacing: AppSpacing.small) {
-                            VStack(spacing: 8) {
-                                HStack {
-                                    VStack {
-                                        Text("3/5")
-                                            .font(.headline)
-                                        Text("Categories")
-                                            .font(.caption)
-                                    }
-                                    Divider()
-                                    VStack {
-                                        Text("12")
-                                            .font(.headline)
-                                        Text("Countdowns")
-                                            .font(.caption)
-                                    }
-                                    Divider()
-                                    VStack {
-                                        Text("7")
-                                            .font(.headline)
-                                        Text("Reminders")
-                                            .font(.caption)
-                                    }
-                                    
-                                }
-                                .padding(.top, 8)
-                                // Placeholder for purchase button
-                                if !purchaseManager.isPremiumUserPurchased {
-                                    Button(action: {
-                                        showPurchaseSheet = true
-                                    }) {
-                                        Text(String(localized: "Upgrade to Premium"))
-                                            .appButtonStyle(theme: themeManager.current)
-                                    }
-                                } else {
-                                    HStack(spacing: 8) {
-                                        Image(systemName: "crown.fill")
-                                            .foregroundColor(.yellow)
-                                            .font(.title3)
-                                        Text(String(localized: "Welcome, Premium user!"))
-                                            .font(.headline)
-                                            .foregroundColor(themeManager.current.primaryColor)
-                                    }
-                                    .padding(.vertical, 8)
-                                    .padding(.horizontal, 16)
-                                    .background(themeManager.current.card)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: AppCornerRadius.button)
-                                            .stroke(themeManager.current.primaryColor, lineWidth: 1.5)
-                                    )
-                                    .cornerRadius(AppCornerRadius.button)
-                                    .shadow(color: AppShadow.card.color, radius: 4, x: 0, y: 2)
-                                }
+                        HStack {
+                            VStack {
+                                Text(model.countdownCount)
+                                    .font(.headline)
+                                Text("Countdowns")
+                                    .font(.caption)
+                            }
+                            Divider()
+                            VStack {
+                                Text(model.categoryCount)
+                                    .font(.headline)
+                                Text("Categories")
+                                    .font(.caption)
                             }
                         }
-                        .padding(.top, AppSpacing.small)
+                        .padding(.top, 8)
+                        // Placeholder for purchase button
+                        if !model.isPremiumUser {
+                            Button(action: {
+                                model.onTapPurchase()
+                            }) {
+                                Text(String(localized: "Upgrade to Premium"))
+                                    .appButtonStyle(theme: model.themeManager.current)
+                            }
+                        } else {
+                            HStack(spacing: 8) {
+                                Image(systemName: "crown.fill")
+                                    .foregroundColor(.yellow)
+                                    .font(.title3)
+                                Text(String(localized: "Welcome, Premium user!"))
+                                    .font(.headline)
+                                    .foregroundColor(model.themeManager.current.primaryColor)
+                            }
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 16)
+                            .background(model.themeManager.current.card)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: AppCornerRadius.button)
+                                    .stroke(model.themeManager.current.primaryColor, lineWidth: 1.5)
+                            )
+                            .cornerRadius(AppCornerRadius.button)
+                            .shadow(color: AppShadow.card.color, radius: 4, x: 0, y: 2)
+                        }
                     }
-                    .appCardStyle(theme: themeManager.current)
+                    .appCardStyle(theme: model.themeManager.current)
                     .padding(.horizontal)
-                    
-                    //more feature section
+
+                    // more feature section
                     moreFeatureView
                     // Others section
-                    othersView(openURL: openURL)
+                    othersView
                     Spacer().frame(height: 5)
 
                     // App info section (moved below othersView)
@@ -124,47 +183,33 @@ struct MeView: View {
                             .fontWeight(.semibold)
                             .foregroundColor(.gray)
                         Button {
-                            if let url = URL(string: "https://apps.apple.com/app/id6748243795") {
-                                openURL(url)
-                            }
+                            model.onTapCheckForUpdates(openURL: openURL)
                         } label: {
-                            Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")  Check for Updates")
+                            Text("v\(model.appVersion)  Check for Updates")
                                 .font(.footnote)
                                 .foregroundColor(.gray)
                                 .underline()
                         }
                     }
-                .padding(.top, -12)
+                    .padding(.top, -12)
                 }
                 .padding(.vertical)
-                
-                if !purchaseManager.isPremiumUserPurchased {
+
+                if !model.isPremiumUser {
                     BannerView()
                         .frame(height: 50)
                 }
             }
-            .sheet(isPresented: $showPurchaseSheet) {
+            .sheet(isPresented: $model.showPurchaseSheet) {
                 PurchaseSheet()
             }
             .background(Color(.systemGroupedBackground))
-            .navigationTitle("Me View")
+            .navigationTitle("Me")
             .navigationBarTitleDisplayMode(.inline)
         }
     }
-    
-    private func statView(title: String, value: String) -> some View {
-        VStack {
-            Text(value)
-                .font(.subheadline)
-                .fontWeight(.bold)
-                .foregroundColor(.blue)
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.gray)
-        }
-    }
 
-    private func othersView(openURL: OpenURLAction) -> some View {
+    private var othersView: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Others")
                 .font(.headline)
@@ -174,20 +219,17 @@ struct MeView: View {
                 NavigationLink(destination: MoreAppsView()) {
                     moreItem(icon: "storefront", title: "More Apps")
                 }
-                if let url = URL(string: "https://itunes.apple.com/app/id6748243795?action=write-review") {
-                    Button {
-                        openURL(url)
-                    } label: {
-                        moreItem(icon: "star.fill", title: "Rate Us")
-                    }
+                Button {
+                    model.onTapRateUs(openURL: openURL)
+                } label: {
+                    moreItem(icon: "star.fill", title: "Rate Us")
                 }
                 Button {
-                    let email = SupportEmail()
-                    email.send(openURL: openURL)
+                    model.onTapFeedback(openURL: openURL)
                 } label: {
                     moreItem(icon: "envelope.fill", title: "Feedback")
                 }
-                if let appURL = URL(string: "https://itunes.apple.com/app/id6748243795") {
+                if let appURL = model.onTapShareApp() {
                     ShareLink(item: appURL) {
                         moreItem(icon: "square.and.arrow.up", title: "Share App")
                     }
@@ -196,17 +238,17 @@ struct MeView: View {
         }
         .padding(.horizontal)
     }
-    
+
     private func moreItem(icon: String, title: String) -> some View {
         VStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.title2)
-                .foregroundColor(themeManager.current.primaryColor)
+                .foregroundColor(model.themeManager.current.primaryColor)
                 .frame(width: 36, height: 36)
                 .clipShape(Circle())
             Text(title)
                 .font(.caption)
-                .foregroundColor(themeManager.current.textPrimary)
+                .foregroundColor(model.themeManager.current.textPrimary)
         }
         .frame(maxWidth: .infinity)
         .padding(8)
@@ -218,13 +260,10 @@ struct MeView: View {
     private var moreFeatureView: some View {
         VStack(alignment: .leading, spacing: AppSpacing.medium) {
             Text(String(localized: "More Features"))
-                .appSectionHeader(theme: themeManager.current)
+                .appSectionHeader(theme: model.themeManager.current)
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
                 NavigationLink(destination: SettingView()) {
                     featureItem(icon: "gear", title: String(localized: "Settings"))
-                }
-                NavigationLink(destination: Text("Coming Soon")) {
-                    featureItem(icon: "bell", title: String(localized: "Reminders"))
                 }
                 NavigationLink(destination: ThemeColorView()) {
                     featureItem(icon: "paintbrush.fill", title: String(localized: "Theme Color"))
@@ -238,23 +277,22 @@ struct MeView: View {
         VStack(spacing: AppSpacing.small) {
             Image(systemName: icon)
                 .font(.title2)
-                .foregroundColor(themeManager.current.primaryColor)
+                .foregroundColor(model.themeManager.current.primaryColor)
                 .frame(width: 36, height: 36)
                 .clipShape(Circle())
             Text(title)
                 .font(AppFont.caption)
-                .foregroundColor(themeManager.current.textPrimary)
+                .foregroundColor(model.themeManager.current.textPrimary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
         }
         .frame(maxWidth: .infinity)
         .padding(AppSpacing.small)
-        .background(themeManager.current.card)
+        .background(model.themeManager.current.card)
         .cornerRadius(AppCornerRadius.card)
         .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
     }
 }
-
 
 #Preview {
     MeView()
