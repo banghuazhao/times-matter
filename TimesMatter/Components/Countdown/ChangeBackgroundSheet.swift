@@ -14,7 +14,7 @@ class ChangeBackgroundSheetModel {
     @ObservationIgnored
     @Dependency(\.backgroundImageManager) var backgroundImageManager
 
-    var selectedTab: Tab = .backgroundColor
+    var selectedTab: Tab = .image
     var selectedPhoto: PhotosPickerItem?
 
     enum Tab: String, CaseIterable, Identifiable {

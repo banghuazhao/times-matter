@@ -72,7 +72,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@就是现在"
+            "value" : "%@ 就是现在"
           }
         }
       }
@@ -92,7 +92,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "剩余 %@"
+            "value" : "还剩 %@"
           }
         }
       }
@@ -432,7 +432,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "在活动时间"
+            "value" : "准时"
           }
         }
       }
@@ -830,7 +830,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "每 %1$lld 天在 %2$@"
+            "value" : "每%1$lld天 %2$@"
           }
         }
       }
@@ -846,7 +846,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "每 %1$lld 个月在第 %2$lld 天 %3$@"
+            "value" : "每%1$lld个月第%2$lld天%3$@"
           }
         }
       }
@@ -862,7 +862,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "每 %1$lld 周在 %2$@ %3$@"
+            "value" : "每%1$lld周%2$@ %3$@"
           }
         }
       }
@@ -878,7 +878,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "每 %1$lld 年在 %2$@ %3$lld %4$@"
+            "value" : "每%1$lld年%2$@ %3$lld %4$@"
           }
         }
       }
@@ -898,7 +898,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "每天在 %@"
+            "value" : "每天 %@"
           }
         }
       }
@@ -924,7 +924,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "每月在第 %1$lld 天 %2$@"
+            "value" : "每月第%1$lld天 %2$@"
           }
         }
       }
@@ -950,7 +950,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "每周在 %1$@ %2$@"
+            "value" : "每周 %1$@ %2$@"
           }
         }
       }
@@ -976,7 +976,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "每年在 %1$@ %2$lld %3$@"
+            "value" : "每年 %1$@ %2$lld %3$@"
           }
         }
       }
