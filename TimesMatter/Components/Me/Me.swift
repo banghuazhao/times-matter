@@ -201,12 +201,12 @@ struct MeView: View {
         VStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.title2)
-                .foregroundColor(.blue)
+                .foregroundColor(themeManager.current.primaryColor)
                 .frame(width: 36, height: 36)
                 .clipShape(Circle())
             Text(title)
                 .font(.caption)
-                .foregroundColor(.primary)
+                .foregroundColor(themeManager.current.textPrimary)
         }
         .frame(maxWidth: .infinity)
         .padding(8)
