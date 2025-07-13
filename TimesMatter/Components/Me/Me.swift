@@ -96,85 +96,13 @@ struct MeView: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: AppSpacing.large) {
-                    // Me Section
-                    VStack(alignment: .leading, spacing: AppSpacing.medium) {
-                        HStack(spacing: AppSpacing.medium) {
-                            Button(action: { model.onTapEmojiPicker() }) {
-                                Text(model.userAvatar)
-                                    .font(.system(size: 40))
-                                    .frame(width: 50, height: 50)
-                                    .background(model.themeManager.current.card)
-                                    .clipShape(Circle())
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                            .sheet(isPresented: $model.showEmojiPicker) {
-                                EmojiPickerView(selectedEmoji: $model.userAvatar, title: "Choose your avatar")
-                                    .presentationDetents([.medium])
-                                    .presentationDragIndicator(.visible)
-                            }
-                            VStack(alignment: .leading, spacing: 4) {
-                                TextField("Your Name", text: $model.userName)
-                                    .font(AppFont.headline)
-                                    .fontWeight(.bold)
-                                    .padding(AppSpacing.small)
-                                    .background(model.themeManager.current.background)
-                                    .cornerRadius(AppCornerRadius.button)
-                                    .lineLimit(1)
-                            }
-                            Spacer()
-                        }
-                        HStack {
-                            VStack {
-                                Text(model.countdownCount)
-                                    .font(.headline)
-                                Text("Countdowns")
-                                    .font(.caption)
-                            }
-                            Divider()
-                            VStack {
-                                Text(model.categoryCount)
-                                    .font(.headline)
-                                Text("Categories")
-                                    .font(.caption)
-                            }
-                        }
-                        .padding(.top, 8)
-                        // Placeholder for purchase button
-                        if !model.isPremiumUser {
-                            Button(action: {
-                                model.onTapPurchase()
-                            }) {
-                                Text(String(localized: "Upgrade to Premium"))
-                                    .appButtonStyle(theme: model.themeManager.current)
-                            }
-                        } else {
-                            HStack(spacing: 8) {
-                                Image(systemName: "crown.fill")
-                                    .foregroundColor(.yellow)
-                                    .font(.title3)
-                                Text(String(localized: "Welcome, Premium user!"))
-                                    .font(.headline)
-                                    .foregroundColor(model.themeManager.current.primaryColor)
-                            }
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 16)
-                            .background(model.themeManager.current.card)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: AppCornerRadius.button)
-                                    .stroke(model.themeManager.current.primaryColor, lineWidth: 1.5)
-                            )
-                            .cornerRadius(AppCornerRadius.button)
-                            .shadow(color: AppShadow.card.color, radius: 4, x: 0, y: 2)
-                        }
-                    }
-                    .appCardStyle(theme: model.themeManager.current)
-                    .padding(.horizontal)
+                    
+                    meSection
 
-                    // more feature section
                     moreFeatureView
-                    // Others section
+
                     othersView
-                    Spacer().frame(height: 5)
+                    
 
                     // App info section (moved below othersView)
                     VStack(spacing: 4) {
@@ -191,22 +119,113 @@ struct MeView: View {
                                 .underline()
                         }
                     }
-                    .padding(.top, -12)
+                    
+                    
+                    if !model.isPremiumUser {
+                        BannerView()
+                            .frame(height: 50)
+                    }
                 }
                 .padding(.vertical)
-
-                if !model.isPremiumUser {
-                    BannerView()
-                        .frame(height: 50)
-                }
             }
             .sheet(isPresented: $model.showPurchaseSheet) {
                 PurchaseSheet()
             }
-            .background(Color(.systemGroupedBackground))
+            .background(model.themeManager.current.background)
             .navigationTitle("Me")
             .navigationBarTitleDisplayMode(.inline)
         }
+    }
+    
+    private var meSection: some View {
+        // Me Section
+        VStack(alignment: .leading, spacing: AppSpacing.medium) {
+            HStack(spacing: AppSpacing.medium) {
+                Button(action: { model.onTapEmojiPicker() }) {
+                    Text(model.userAvatar)
+                        .font(.system(size: 40))
+                        .frame(width: 50, height: 50)
+                        .background(model.themeManager.current.card)
+                        .clipShape(Circle())
+                }
+                .buttonStyle(PlainButtonStyle())
+                .sheet(isPresented: $model.showEmojiPicker) {
+                    EmojiPickerView(selectedEmoji: $model.userAvatar, title: "Choose your avatar")
+                        .presentationDetents([.medium])
+                        .presentationDragIndicator(.visible)
+                }
+                VStack(alignment: .leading, spacing: 4) {
+                    TextField("Your Name", text: $model.userName)
+                        .font(AppFont.headline)
+                        .fontWeight(.bold)
+                        .padding(AppSpacing.small)
+                        .background(model.themeManager.current.background)
+                        .cornerRadius(AppCornerRadius.button)
+                        .lineLimit(1)
+                }
+                Spacer()
+            }
+            HStack {
+                VStack {
+                    Text(model.countdownCount)
+                        .font(.headline)
+                    Text("Countdowns")
+                        .font(.caption)
+                }
+                Divider()
+                VStack {
+                    Text(model.categoryCount)
+                        .font(.headline)
+                    Text("Categories")
+                        .font(.caption)
+                }
+            }
+
+            if !model.isPremiumUser {
+                Button(action: {
+                    model.onTapPurchase()
+                }) {
+                    Text(String(localized: "Upgrade to Premium"))
+                        .appButtonStyle(theme: model.themeManager.current)
+                }
+            } else {
+                HStack(spacing: 8) {
+                    Image(systemName: "crown.fill")
+                        .foregroundColor(.yellow)
+                        .font(.title3)
+                    Text(String(localized: "Welcome, Premium user!"))
+                        .font(.headline)
+                        .foregroundColor(model.themeManager.current.primaryColor)
+                }
+                .padding(.vertical, 8)
+                .padding(.horizontal, 16)
+                .background(model.themeManager.current.card)
+                .overlay(
+                    RoundedRectangle(cornerRadius: AppCornerRadius.button)
+                        .stroke(model.themeManager.current.primaryColor, lineWidth: 1.5)
+                )
+                .cornerRadius(AppCornerRadius.button)
+                .shadow(color: AppShadow.card.color, radius: 4, x: 0, y: 2)
+            }
+        }
+        .appCardStyle(theme: model.themeManager.current)
+        .padding(.horizontal)
+    }
+    
+    private var moreFeatureView: some View {
+        VStack(alignment: .leading, spacing: AppSpacing.medium) {
+            Text(String(localized: "More Features"))
+                .appSectionHeader(theme: model.themeManager.current)
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
+                NavigationLink(destination: SettingView()) {
+                    featureItem(icon: "gear", title: String(localized: "Settings"))
+                }
+                NavigationLink(destination: ThemeColorView()) {
+                    featureItem(icon: "paintbrush.fill", title: String(localized: "Theme Color"))
+                }
+            }
+        }
+        .padding(.horizontal)
     }
 
     private var othersView: some View {
@@ -255,22 +274,6 @@ struct MeView: View {
         .background(Color(.secondarySystemGroupedBackground))
         .cornerRadius(12)
         .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
-    }
-
-    private var moreFeatureView: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.medium) {
-            Text(String(localized: "More Features"))
-                .appSectionHeader(theme: model.themeManager.current)
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
-                NavigationLink(destination: SettingView()) {
-                    featureItem(icon: "gear", title: String(localized: "Settings"))
-                }
-                NavigationLink(destination: ThemeColorView()) {
-                    featureItem(icon: "paintbrush.fill", title: String(localized: "Theme Color"))
-                }
-            }
-        }
-        .padding(.horizontal)
     }
 
     private func featureItem(icon: String, title: String) -> some View {
