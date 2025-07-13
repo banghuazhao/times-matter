@@ -14,7 +14,7 @@ struct ThemeColorView: View {
     @Environment(\.dismiss) private var dismiss
     
     private let themeColors: [ThemeColorOption] = [
-        ThemeColorOption(name: "Default", color: Color(red: 1.0, green: 0.47, blue: 0.18), icon: "flame.fill"),
+        ThemeColorOption(name: "Default", color: Color(red: 0.914, green: 0.420, blue: 0.369), icon: "flame.fill"),
         ThemeColorOption(name: "Blue", color: Color(red: 0.0, green: 0.48, blue: 1.0), icon: "drop.fill"),
         ThemeColorOption(name: "Green", color: Color(red: 0.20, green: 0.78, blue: 0.35), icon: "leaf.fill"),
         ThemeColorOption(name: "Purple", color: Color(red: 0.58, green: 0.35, blue: 0.95), icon: "sparkles")
