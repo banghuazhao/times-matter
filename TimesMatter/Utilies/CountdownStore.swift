@@ -10,16 +10,18 @@ struct CountdownStore {
         title: "Test minute",
         date: Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date(),
         backgroundColor: 0xFF6B9DCC,
-        textColor: 0xFFFFFFFFFF,
-        backgroundImageName: "predefined_aurora"
+        textColor: 0xFFFFFFFF,
+        backgroundImageName: "predefined_aurora",
+        layout: .top
     )
 
     static let testSecond = Countdown.Draft(
         title: "🔧 Test second",
         date: Calendar.current.date(byAdding: .second, value: 10, to: Date()) ?? Date(),
         backgroundColor: 0xFF6B9DCC,
-        textColor: 0xFFFFFFFFFF,
-        backgroundImageName: "predefined_star"
+        textColor: 0xFFFFFFFF,
+        backgroundImageName: "predefined_star",
+        layout: .bottom
     )
 
     static let seed: [Countdown.Draft] = [
@@ -32,7 +34,7 @@ struct CountdownStore {
             date: Calendar.current.date(byAdding: .month, value: 2, to: Date()) ?? Date(),
             categoryID: 2, // Birthday category
             backgroundColor: 0xFF6B9DCC,
-            textColor: 0xFFFFFFFFFF,
+            textColor: 0xFFFFFFFF,
             isFavorite: true,
             repeatType: .yearly,
             backgroundImageName: "predefined_holiday"
@@ -42,8 +44,8 @@ struct CountdownStore {
             title: "👨🎂 Dad's Birthday",
             date: Calendar.current.date(byAdding: .day, value: 45, to: Date()) ?? Date(),
             categoryID: 2, // Birthday category
-            backgroundColor: 0xFF4ECDC4CC,
-            textColor: 0xFFFFFFFFFF,
+            backgroundColor: 0x4ECDC4CC,
+            textColor: 0xFFFFFFFF,
             isFavorite: false,
             repeatType: .yearly,
             backgroundImageName: "predefined_mt_cook"
@@ -54,11 +56,12 @@ struct CountdownStore {
             title: "💍 Wedding Anniversary",
             date: Calendar.current.date(byAdding: .month, value: 6, to: Date()) ?? Date(),
             categoryID: 1, // Anniversary category
-            backgroundColor: 0xFFE74C3CCC,
-            textColor: 0xFFFFFFFFFF,
+            backgroundColor: 0xE74C3CCC,
+            textColor: 0xFFFFFFFF,
             isFavorite: true,
             repeatType: .yearly,
-            backgroundImageName: "predefined_relationship"
+            backgroundImageName: "predefined_relationship",
+            layout: .top
         ),
 
 
@@ -67,8 +70,8 @@ struct CountdownStore {
             title: "Project Deadline",
             date: Calendar.current.date(byAdding: .weekOfYear, value: -3, to: Date()) ?? Date(),
             categoryID: 3, // Work category
-            backgroundColor: 0xFF34495ECC,
-            textColor: 0xFFFFFFFFFF,
+            backgroundColor: 0x34495ECC,
+            textColor: 0xFFFFFFFF,
             isFavorite: false,
             repeatType: .nonRepeating,
             backgroundImageName: "predefined_mercer_bay"
@@ -78,8 +81,8 @@ struct CountdownStore {
             title: "Team Meeting",
             date: Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date(),
             categoryID: 3, // Work category
-            backgroundColor: 0xFF95A5A6CC,
-            textColor: 0xFFFFFFFFFF,
+            backgroundColor: 0x95A5A6CC,
+            textColor: 0xFFFFFFFF,
             isFavorite: false,
             repeatType: .weekly
         ),
@@ -89,8 +92,8 @@ struct CountdownStore {
             title: "🦷 Dentist Appointment",
             date: Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date(),
             categoryID: 4, // Reminders category
-            backgroundColor: 0xFF1ABC9CCC,
-            textColor: 0xFFFFFFFFFF,
+            backgroundColor: 0x1ABC9CCC,
+            textColor: 0xFFFFFFFF,
             isFavorite: false,
             repeatType: .yearly,
             repeatTime: 2,
@@ -101,8 +104,8 @@ struct CountdownStore {
             title: "🚗 Car Service",
             date: Calendar.current.date(byAdding: .month, value: 1, to: Date()) ?? Date(),
             categoryID: 4, // Reminders category
-            backgroundColor: 0xFFE67E22CC,
-            textColor: 0xFFFFFFFFFF,
+            backgroundColor: 0xE67E22CC,
+            textColor: 0xFFFFFFFF,
             isFavorite: false,
             repeatType: .monthly
         ),
@@ -112,19 +115,20 @@ struct CountdownStore {
             title: "🏖️ Vacation",
             date: Calendar.current.date(byAdding: .month, value: -1, to: Date()) ?? Date(),
             categoryID: nil, // No category
-            backgroundColor: 0xFF2ECC71CC,
-            textColor: 0xFFFFFFFFFF,
+            backgroundColor: 0x2ECC71CC,
+            textColor: 0xFFFFFFFF,
             isFavorite: true,
             repeatType: .nonRepeating,
-            backgroundImageName: "predefined_taupo"
+            backgroundImageName: "predefined_taupo",
+            layout: .bottom
         ),
 
         .init(
             title: "🎆 New Year",
             date: Calendar.current.date(byAdding: .month, value: 5, to: Date()) ?? Date(),
             categoryID: nil, // No category
-            backgroundColor: 0xFF9B59B6CC,
-            textColor: 0xFFFFFFFFFF,
+            backgroundColor: 0x9B59B6CC,
+            textColor: 0xFFFFFFFF,
             isFavorite: true,
             repeatType: .yearly,
             backgroundImageName: "predefined_wanaka_tree"

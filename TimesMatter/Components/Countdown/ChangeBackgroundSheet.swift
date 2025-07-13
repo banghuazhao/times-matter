@@ -33,34 +33,9 @@ class ChangeBackgroundSheetModel {
         }
     }
 
-    // Predefined images from the Backgrounds folder
-    let predefinedImages = [
-        "predefined_aurora",
-        "predefined_holiday",
-        "predefined_mercer_bay",
-        "predefined_mt_cook",
-        "predefined_mt_eden",
-        "predefined_shakespeare",
-        "predefined_wanaka_tree",
-        "predefined_star",
-        "predefined_taupo",
-        "predefined_tekapo",
-        "predefined_tree_sister",
-        "predefined_birthday",
-        "predefined_relationship",
-        "predefined_history",
-    ]
-
     init(countdown: Countdown.Draft, onSelect: @escaping (Countdown.Draft) -> Void) {
         self.countdown = countdown
         self.onSelect = onSelect
-    }
-
-    var isCustomImageSelected: Bool {
-        if let bgName = countdown.backgroundImageName, !predefinedImages.contains(bgName), !bgName.isEmpty {
-            return true
-        }
-        return false
     }
 
     var primaryColor: Color {
@@ -97,6 +72,10 @@ class ChangeBackgroundSheetModel {
 
     func updateTextColor(_ color: Color) {
         countdown.textColor = color.hexIntWithAlpha
+    }
+
+    func updateLayout(_ layout: LayoutType) {
+        countdown.layout = layout
     }
 
     func useColorOnly() {
@@ -168,7 +147,7 @@ struct ChangeBackgroundSheet: View {
                 case .textColor:
                     textColor
                 case .layout:
-                    EmptyView()
+                    layout
                 }
                 
                 // Tabs
@@ -261,7 +240,7 @@ struct ChangeBackgroundSheet: View {
                     }
                 }
 
-                ForEach(model.predefinedImages, id: \.self) { name in
+                ForEach(PredefinedImages.backgroundImages, id: \.self) { name in
                     ZStack(alignment: .topTrailing) {
                         Image(name, bundle: .main)
                             .resizable()
@@ -370,6 +349,46 @@ struct ChangeBackgroundSheet: View {
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundColor(.white)
                                 .background(Circle().fill(Color.black.opacity(0.3)))
+                                .offset(x: -4, y: 4)
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, AppSpacing.medium)
+        }
+        .frame(height: 100)
+    }
+
+    @ViewBuilder
+    private var layout: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: AppSpacing.small) {
+                ForEach(LayoutType.allCases, id: \.self) { layout in
+                    ZStack(alignment: .topTrailing) {
+                        VStack(spacing: 8) {
+                            Image(systemName: layout.iconName)
+                                .font(.system(size: 24, weight: .semibold))
+                                .foregroundColor(model.countdown.layout == layout ? model.primaryColor : .gray)
+                            Text(layout.displayName)
+                                .font(AppFont.footnote)
+                                .foregroundColor(model.countdown.layout == layout ? model.primaryColor : .gray)
+                        }
+                        .frame(width: 80, height: 80)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(model.countdown.layout == layout ? model.primaryColor.opacity(0.12) : Color.gray.opacity(0.1))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(model.countdown.layout == layout ? model.primaryColor : Color.clear, lineWidth: 2)
+                        )
+                        .onTapGesture {
+                            model.updateLayout(layout)
+                        }
+
+                        if model.countdown.layout == layout {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(model.primaryColor)
                                 .offset(x: -4, y: 4)
                         }
                     }

@@ -200,7 +200,8 @@ extension Countdown.Draft {
             repeatType: repeatType,
             repeatTime: repeatTime,
             backgroundImageName: backgroundImageName,
-            compactTimeUnit: compactTimeUnit
+            compactTimeUnit: compactTimeUnit,
+            layout: layout
         )
     }
 }

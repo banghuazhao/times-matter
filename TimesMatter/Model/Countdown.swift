@@ -22,6 +22,7 @@ struct Countdown: Identifiable {
     var repeatTime: Int = 1
     var backgroundImageName: String? = nil
     var compactTimeUnit: CompactTimeUnit = .days
+    var layout: LayoutType = .middle
 }
 
 // MARK: - Draft Extension
@@ -100,6 +101,29 @@ enum CompactTimeUnit: String, Codable, CaseIterable, QueryBindable {
             return "Month"
         case .years:
             return "Year"
+        }
+    }
+}
+
+// MARK: - Layout Type Enum
+enum LayoutType: String, Codable, CaseIterable, QueryBindable {
+    case top
+    case middle
+    case bottom
+    
+    var displayName: String {
+        switch self {
+        case .top: return "Top"
+        case .middle: return "Middle"
+        case .bottom: return "Bottom"
+        }
+    }
+    
+    var iconName: String {
+        switch self {
+        case .top: return "arrow.up.circle"
+        case .middle: return "minus.circle"
+        case .bottom: return "arrow.down.circle"
         }
     }
 }

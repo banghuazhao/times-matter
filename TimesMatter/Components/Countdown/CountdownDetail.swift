@@ -118,7 +118,9 @@ struct CountdownDetailView: View {
                 model.bgColor.ignoresSafeArea()
             }
             VStack {
-                Spacer(minLength: 0)
+                if model.countdown.layout != .top {
+                    Spacer(minLength: 0)
+                }
                 VStack(spacing: AppSpacing.large * scale) {
                     // Title and date
                     VStack(spacing: 8 * scale) {
@@ -141,8 +143,11 @@ struct CountdownDetailView: View {
                     .padding(.horizontal, AppSpacing.medium * scale)
                     .background(RoundedRectangle(cornerRadius: 16 * scale).fill(Color.black.opacity(0.18)))
                 }
-                Spacer(minLength: 0)
+                if model.countdown.layout != .bottom {
+                    Spacer(minLength: 0)
+                }
             }
+            .padding(.vertical, AppSpacing.large * scale)
             .padding(.horizontal, AppSpacing.medium * scale)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
@@ -180,8 +185,7 @@ struct CountdownDetailView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
             Text(value == 1 && value == 0 ? String(label.dropLast()) : label)
-                .font(AppFont.caption) // If AppFont.caption is not dynamic, consider scaling it as well
-                .font(.system(size: 14 * scale))
+                .font(.system(size: 13 * scale))
                 .foregroundColor(model.textColor)
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
