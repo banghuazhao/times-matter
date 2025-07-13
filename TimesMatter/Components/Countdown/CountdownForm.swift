@@ -557,9 +557,9 @@ struct CustomRepeatSheet: View {
     
     var repeatSummary: String {
         if repeatTime == 1 {
-            "This event will repeat every \(repeatType.singleRepeatTimeName.lowercased())"
+            String(localized: "This event will repeat every \(repeatType.singleRepeatTimeName.lowercased())")
         } else {
-            "This event will repeat every \(repeatTime) \(repeatType.multipleRepeatTimeName.lowercased())"
+            String(localized: "This event will repeat every \(repeatTime) \(repeatType.multipleRepeatTimeName.lowercased())")
         }
     }
 }

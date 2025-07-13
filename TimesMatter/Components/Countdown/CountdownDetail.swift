@@ -60,18 +60,18 @@ class CountdownDetailModel {
 
         var result: [(Int, String)] = []
         if years > 0 {
-            result.append((years, "years"))
+            result.append((years, String(localized: "years")))
         }
         if days > 0 || !result.isEmpty {
-            result.append((days, "days"))
+            result.append((days, String(localized: "days")))
         }
         if hours > 0 || !result.isEmpty {
-            result.append((hours, "hours"))
+            result.append((hours, String(localized: "hours")))
         }
         if minutes > 0 || !result.isEmpty {
-            result.append((minutes, "minutes"))
+            result.append((minutes, String(localized: "minutes")))
         }
-        result.append((seconds, "seconds"))
+        result.append((seconds, String(localized: "seconds")))
         return result
     }
 

@@ -279,10 +279,10 @@ struct MeView: View {
                 .foregroundColor(model.themeManager.current.textPrimary)
         }
         .frame(maxWidth: .infinity)
-        .padding(8)
-        .background(Color(.secondarySystemGroupedBackground))
-        .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+        .padding(AppSpacing.small)
+        .background(model.themeManager.current.card)
+        .cornerRadius(AppCornerRadius.card)
+        .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
     }
     
     private func featureItem(icon: String, title: String) -> some View {

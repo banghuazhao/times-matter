@@ -28,25 +28,74 @@
       }
     },
     "%@ ago" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@前"
+          }
+        }
+      }
     },
     "%@ in 5 minutes" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 5分钟后"
+          }
+        }
+      }
     },
     "%@ in 30 minutes" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 在30分钟后"
+          }
+        }
+      }
     },
     "%@ is in 3 days" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 在3天后"
+          }
+        }
+      }
     },
     "%@ is now" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@就是现在"
+          }
+        }
+      }
     },
     "%@ is tomorrow" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ 在明天"
+          }
+        }
+      }
     },
     "%@ left" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "剩余 %@"
+          }
+        }
+      }
     },
     "%lld" : {
       "localizations" : {
@@ -139,10 +188,24 @@
       }
     },
     "🎄 Christmas" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎄 圣诞节"
+          }
+        }
+      }
     },
     "🎆 New Year" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎆 新年"
+          }
+        }
+      }
     },
     "🎉 Anniversary" : {
       "localizations" : {
@@ -175,7 +238,14 @@
       }
     },
     "👆 Long press to edit" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👆 长按编辑"
+          }
+        }
+      }
     },
     "💼 Work" : {
       "localizations" : {
@@ -238,7 +308,14 @@
       }
     },
     "🚀 First use this app" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🚀 首次使用此应用"
+          }
+        }
+      }
     },
     "🚗 Car Service" : {
       "localizations" : {
@@ -301,7 +378,14 @@
       }
     },
     "Activities" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "活动"
+          }
+        }
+      }
     },
     "Ad-free experience" : {
       "localizations" : {
@@ -334,7 +418,14 @@
       }
     },
     "Animals" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "动物"
+          }
+        }
+      }
     },
     "At Event Time" : {
       "localizations" : {
@@ -367,16 +458,44 @@
       }
     },
     "Background Color" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "背景颜色"
+          }
+        }
+      }
     },
     "Background Image" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "背景图片"
+          }
+        }
+      }
     },
     "Blue" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "蓝色"
+          }
+        }
+      }
     },
     "Bottom" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "底部"
+          }
+        }
+      }
     },
     "Cancel" : {
       "localizations" : {
@@ -419,7 +538,14 @@
       }
     },
     "Choose your avatar" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择您的头像"
+          }
+        }
+      }
     },
     "Compact Time Format" : {
       "localizations" : {
@@ -492,7 +618,14 @@
       }
     },
     "Daily" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每日"
+          }
+        }
+      }
     },
     "Dark Mode" : {
       "localizations" : {
@@ -505,10 +638,24 @@
       }
     },
     "Date (Future → Past)" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日期（未来 → 过去）"
+          }
+        }
+      }
     },
     "Date (Past → Future)" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日期（过去 → 未来）"
+          }
+        }
+      }
     },
     "day" : {
       "comment" : "Singular day unit",
@@ -522,7 +669,14 @@
       }
     },
     "Day" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "天"
+          }
+        }
+      }
     },
     "days" : {
       "comment" : "Plural day unit",
@@ -536,10 +690,24 @@
       }
     },
     "Days" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "天"
+          }
+        }
+      }
     },
     "Default" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "默认"
+          }
+        }
+      }
     },
     "Delete" : {
       "localizations" : {
@@ -646,7 +814,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "活动画廊"
+            "value" : "事件库"
           }
         }
       }
@@ -658,6 +826,12 @@
             "state" : "new",
             "value" : "Every %1$lld days at %2$@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每 %1$lld 天在 %2$@"
+          }
         }
       }
     },
@@ -667,6 +841,12 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Every %1$lld months on day %2$lld at %3$@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每 %1$lld 个月在第 %2$lld 天 %3$@"
           }
         }
       }
@@ -678,6 +858,12 @@
             "state" : "new",
             "value" : "Every %1$lld weeks on %2$@ at %3$@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每 %1$lld 周在 %2$@ %3$@"
+          }
         }
       }
     },
@@ -688,17 +874,44 @@
             "state" : "new",
             "value" : "Every %1$lld years on %2$@ %3$lld at %4$@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每 %1$lld 年在 %2$@ %3$lld %4$@"
+          }
         }
       }
     },
     "Every Day" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每天"
+          }
+        }
+      }
     },
     "Every day at %@" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每天在 %@"
+          }
+        }
+      }
     },
     "Every Month" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每月"
+          }
+        }
+      }
     },
     "Every month on day %lld at %@" : {
       "localizations" : {
@@ -707,11 +920,24 @@
             "state" : "new",
             "value" : "Every month on day %1$lld at %2$@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每月在第 %1$lld 天 %2$@"
+          }
         }
       }
     },
     "Every Week" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每周"
+          }
+        }
+      }
     },
     "Every week on %@ at %@" : {
       "localizations" : {
@@ -720,11 +946,24 @@
             "state" : "new",
             "value" : "Every week on %1$@ at %2$@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每周在 %1$@ %2$@"
+          }
         }
       }
     },
     "Every Year" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每年"
+          }
+        }
+      }
     },
     "Every year on %@ %lld at %@" : {
       "localizations" : {
@@ -733,14 +972,34 @@
             "state" : "new",
             "value" : "Every year on %1$@ %2$lld at %3$@"
           }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每年在 %1$@ %2$lld %3$@"
+          }
         }
       }
     },
     "Favorites" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "收藏夹"
+          }
+        }
+      }
     },
     "Feedback" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "反馈"
+          }
+        }
+      }
     },
     "Filter By" : {
       "localizations" : {
@@ -753,20 +1012,34 @@
       }
     },
     "Food" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "食品"
+          }
+        }
+      }
     },
     "Gallery" : {
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "画廊"
+            "value" : "事件库"
           }
         }
       }
     },
     "Green" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "绿色"
+          }
+        }
+      }
     },
     "hour" : {
       "localizations" : {
@@ -789,10 +1062,24 @@
       }
     },
     "In the Future" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未来"
+          }
+        }
+      }
     },
     "In the Past" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "过去"
+          }
+        }
+      }
     },
     "Interval" : {
       "localizations" : {
@@ -805,7 +1092,14 @@
       }
     },
     "Layout" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "布局"
+          }
+        }
+      }
     },
     "Less than 1 day" : {
       "localizations" : {
@@ -838,7 +1132,14 @@
       }
     },
     "Middle" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中间"
+          }
+        }
+      }
     },
     "minute" : {
       "localizations" : {
@@ -872,10 +1173,24 @@
       }
     },
     "Month" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "月"
+          }
+        }
+      }
     },
     "Monthly" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每月"
+          }
+        }
+      }
     },
     "months" : {
       "comment" : "Plural month unit",
@@ -889,10 +1204,24 @@
       }
     },
     "Months" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "月"
+          }
+        }
+      }
     },
     "More Apps" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更多应用"
+          }
+        }
+      }
     },
     "More Features" : {
       "localizations" : {
@@ -925,10 +1254,24 @@
       }
     },
     "No Reminder" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无提醒"
+          }
+        }
+      }
     },
     "No Repeat" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "不重复"
+          }
+        }
+      }
     },
     "Note: When a category is deleted, all countdowns in that category will be moved to '📅 All' category." : {
       "localizations" : {
@@ -951,13 +1294,34 @@
       }
     },
     "Objects" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "物体"
+          }
+        }
+      }
     },
     "Only Once" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅一次"
+          }
+        }
+      }
     },
     "Orange" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "橙色"
+          }
+        }
+      }
     },
     "Others" : {
       "localizations" : {
@@ -1000,7 +1364,14 @@
       }
     },
     "Pink" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "粉色"
+          }
+        }
+      }
     },
     "Please describe your issue below" : {
       "localizations" : {
@@ -1033,10 +1404,24 @@
       }
     },
     "Purple" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "紫色"
+          }
+        }
+      }
     },
     "Rate Us" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "给我们评分"
+          }
+        }
+      }
     },
     "Reminder" : {
       "localizations" : {
@@ -1179,7 +1564,14 @@
       }
     },
     "Share App" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分享应用"
+          }
+        }
+      }
     },
     "Shows hours, minutes, or seconds" : {
       "localizations" : {
@@ -1202,7 +1594,14 @@
       }
     },
     "Smileys" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表情符号"
+          }
+        }
+      }
     },
     "Sort By" : {
       "localizations" : {
@@ -1235,7 +1634,14 @@
       }
     },
     "Text Color" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "文本颜色"
+          }
+        }
+      }
     },
     "Theme Color" : {
       "localizations" : {
@@ -1243,6 +1649,32 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "主题颜色"
+          }
+        }
+      }
+    },
+    "This event will repeat every %@" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个事件每%@重复"
+          }
+        }
+      }
+    },
+    "This event will repeat every %lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "This event will repeat every %1$lld %2$@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这个事件每%1$lld%2$@重复"
           }
         }
       }
@@ -1288,7 +1720,14 @@
       }
     },
     "Top" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顶部"
+          }
+        }
+      }
     },
     "Unit" : {
       "localizations" : {
@@ -1372,10 +1811,24 @@
       }
     },
     "Week" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "周"
+          }
+        }
+      }
     },
     "Weekly" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每周"
+          }
+        }
+      }
     },
     "weeks" : {
       "comment" : "Plural week unit",
@@ -1389,7 +1842,14 @@
       }
     },
     "Weeks" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "周"
+          }
+        }
+      }
     },
     "Welcome, Premium user!" : {
       "localizations" : {
@@ -1413,10 +1873,24 @@
       }
     },
     "Year" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "年"
+          }
+        }
+      }
     },
     "Yearly" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每年"
+          }
+        }
+      }
     },
     "years" : {
       "comment" : "Plural year unit",
@@ -1430,7 +1904,14 @@
       }
     },
     "Years" : {
-
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "年"
+          }
+        }
+      }
     },
     "You are now Premium user!" : {
       "localizations" : {
