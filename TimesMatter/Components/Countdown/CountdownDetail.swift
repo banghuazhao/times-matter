@@ -118,7 +118,11 @@ class CountdownDetailModel {
 struct CountdownDetailView: View {
     @Bindable var model: CountdownDetailModel
     @Environment(\.dismiss) private var dismiss
-
+    
+    // Share state
+    @State private var isShareSheetPresented = false
+    @State private var shareImage: UIImage? = nil
+    
     var body: some View {
         let scale = model.isPreview ? 0.6 : 1.0
         ZStack {
@@ -193,6 +197,7 @@ struct CountdownDetailView: View {
                     
                     Button {
                         Haptics.shared.vibrateIfEnabled()
+                        shareCountdownDetail()
                     } label: {
                         Image(systemName: "square.and.arrow.up")
                     }
@@ -226,6 +231,11 @@ struct CountdownDetailView: View {
                 Text(String(localized: "This will permanently delete ‘\(model.countdown.truncatedTitle)’. This action cannot be undone. Are you sure you want to proceed?"))
             }
         )
+        .sheet(isPresented: $isShareSheetPresented) {
+            if let shareImage {
+                ShareSheet(activityItems: [shareImage])
+            }
+        }
     }
 
     // Helper for timer block
@@ -245,6 +255,91 @@ struct CountdownDetailView: View {
         }
         .frame(minWidth: 56 * scale)
     }
+
+    // MARK: - Share helpers
+    private func shareCountdownDetail() {
+        // Render the ZStack as image (without navigation bar/toolbars)
+        let renderer = ImageRenderer(content: shareContentView)
+        renderer.scale = UIScreen.main.scale
+        if let image = renderer.uiImage {
+            self.shareImage = image
+            self.isShareSheetPresented = true
+        }
+    }
+
+    // The content to share (the main ZStack)
+    @ViewBuilder
+    private var shareContentView: some View {
+        ZStack {
+            if let bgName = model.countdown.backgroundImageName, !bgName.isEmpty {
+                if let uiImage = UIImage(contentsOfFile: bgName) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                        .ignoresSafeArea()
+                } else {
+                    if let _ = UIImage(named: bgName, in: .main, with: nil) {
+                        Image(bgName, bundle: .main)
+                            .resizable()
+                            .scaledToFill()
+                            .ignoresSafeArea()
+                    } else {
+                        model.bgColor.ignoresSafeArea()
+                    }
+                }
+            } else {
+                model.bgColor.ignoresSafeArea()
+            }
+            VStack {
+                if model.countdown.layout != .top {
+                    Spacer(minLength: 0)
+                }
+                VStack(spacing: AppSpacing.large) {
+                    VStack(spacing: 8) {
+                        Text(model.countdown.title)
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundColor(model.textColor)
+                            .multilineTextAlignment(.center)
+                            .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
+                        Text(model.countdown.timeSummary)
+                            .font(.system(size: 17))
+                            .foregroundColor(model.textColor)
+                            .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
+                    }
+                    HStack(spacing: 5) {
+                        ForEach(Array(model.timeLeftComponentsFull.enumerated()), id: \ .offset) { _, comp in
+                            timerBlock(value: comp.value, label: comp.label, scale: 1.0)
+                        }
+                    }
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, AppSpacing.medium)
+                    .background(RoundedRectangle(cornerRadius: 16).fill(Color.black.opacity(0.18)))
+                }
+                .padding(.vertical, AppSpacing.medium)
+                if model.countdown.layout != .bottom {
+                    Spacer(minLength: 0)
+                }
+            }
+            .padding(.vertical, AppSpacing.large)
+            .padding(.horizontal, AppSpacing.medium)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height) // Reasonable share size
+    }
+}
+
+// MARK: - ShareSheet Representable
+import UIKit
+import SwiftUI
+
+struct ShareSheet: UIViewControllerRepresentable {
+    var activityItems: [Any]
+    var applicationActivities: [UIActivity]? = nil
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: applicationActivities)
+        return controller
+    }
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 #Preview {
