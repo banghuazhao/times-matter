@@ -26,12 +26,10 @@ struct TimesMatterApp: App {
     @ViewBuilder
     var content: some View {
         ZStack {
-            NavigationStack {
-                if #available(iOS 18.0, *) {
-                    tabView18
-                } else {
-                    tabView
-                }
+            if #available(iOS 18.0, *) {
+                tabView18
+            } else {
+                tabView
             }
         }
     }

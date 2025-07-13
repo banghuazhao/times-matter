@@ -61,6 +61,21 @@ extension Countdown {
             }
         }
     }
+    
+    var notificationTitle: String {
+        switch reminder.time {
+        case .atEventTime:
+            "\(title) is now"
+        case .fiveMinutesEarly:
+            "\(title) in 5 minutes"
+        case .thirtyMinutesEarly:
+            "\(title) in 30 minutes"
+        case .oneDayEarly:
+            "\(title) is tomorrow"
+        case .threeDaysEarly:
+            "\(title) is in 3 days"
+        }
+    }
 
     // MARK: Next Occurrence
 

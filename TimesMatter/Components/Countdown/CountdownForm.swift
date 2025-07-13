@@ -211,7 +211,7 @@ struct CountdownFormView: View {
                             isPresented: Binding($model.route.showingReminderSheet)
                         ) {
                             ReminderSheet(reminder: $model.countdown.reminder)
-                                .presentationDetents([.medium, .large])
+                                .presentationDetents([.fraction(0.7), .large])
                         }
                         
                         Divider()

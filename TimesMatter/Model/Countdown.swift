@@ -2,14 +2,16 @@
 // Created by Banghua Zhao on 08/07/2025
 // Copyright Apps Bay Limited. All rights reserved.
 //
-  
+
 import Foundation
 import SharingGRDB
 
 // MARK: - Countdown Model
+
 @Table
 struct Countdown: Identifiable {
     // MARK: Properties
+
     let id: Int
     var title: String = ""
     var date: Date = Date()
@@ -28,16 +30,18 @@ struct Countdown: Identifiable {
 }
 
 // MARK: - Draft Extension
+
 extension Countdown.Draft: Identifiable {}
 
 // MARK: - Repeat Type Enum
+
 enum RepeatType: String, Codable, CaseIterable, QueryBindable {
     case nonRepeating
     case daily
     case weekly
     case monthly
     case yearly
-    
+
     var displayName: String {
         switch self {
         case .nonRepeating: return "No Repeat"
@@ -47,7 +51,7 @@ enum RepeatType: String, Codable, CaseIterable, QueryBindable {
         case .yearly: return "Yearly"
         }
     }
-    
+
     var singleRepeatTimeName: String {
         switch self {
         case .nonRepeating: return "No Repeat"
@@ -57,7 +61,7 @@ enum RepeatType: String, Codable, CaseIterable, QueryBindable {
         case .yearly: return "Year"
         }
     }
-    
+
     var multipleRepeatTimeName: String {
         switch self {
         case .nonRepeating: return "No Repeat"
@@ -67,19 +71,20 @@ enum RepeatType: String, Codable, CaseIterable, QueryBindable {
         case .yearly: return "Years"
         }
     }
-    
+
     static var allCasesToChoose: [RepeatType] {
         [.nonRepeating, .daily, .weekly, .monthly, .yearly]
     }
 }
 
 // MARK: - Compact Time Unit Enum
+
 enum CompactTimeUnit: String, Codable, CaseIterable, QueryBindable {
     case days
     case weeks
     case months
     case years
-    
+
     var displayName: String {
         switch self {
         case .days:
@@ -92,7 +97,7 @@ enum CompactTimeUnit: String, Codable, CaseIterable, QueryBindable {
             return "Years"
         }
     }
-    
+
     var singularName: String {
         switch self {
         case .days:
@@ -108,11 +113,12 @@ enum CompactTimeUnit: String, Codable, CaseIterable, QueryBindable {
 }
 
 // MARK: - Layout Type Enum
+
 enum LayoutType: String, Codable, CaseIterable, QueryBindable {
     case top
     case middle
     case bottom
-    
+
     var displayName: String {
         switch self {
         case .top: return "Top"
@@ -120,7 +126,7 @@ enum LayoutType: String, Codable, CaseIterable, QueryBindable {
         case .bottom: return "Bottom"
         }
     }
-    
+
     var iconName: String {
         switch self {
         case .top: return "arrow.up.circle"

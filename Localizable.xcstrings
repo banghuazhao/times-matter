@@ -44,16 +44,28 @@
     "$5.99 - Upgrade to Premium" : {
 
     },
+    "1 Day Early" : {
+
+    },
     "1 day or more" : {
 
     },
+    "3 Days Early" : {
+
+    },
     "3/5" : {
+
+    },
+    "5 Minutes Early" : {
 
     },
     "7" : {
 
     },
     "12" : {
+
+    },
+    "30 Minutes Early" : {
 
     },
     "Ad-free experience" : {
@@ -63,6 +75,9 @@
 
     },
     "All" : {
+
+    },
+    "At Event Time" : {
 
     },
     "Automatically adjusts time display based on remaining duration for better readability." : {
@@ -227,9 +242,6 @@
     "Reminder" : {
 
     },
-    "Reminder Settings" : {
-
-    },
     "Reminder Time" : {
 
     },
@@ -240,21 +252,6 @@
 
     },
     "Remove from Favorites" : {
-
-    },
-    "At Event Time" : {
-
-    },
-    "5 Minutes Early" : {
-
-    },
-    "30 Minutes Early" : {
-
-    },
-    "1 Day Early" : {
-
-    },
-    "3 Days Early" : {
 
     },
     "Repeat" : {

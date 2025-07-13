@@ -9,8 +9,8 @@ class ReminderNotificationManager {
         guard reminder.type != .noReminder else { return }
 
         let content = UNMutableNotificationContent()
-        content.title = countdown.title
-        content.body = "It's time for your event: \(countdown.title)"
+        content.title = countdown.notificationTitle
+        content.body = countdown.timeSummary
         if reminder.soundName != "Default" {
             content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: reminder.soundName))
         } else {
@@ -26,10 +26,13 @@ class ReminderNotificationManager {
         case .onlyOnce:
             trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         case .everyDay:
-            dateComponents.year = nil; dateComponents.month = nil; dateComponents.day = nil
+            dateComponents.year = nil
+            dateComponents.month = nil
+            dateComponents.day = nil
             trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         case .everyWeek:
-            dateComponents.year = nil; dateComponents.month = nil
+            dateComponents.year = nil
+            dateComponents.month = nil
             trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         case .everyMonth:
             dateComponents.year = nil
