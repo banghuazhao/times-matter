@@ -12,11 +12,10 @@ struct Countdown: Identifiable {
     // MARK: Properties
     let id: Int
     var title: String = ""
-    var icon: String = "⏰"
     var date: Date = Date()
     var categoryID: Category.ID?
-    var backgroundColor: Int = 0x2ECC71CC
-    var textColor: Int = 0xFFFFFFFFFF
+    var backgroundColor: Int = 0x2C3E50CC
+    var textColor: Int = 0xFFFFFFFF
     var isFavorite: Bool = false
     var isArchived: Bool = false
     var repeatType: RepeatType = .nonRepeating

@@ -8,7 +8,6 @@ import Foundation
 struct CountdownStore {
     static let testMinute = Countdown.Draft(
         title: "Test minute",
-        icon: "🔧",
         date: Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date(),
         backgroundColor: 0xFF6B9DCC,
         textColor: 0xFFFFFFFFFF,
@@ -16,8 +15,7 @@ struct CountdownStore {
     )
 
     static let testSecond = Countdown.Draft(
-        title: "Test second",
-        icon: "🔧",
+        title: "🔧 Test second",
         date: Calendar.current.date(byAdding: .second, value: 10, to: Date()) ?? Date(),
         backgroundColor: 0xFF6B9DCC,
         textColor: 0xFFFFFFFFFF,
@@ -30,8 +28,7 @@ struct CountdownStore {
 
         // Birthday countdowns
         .init(
-            title: "Mom's Birthday",
-            icon: "🎂",
+            title: "👩🎂 Mom's Birthday",
             date: Calendar.current.date(byAdding: .month, value: 2, to: Date()) ?? Date(),
             categoryID: 2, // Birthday category
             backgroundColor: 0xFF6B9DCC,
@@ -42,8 +39,7 @@ struct CountdownStore {
         ),
 
         .init(
-            title: "Dad's Birthday",
-            icon: "🎉",
+            title: "👨🎂 Dad's Birthday",
             date: Calendar.current.date(byAdding: .day, value: 45, to: Date()) ?? Date(),
             categoryID: 2, // Birthday category
             backgroundColor: 0xFF4ECDC4CC,
@@ -55,8 +51,7 @@ struct CountdownStore {
 
         // Anniversary countdowns
         .init(
-            title: "Wedding Anniversary",
-            icon: "💍",
+            title: "💍 Wedding Anniversary",
             date: Calendar.current.date(byAdding: .month, value: 6, to: Date()) ?? Date(),
             categoryID: 1, // Anniversary category
             backgroundColor: 0xFFE74C3CCC,
@@ -66,21 +61,10 @@ struct CountdownStore {
             backgroundImageName: "relationship"
         ),
 
-        .init(
-            title: "First Date Anniversary",
-            icon: "💕",
-            date: Calendar.current.date(byAdding: .day, value: 15, to: Date()) ?? Date(),
-            categoryID: 1, // Anniversary category
-            backgroundColor: 0xFFF39C12CC,
-            textColor: 0xFFFFFFFFFF,
-            isFavorite: false,
-            repeatType: .yearly
-        ),
 
         // Work countdowns
         .init(
             title: "Project Deadline",
-            icon: "📋",
             date: Calendar.current.date(byAdding: .weekOfYear, value: -3, to: Date()) ?? Date(),
             categoryID: 3, // Work category
             backgroundColor: 0xFF34495ECC,
@@ -92,7 +76,6 @@ struct CountdownStore {
 
         .init(
             title: "Team Meeting",
-            icon: "👥",
             date: Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date(),
             categoryID: 3, // Work category
             backgroundColor: 0xFF95A5A6CC,
@@ -103,8 +86,7 @@ struct CountdownStore {
 
         // Reminder countdowns
         .init(
-            title: "Dentist Appointment",
-            icon: "🦷",
+            title: "🦷 Dentist Appointment",
             date: Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date(),
             categoryID: 4, // Reminders category
             backgroundColor: 0xFF1ABC9CCC,
@@ -116,8 +98,7 @@ struct CountdownStore {
         ),
 
         .init(
-            title: "Car Service",
-            icon: "🚗",
+            title: "🚗 Car Service",
             date: Calendar.current.date(byAdding: .month, value: 1, to: Date()) ?? Date(),
             categoryID: 4, // Reminders category
             backgroundColor: 0xFFE67E22CC,
@@ -128,8 +109,7 @@ struct CountdownStore {
 
         // Personal countdowns
         .init(
-            title: "Vacation",
-            icon: "🏖️",
+            title: "🏖️ Vacation",
             date: Calendar.current.date(byAdding: .month, value: -1, to: Date()) ?? Date(),
             categoryID: nil, // No category
             backgroundColor: 0xFF2ECC71CC,
@@ -140,8 +120,7 @@ struct CountdownStore {
         ),
 
         .init(
-            title: "New Year",
-            icon: "🎆",
+            title: "🎆 New Year",
             date: Calendar.current.date(byAdding: .month, value: 5, to: Date()) ?? Date(),
             categoryID: nil, // No category
             backgroundColor: 0xFF9B59B6CC,

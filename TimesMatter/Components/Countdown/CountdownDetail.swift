@@ -115,12 +115,9 @@ struct CountdownDetailView: View {
             }
             VStack {
                 Spacer(minLength: 0)
-                VStack(spacing: 32 * scale) {
+                VStack(spacing: AppSpacing.large * scale) {
                     // Title and date
                     VStack(spacing: 8 * scale) {
-                        Text(model.countdown.icon)
-                            .font(.system(size: 32 * scale, weight: .bold))
-                            .multilineTextAlignment(.center)
 
                         Text(model.countdown.title)
                             .font(.system(size: 32 * scale, weight: .bold))
@@ -197,8 +194,7 @@ struct CountdownDetailView: View {
         model: CountdownDetailModel(
             countdown: Countdown(
                 id: 1,
-                title: "Test",
-                icon: "😀",
+                title: "😀 Test",
                 date: futureDate,
                 backgroundColor: 0xFF6B9DCC,
                 textColor: 0xFFFFFFFF,

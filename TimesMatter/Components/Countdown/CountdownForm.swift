@@ -37,6 +37,7 @@ class CountdownFormModel: HashableObject {
         case showCompactTimeFormatInfo
         case selectCategory
         case showingCustomRepeatSheet
+        case showingBackgroundSheet
     }
     var route: Route?
     
@@ -83,12 +84,15 @@ class CountdownFormModel: HashableObject {
             route = nil
         }
     }
+    
+    func showChangeBackgroundSheet() {
+        route = .showingBackgroundSheet
+    }
 }
 
 struct CountdownFormView: View {
     @State var model: CountdownFormModel
     @State private var showingTimeFormatPopover = false
-    @State private var showingBackgroundSheet = false
     @Dependency(\.themeManager) var themeManager
     
     @Environment(\.dismiss) var dismiss
@@ -115,6 +119,9 @@ struct CountdownFormView: View {
             ScrollView {
                 VStack(spacing: AppSpacing.large) {
                     CountdownRow(countdown: model.displayMock)
+                        .onTapGesture {
+                            model.showChangeBackgroundSheet()
+                        }
                     
                     // Form Section
                     VStack(spacing: AppSpacing.smallMedium) {
@@ -217,13 +224,15 @@ struct CountdownFormView: View {
                                 .foregroundColor(textPrimaryColor)
                             Spacer()
                             Button {
-                                showingBackgroundSheet = true
+                                model.showChangeBackgroundSheet()
                             } label: {
                                 Text("Change")
                             }
                             .buttonStyle(.appRect)
                         }
-                        .sheet(isPresented: $showingBackgroundSheet) {
+                        .sheet(
+                            isPresented: Binding($model.route.showingBackgroundSheet)
+                        ) {
                             ChangeBackgroundSheet(
                                 model: ChangeBackgroundSheetModel(
                                     countdown: model.countdown

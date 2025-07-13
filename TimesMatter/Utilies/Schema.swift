@@ -47,7 +47,6 @@ func appDatabase() throws -> any DatabaseWriter {
             CREATE TABLE "countdowns" (
              "id" INTEGER PRIMARY KEY AUTOINCREMENT, 
              "title" TEXT NOT NULL DEFAULT '', 
-             "icon" TEXT NOT NULL DEFAULT '', 
              "date" TEXT NOT NULL DEFAULT '', 
              "categoryID" INTEGER REFERENCES "categories"("id") ON DELETE SET NULL,
              "backgroundColor" TEXT NOT NULL DEFAULT '', 

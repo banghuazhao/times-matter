@@ -62,37 +62,6 @@ extension Countdown {
         }
     }
 
-//    var repeatSummary: String {
-//        switch repeatType {
-//        case .nonRepeating:
-//            return "No repeat"
-//        case .daily:
-//            if repeatTime == 1 {
-//                return "Every day "
-//            } else {
-//                return "Every \(repeatTime) days"
-//            }
-//        case .weekly:
-//            if repeatTime == 1 {
-//                return "Every week"
-//            } else {
-//                return "Every \(repeatTime) weeks"
-//            }
-//        case .monthly:
-//            if repeatTime == 1 {
-//                return "Every month"
-//            } else {
-//                return "Every \(repeatTime) months"
-//            }
-//        case .yearly:
-//            if repeatTime == 1 {
-//                return "Every year"
-//            } else {
-//                return "Every \(repeatTime) years"
-//            }
-//        }
-//    }
-
     // MARK: Next Occurrence
 
     /// Computed property for next occurrence date (for repeating countdowns)
@@ -222,7 +191,6 @@ extension Countdown.Draft {
         Countdown(
             id: 0,
             title: title,
-            icon: icon,
             date: date,
             categoryID: categoryID,
             backgroundColor: backgroundColor,

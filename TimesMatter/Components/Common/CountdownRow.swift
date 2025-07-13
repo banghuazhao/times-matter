@@ -10,11 +10,6 @@ struct CountdownRow: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            // Icon
-            Text(countdown.icon)
-                .font(.system(size: 32))
-                .padding(.leading, AppSpacing.smallMedium)
-            
             VStack(alignment: .leading, spacing: 4) {
                 // Title
                 Text(countdown.title)
@@ -30,7 +25,7 @@ struct CountdownRow: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
             }
-            .padding(.leading, AppSpacing.small)
+            .padding(.leading, AppSpacing.medium)
             .padding(.vertical, AppSpacing.smallMedium)
             
             Spacer()
@@ -86,8 +81,7 @@ struct CountdownRow_Previews: PreviewProvider {
     static var previews: some View {
         let sample = Countdown(
             id: 1,
-            title: "Test",
-            icon: "😀",
+            title: "😀 Test",
             date: Date(),
             backgroundColor: 0xFF6B9DCC,
             textColor: 0xFFFFFFFF,
