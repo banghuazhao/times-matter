@@ -219,4 +219,154 @@ extension Countdown.Draft {
             layout: layout
         )
     }
+    
+    /// Returns a summary string for display: repeat info if repeating, otherwise the formatted date.
+    var timeSummary: String {
+        let timeFormatter = DateFormatter()
+        timeFormatter.locale = Locale.current
+        timeFormatter.dateFormat = "h:mm a"
+        let timeString = timeFormatter.string(from: date)
+        switch repeatType {
+        case .nonRepeating:
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale.current
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .short
+            return dateFormatter.string(from: date)
+        case .daily:
+            if repeatTime == 1 {
+                return "Every day at \(timeString)"
+            } else {
+                return "Every \(repeatTime) days at \(timeString)"
+            }
+        case .weekly:
+            let weekday = Calendar.current.component(.weekday, from: date)
+            let weekdayName = Calendar.current.weekdaySymbols[weekday - 1]
+            if repeatTime == 1 {
+                return "Every week on \(weekdayName) at \(timeString)"
+            } else {
+                return "Every \(repeatTime) weeks on \(weekdayName) at \(timeString)"
+            }
+        case .monthly:
+            let day = Calendar.current.component(.day, from: date)
+            if repeatTime == 1 {
+                return "Every month on day \(day) at \(timeString)"
+            } else {
+                return "Every \(repeatTime) months on day \(day) at \(timeString)"
+            }
+        case .yearly:
+            let month = Calendar.current.component(.month, from: date)
+            let day = Calendar.current.component(.day, from: date)
+            let monthName = DateFormatter().monthSymbols[month - 1]
+            if repeatTime == 1 {
+                return "Every year on \(monthName) \(day) at \(timeString)"
+            } else {
+                return "Every \(repeatTime) years on \(monthName) \(day) at \(timeString)"
+            }
+        }
+    }
+    
+    // MARK: Next Occurrence
+
+    /// Computed property for next occurrence date (for repeating countdowns)
+    var nextOccurrence: Date? {
+        guard repeatType != .nonRepeating else { return date }
+
+        let now = Date()
+        if date > now { return date }
+
+        let calendar = Calendar.current
+        var nextDate = date
+
+        switch repeatType {
+        case .nonRepeating:
+            return nil
+        case .daily:
+            nextDate = calendar.date(byAdding: .day, value: repeatTime, to: date) ?? date
+        case .weekly:
+            nextDate = calendar.date(byAdding: .weekOfYear, value: repeatTime, to: date) ?? date
+        case .monthly:
+            nextDate = calendar.date(byAdding: .month, value: repeatTime, to: date) ?? date
+        case .yearly:
+            nextDate = calendar.date(byAdding: .year, value: repeatTime, to: date) ?? date
+        }
+
+        // Keep adding intervals until we get a future date
+        while nextDate <= now {
+            switch repeatType {
+            case .daily:
+                nextDate = calendar.date(byAdding: .day, value: repeatTime, to: nextDate) ?? nextDate
+            case .weekly:
+                nextDate = calendar.date(byAdding: .weekOfYear, value: repeatTime, to: nextDate) ?? nextDate
+            case .monthly:
+                nextDate = calendar.date(byAdding: .month, value: repeatTime, to: nextDate) ?? nextDate
+            case .yearly:
+                nextDate = calendar.date(byAdding: .year, value: repeatTime, to: nextDate) ?? nextDate
+            case .nonRepeating:
+                return nil
+            }
+        }
+
+        return nextDate
+    }
+
+    // MARK: Compact Relative Time
+
+    /// Computed property for relative time (number and label)
+    func calculateRelativeTime(currentTime: Date) -> (number: String, label: String) {
+        let now = currentTime
+        let targetDate: Date
+        if repeatType == .nonRepeating {
+            targetDate = date
+        } else {
+            targetDate = nextOccurrence ?? date
+        }
+
+        let interval = targetDate.timeIntervalSince(now)
+        let absInterval = Swift.abs(interval)
+        let isFuture = interval > 0
+        let calendar = Calendar.current
+        let value: Int
+        let component: Calendar.Component
+
+        if absInterval < 60 {
+            // Less than 1 minute: show seconds
+            value = Swift.max(Int(absInterval), 0)
+            component = .second
+        } else if absInterval < 3600 {
+            // Less than 1 hour: show minutes
+            value = Swift.max(Int(absInterval / 60), 0)
+            component = .minute
+        } else if absInterval < 86400 {
+            // Less than 1 day: show hours
+            value = Swift.max(Int(absInterval / 3600), 0)
+            component = .hour
+        } else {
+            switch compactTimeUnit {
+            case .days:
+                component = .day
+            case .weeks:
+                component = .weekOfYear
+            case .months:
+                component = .month
+            case .years:
+                component = .year
+            }
+            let startOfNow = calendar.startOfDay(for: now)
+            let startOfTarget = calendar.startOfDay(for: targetDate)
+            value = Swift.abs(calendar.dateComponents([component], from: startOfNow, to: startOfTarget).value(for: component) ?? 0)
+        }
+
+        let unit = component.localizedUnit(for: value)
+        let label = String(localized: isFuture ? "\(unit) left" : "\(unit) ago")
+        if value == 0 {
+            if component == .second {
+                return ("✅", String(localized: "Now"))
+            } else {
+                return ("1-", label)
+            }
+        } else {
+            return ("\(value)", label)
+        }
+    }
 }

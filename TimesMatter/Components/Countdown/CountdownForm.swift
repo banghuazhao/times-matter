@@ -39,6 +39,7 @@ class CountdownFormModel: HashableObject {
         case showingCustomRepeatSheet
         case showingBackgroundSheet
         case showingReminderSheet
+        case showingGallerySheet
     }
     var route: Route?
     
@@ -74,7 +75,7 @@ class CountdownFormModel: HashableObject {
     }
     
     func onTapEventGallery() {
-        
+        route = .showingGallerySheet
     }
     
     func onTapSelectCategory() {
@@ -83,6 +84,13 @@ class CountdownFormModel: HashableObject {
     
     func onSelectCategory(_ category: Category?) {
         countdown.categoryID = category?.id
+        Task {
+            route = nil
+        }
+    }
+    
+    func onSelectGalleryItem(_ selectedDraft: Countdown.Draft) {
+        countdown = selectedDraft
         Task {
             route = nil
         }
@@ -345,6 +353,14 @@ struct CountdownFormView: View {
                      repeatTime: $model.countdown.repeatTime
                  )
                  .presentationDetents([.medium, .large])
+             }
+             .sheet(isPresented: Binding($model.route.showingGallerySheet)) {
+                 GallerySheet(
+                     onSelect: { selectedDraft in
+                         model.onSelectGalleryItem(selectedDraft)
+                     }
+                 )
+                 .presentationDetents([.large])
              }
              .easyToast(isPresented: $model.showTitleEmptyToast, message: String(localized:"Event title is empty"))
         }

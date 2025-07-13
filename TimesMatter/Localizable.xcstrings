@@ -29,10 +29,25 @@
     "✨ Thanks for unlocking the full experience." : {
 
     },
+    "🌅 Sunrise" : {
+
+    },
+    "🌅 Sunset" : {
+
+    },
+    "🌟 Special Event" : {
+
+    },
     "🎂 Birthday" : {
 
     },
+    "🎉 Anniversary" : {
+
+    },
     "🎉 Holiday" : {
+
+    },
+    "🏖️ Vacation" : {
 
     },
     "💼 Work" : {
@@ -44,7 +59,16 @@
     "📅 All" : {
 
     },
+    "📅 Project Deadline" : {
+
+    },
     "🥳 Anniversary" : {
+
+    },
+    "🦷 Dentist Appointment" : {
+
+    },
+    "🚗 Car Service" : {
 
     },
     "1 Day Early" : {
@@ -90,6 +114,9 @@
 
     },
     "Change" : {
+
+    },
+    "Checkin Sound" : {
 
     },
     "Compact Time Format" : {
@@ -150,6 +177,9 @@
 
     },
     "Event title is empty" : {
+
+    },
+    "Events Gallery" : {
 
     },
     "Filter By" : {

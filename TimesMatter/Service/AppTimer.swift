@@ -5,6 +5,7 @@
 
 import Foundation
 import Dependencies
+import SwiftUI
 
 // MARK: - App Timer Implementation
 @Observable
@@ -26,7 +27,9 @@ class AppTimer {
         // Start new timer
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             Task { @MainActor in
-                self?.currentTime = Date()
+                withAnimation {
+                    self?.currentTime = Date()
+                }
             }
         }
     }

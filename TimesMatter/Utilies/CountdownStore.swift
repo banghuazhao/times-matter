@@ -6,15 +6,6 @@
 import Foundation
 
 struct CountdownStore {
-    static let testMinute = Countdown.Draft(
-        title: "Test minute",
-        date: Calendar.current.date(byAdding: .hour, value: 1, to: Date()) ?? Date(),
-        backgroundColor: 0xFF6B9DCC,
-        textColor: 0xFFFFFFFF,
-        backgroundImageName: "predefined_aurora",
-        layout: .top
-    )
-
     static let testSecond = Countdown.Draft(
         title: "🔧 Test second",
         date: Calendar.current.date(byAdding: .second, value: 10, to: Date()) ?? Date(),
@@ -68,7 +59,7 @@ struct CountdownStore {
         isFavorite: false,
         repeatType: .yearly,
         backgroundImageName: "predefined_aurora",
-        reminder: .init(type: .everyYear, time: .atEventTime)
+        reminder: .init(type: .everyYear, time: .atEventTime, soundName: "Sunny Step.mp3")
     )
     
     static let seedLive: [Countdown.Draft] = [
@@ -79,7 +70,6 @@ struct CountdownStore {
     ]
 
     static let seedDebug: [Countdown.Draft] = [
-        testMinute,
         testSecond,
 
         // Birthday countdowns
