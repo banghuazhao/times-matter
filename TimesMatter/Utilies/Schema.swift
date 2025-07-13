@@ -75,16 +75,17 @@ func appDatabase() throws -> any DatabaseWriter {
         .execute(db)
     }
     
-    migrator.registerMigration("Seed category") { db in
+    migrator.registerMigration("Seed") { db in
         try db.seed {
             CategoryStore.seed
+            CountdownStore.seedLive
         }
     }
     
     #if DEBUG
         migrator.registerMigration("Seed countdown") { db in
             try db.seed {
-                CountdownStore.seed
+                CountdownStore.seedDebug
             }
         }
     #endif

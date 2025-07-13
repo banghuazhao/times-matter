@@ -23,8 +23,62 @@ struct CountdownStore {
         backgroundImageName: "predefined_star",
         layout: .bottom
     )
+    
+    static let christmas = Countdown.Draft(
+        title: "🎄 Christmas",
+        date: Calendar.current.nextDate(after: Date(), matching: DateComponents(month: 12, day: 25, hour: 0, minute: 0), matchingPolicy: .nextTimePreservingSmallerComponents) ?? Date(),
+        categoryID: 3,
+        backgroundColor: 0x9B59B6CC,
+        textColor: 0xFFFFFFFF,
+        isFavorite: true,
+        repeatType: .yearly,
+        backgroundImageName: "predefined_holiday",
+        reminder: .init(type: .everyYear, time: .oneDayEarly)
+    )
 
-    static let seed: [Countdown.Draft] = [
+    static let newYear = Countdown.Draft(
+        title: "🎆 New Year",
+        date: Calendar.current.nextDate(after: Date(), matching: DateComponents(month: 1, day: 1, hour: 0, minute: 0), matchingPolicy: .nextTimePreservingSmallerComponents) ?? Date(),
+        categoryID: 3,
+        backgroundColor: 0x9B59B6CC,
+        textColor: 0xFFFFFFFF,
+        isFavorite: true,
+        repeatType: .yearly,
+        backgroundImageName: "predefined_wanaka_tree",
+        reminder: .init(type: .everyYear, time: .thirtyMinutesEarly)
+    )
+
+    static let longPressToEdit = Countdown.Draft(
+        title: "👆 Long press to edit",
+        date: Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date(),
+        backgroundColor: 0xFF6B9DCC,
+        textColor: 0xFFFFFFFF,
+        isFavorite: false,
+        repeatType: .nonRepeating,
+        backgroundImageName: "predefined_star",
+        reminder: .init(type: .onlyOnce, time: .atEventTime)
+    )
+
+    static let firstUse = Countdown.Draft(
+        title: "🚀 First use this app",
+        date: Date(),
+        categoryID: 1,
+        backgroundColor: 0x2ECC71CC,
+        textColor: 0xFFFFFFFF,
+        isFavorite: false,
+        repeatType: .yearly,
+        backgroundImageName: "predefined_aurora",
+        reminder: .init(type: .everyYear, time: .atEventTime)
+    )
+    
+    static let seedLive: [Countdown.Draft] = [
+        firstUse,
+        longPressToEdit,
+        christmas,
+        newYear
+    ]
+
+    static let seedDebug: [Countdown.Draft] = [
         testMinute,
         testSecond,
 
@@ -36,8 +90,7 @@ struct CountdownStore {
             backgroundColor: 0xFF6B9DCC,
             textColor: 0xFFFFFFFF,
             isFavorite: true,
-            repeatType: .yearly,
-            backgroundImageName: "predefined_holiday"
+            repeatType: .yearly
         ),
 
         .init(
@@ -47,8 +100,7 @@ struct CountdownStore {
             backgroundColor: 0x4ECDC4CC,
             textColor: 0xFFFFFFFF,
             isFavorite: false,
-            repeatType: .yearly,
-            backgroundImageName: "predefined_mt_cook"
+            repeatType: .yearly
         ),
 
         // Anniversary countdowns
@@ -64,28 +116,6 @@ struct CountdownStore {
             layout: .top
         ),
 
-
-        // Work countdowns
-        .init(
-            title: "Project Deadline",
-            date: Calendar.current.date(byAdding: .weekOfYear, value: -3, to: Date()) ?? Date(),
-            categoryID: 3, // Work category
-            backgroundColor: 0x34495ECC,
-            textColor: 0xFFFFFFFF,
-            isFavorite: false,
-            repeatType: .nonRepeating,
-            backgroundImageName: "predefined_mercer_bay"
-        ),
-
-        .init(
-            title: "Team Meeting",
-            date: Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date(),
-            categoryID: 3, // Work category
-            backgroundColor: 0x95A5A6CC,
-            textColor: 0xFFFFFFFF,
-            isFavorite: false,
-            repeatType: .weekly
-        ),
 
         // Reminder countdowns
         .init(
@@ -121,17 +151,6 @@ struct CountdownStore {
             repeatType: .nonRepeating,
             backgroundImageName: "predefined_taupo",
             layout: .bottom
-        ),
-
-        .init(
-            title: "🎆 New Year",
-            date: Calendar.current.date(byAdding: .month, value: 5, to: Date()) ?? Date(),
-            categoryID: nil, // No category
-            backgroundColor: 0x9B59B6CC,
-            textColor: 0xFFFFFFFF,
-            isFavorite: true,
-            repeatType: .yearly,
-            backgroundImageName: "predefined_wanaka_tree"
         ),
     ]
 }

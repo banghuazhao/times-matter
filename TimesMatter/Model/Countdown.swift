@@ -188,4 +188,10 @@ struct CountdownReminder: Codable, Equatable {
     var type: ReminderType = .onlyOnce
     var time: ReminderTime = .atEventTime
     var soundName: String = "Default"
+    
+    init(type: ReminderType = .onlyOnce, time: ReminderTime = .atEventTime, soundName: String = "Default") {
+        self.type = type
+        self.time = time
+        self.soundName = soundName
+    }
 }

@@ -26,7 +26,7 @@ struct PurchaseSheet: View {
                             Image(systemName: "xmark")
                         
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.appCircular)
                         Spacer()
                     }
                     .padding(.top, 12)

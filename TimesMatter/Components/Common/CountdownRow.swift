@@ -12,12 +12,19 @@ struct CountdownRow: View {
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 4) {
                 // Title
-                Text(countdown.title)
-                    .font(AppFont.title3)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
-                    .foregroundColor(Color(hex: countdown.textColor))
-                    .lineLimit(1)
+                HStack {
+                    Text(countdown.title)
+                        .font(AppFont.title3)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                        .foregroundColor(Color(hex: countdown.textColor))
+                        .lineLimit(1)
+                    if countdown.isFavorite {
+                        Image(systemName: "heart.fill")
+                            .foregroundStyle(.red)
+                            .font(AppFont.headline)
+                    }
+                }
                 // Secondary description: always show timeSummary
                 Text(countdown.timeSummary)
                     .font(AppFont.caption)

@@ -11,6 +11,9 @@
         }
       }
     },
+    "%@ - Upgrade to Premium" : {
+
+    },
     "%lld" : {
 
     },
@@ -29,6 +32,9 @@
     "🎂 Birthday" : {
 
     },
+    "🎉 Holiday" : {
+
+    },
     "💼 Work" : {
 
     },
@@ -39,9 +45,6 @@
 
     },
     "🥳 Anniversary" : {
-
-    },
-    "$5.99 - Upgrade to Premium" : {
 
     },
     "1 Day Early" : {
@@ -168,6 +171,9 @@
 
     },
     "Less than 1 day" : {
+
+    },
+    "Loading product..." : {
 
     },
     "Me" : {
@@ -328,6 +334,9 @@
     },
     "years" : {
       "comment" : "Plural year unit"
+    },
+    "You are now Premium user!" : {
+
     },
     "You're All Set!" : {
 

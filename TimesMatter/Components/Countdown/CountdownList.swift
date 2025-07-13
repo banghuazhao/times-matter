@@ -18,6 +18,9 @@ class CountdownListModel {
 
     @ObservationIgnored
     @Shared(.appStorage("selectedCategory")) var selectedCategory: Category.ID?
+    
+    @ObservationIgnored
+    @Shared(.appStorage("isFirstLaunch")) var isFirstLaunch = true
 
     // MARK: Filter & Order State
 
@@ -192,6 +195,18 @@ class CountdownListModel {
             ReminderNotificationManager.shared.removeNotification(for: countdown)
         }
     }
+    
+    func scheduleRemindersForFirstLaunch() {
+        if isFirstLaunch {
+            for countdown in countdowns {
+                ReminderNotificationManager.shared.removeNotification(for: countdown)
+                ReminderNotificationManager.shared.scheduleNotification(for: countdown)
+            }
+            $isFirstLaunch.withLock {
+                $0 = false
+            }
+        }
+    }
 }
 
 struct CountdownListView: View {
@@ -264,6 +279,9 @@ struct CountdownListView: View {
             }
             .appBackground()
             .navigationBarTitleDisplayMode(.inline)
+            .task {
+                model.scheduleRemindersForFirstLaunch()
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Menu {
