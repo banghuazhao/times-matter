@@ -18,12 +18,6 @@ struct SettingView: View {
         ScrollView {
             VStack(spacing: AppSpacing.large) {
                 settingsSection(title: "Feedback") {
-                    Toggle(isOn: $buttonSoundEnabled) {
-                        Text(String(localized: "Checkin Sound"))
-                            .font(AppFont.body)
-                            .foregroundColor(themeManager.current.textPrimary)
-                    }
-                    .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
                     Toggle(isOn: $vibrateEnabled) {
                         Text(String(localized: "Vibrate"))
                             .font(AppFont.body)

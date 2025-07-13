@@ -155,6 +155,7 @@ struct ChangeBackgroundSheet: View {
                     HStack(spacing: AppSpacing.smallMedium) {
                         ForEach(ChangeBackgroundSheetModel.Tab.allCases) { tab in
                             Button(action: {
+                                Haptics.shared.vibrateIfEnabled()
                                 model.selectTab(tab)
                             }) {
                                 VStack(spacing: 4) {
@@ -185,6 +186,7 @@ struct ChangeBackgroundSheet: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
+                        Haptics.shared.vibrateIfEnabled()
                         dismiss()
                     } label: {
                         Image(systemName: "xmark")
@@ -194,6 +196,7 @@ struct ChangeBackgroundSheet: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
+                        Haptics.shared.vibrateIfEnabled()
                         model.applyChanges()
                         dismiss()
                     } label: {
@@ -252,6 +255,7 @@ struct ChangeBackgroundSheet: View {
                                     .stroke(model.countdown.backgroundImageName == name ? model.primaryColor : Color.clear, lineWidth: 2)
                             )
                             .onTapGesture {
+                                Haptics.shared.vibrateIfEnabled()
                                 model.selectPredefinedImage(name)
                             }
                         if model.countdown.backgroundImageName == name {
@@ -272,6 +276,7 @@ struct ChangeBackgroundSheet: View {
         // Use Color (No Image) button
         if model.countdown.backgroundImageName != nil {
             Button {
+                Haptics.shared.vibrateIfEnabled()
                 withAnimation {
                     model.useColorOnly()
                 }
@@ -302,6 +307,7 @@ struct ChangeBackgroundSheet: View {
                                     .stroke(model.countdown.backgroundColor == color.hexIntWithAlpha ? model.primaryColor : Color.clear, lineWidth: 2)
                             )
                             .onTapGesture {
+                                Haptics.shared.vibrateIfEnabled()
                                 model.updateBackgroundColor(color)
                             }
 
@@ -342,6 +348,7 @@ struct ChangeBackgroundSheet: View {
                                     .stroke(model.countdown.textColor == color.hexIntWithAlpha ? model.primaryColor : Color.clear, lineWidth: 2)
                             )
                             .onTapGesture {
+                                Haptics.shared.vibrateIfEnabled()
                                 model.updateTextColor(color)
                             }
 

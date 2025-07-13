@@ -141,7 +141,10 @@ struct MeView: View {
         // Me Section
         VStack(alignment: .leading, spacing: AppSpacing.medium) {
             HStack(spacing: AppSpacing.medium) {
-                Button(action: { model.onTapEmojiPicker() }) {
+                Button(action: { 
+                    Haptics.shared.vibrateIfEnabled()
+                    model.onTapEmojiPicker() 
+                }) {
                     Text(model.userAvatar)
                         .font(.system(size: 40))
                         .frame(width: 50, height: 50)
@@ -183,6 +186,7 @@ struct MeView: View {
 
             if !model.isPremiumUser {
                 Button(action: {
+                    Haptics.shared.vibrateIfEnabled()
                     model.onTapPurchase()
                 }) {
                     Text(String(localized: "Upgrade to Premium"))
@@ -221,13 +225,15 @@ struct MeView: View {
                     featureItem(icon: "gear", title: String(localized: "Settings"))
                 }
                 NavigationLink(destination: ThemeColorView()) {
+                    
                     featureItem(icon: "paintbrush.fill", title: String(localized: "Theme Color"))
+                    
                 }
             }
         }
         .padding(.horizontal)
     }
-
+    
     private var othersView: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Others")
@@ -237,6 +243,7 @@ struct MeView: View {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 24) {
                 NavigationLink(destination: MoreAppsView()) {
                     moreItem(icon: "storefront", title: "More Apps")
+                    
                 }
                 Button {
                     model.onTapRateUs(openURL: openURL)
@@ -251,13 +258,14 @@ struct MeView: View {
                 if let appURL = model.onTapShareApp() {
                     ShareLink(item: appURL) {
                         moreItem(icon: "square.and.arrow.up", title: "Share App")
+                        
                     }
                 }
             }
         }
         .padding(.horizontal)
     }
-
+    
     private func moreItem(icon: String, title: String) -> some View {
         VStack(spacing: 8) {
             Image(systemName: icon)
@@ -275,7 +283,7 @@ struct MeView: View {
         .cornerRadius(12)
         .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
     }
-
+    
     private func featureItem(icon: String, title: String) -> some View {
         VStack(spacing: AppSpacing.small) {
             Image(systemName: icon)

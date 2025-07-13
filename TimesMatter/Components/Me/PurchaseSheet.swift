@@ -22,7 +22,10 @@ struct PurchaseSheet: View {
                 VStack(spacing: 16) {
                     // Close button
                     HStack {
-                        Button(action: { dismiss() }) {
+                        Button(action: { 
+                            Haptics.shared.vibrateIfEnabled()
+                            dismiss() 
+                        }) {
                             Image(systemName: "xmark")
                         
                         }
@@ -85,6 +88,7 @@ struct PurchaseSheet: View {
                                 .padding(.bottom, 12)
                         } else {
                             Button(action: {
+                                Haptics.shared.vibrateIfEnabled()
                                 Task {
                                     isPurchasing = true
                                     let result = await purchaseManager.purchasePremium()
@@ -124,6 +128,7 @@ struct PurchaseSheet: View {
                     // Links
                     VStack(spacing: 16) {
                         Button("Restore Purchases") {
+                            Haptics.shared.vibrateIfEnabled()
                             Task {
                                 isPurchasing = true
                                 await purchaseManager.restorePurchases()
@@ -133,6 +138,7 @@ struct PurchaseSheet: View {
                         .foregroundColor(themeManager.current.primaryColor)
                         
                         Button("Contact Support") {
+                            Haptics.shared.vibrateIfEnabled()
                             if let url = URL(string: "https://apps-bay.github.io/Apps-Bay-Website/contact/") {
                                 UIApplication.shared.open(url)
                             }
@@ -140,6 +146,7 @@ struct PurchaseSheet: View {
                         .foregroundColor(themeManager.current.primaryColor)
                         
                         Button("Privacy Policy") {
+                            Haptics.shared.vibrateIfEnabled()
                             if let url = URL(string: "https://apps-bay.github.io/Apps-Bay-Website/privacy/") {
                                 UIApplication.shared.open(url)
                             }
