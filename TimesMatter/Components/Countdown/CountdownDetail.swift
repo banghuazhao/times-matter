@@ -27,6 +27,8 @@ class CountdownDetailModel {
     
     @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
+    
+    let isIphone = UIDevice.current.userInterfaceIdiom == .phone
 
     init(countdown: Countdown, isPreview: Bool = false, onDelete: (() -> Void)? = nil) {
         self.countdown = countdown
@@ -180,6 +182,7 @@ struct CountdownDetailView: View {
                     Spacer(minLength: 0)
                 }
             }
+            .padding(.vertical, model.isIphone ? 0 : AppSpacing.large)
             .padding(.vertical, AppSpacing.large * scale)
             .padding(.horizontal, AppSpacing.medium * scale)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -320,6 +323,7 @@ struct CountdownDetailView: View {
                     Spacer(minLength: 0)
                 }
             }
+            .padding(.vertical, model.isIphone ? 0 : AppSpacing.large)
             .padding(.vertical, AppSpacing.large)
             .padding(.horizontal, AppSpacing.medium)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
