@@ -13,12 +13,12 @@ struct ThemeColorView: View {
     @Environment(\.dismiss) private var dismiss
 
     private let themeColors: [ThemeColorOption] = [
-        ThemeColorOption(name: String(localized: "Default"), color: Color(red: 0.914, green: 0.420, blue: 0.369), icon: "flame.fill"),
-        ThemeColorOption(name: String(localized: "Blue"), color: Color(red: 0.0, green: 0.48, blue: 1.0), icon: "drop.fill"),
-        ThemeColorOption(name: String(localized: "Green"), color: Color(red: 0.20, green: 0.78, blue: 0.35), icon: "leaf.fill"),
-        ThemeColorOption(name: String(localized: "Purple"), color: Color(red: 0.58, green: 0.35, blue: 0.95), icon: "sparkles"),
-        ThemeColorOption(name: String(localized: "Pink"), color: Color(red: 0.91, green: 0.30, blue: 0.58), icon: "heart.fill"),
-        ThemeColorOption(name: String(localized: "Orange"), color: Color(red: 1.0, green: 0.58, blue: 0.0), icon: "sun.max.fill"),
+        ThemeColorOption(themeColor: .default, color: Color(red: 0.914, green: 0.420, blue: 0.369), icon: "flame.fill"),
+        ThemeColorOption(themeColor: .blue, color: Color(red: 0.0, green: 0.48, blue: 1.0), icon: "drop.fill"),
+        ThemeColorOption(themeColor: .green, color: Color(red: 0.20, green: 0.78, blue: 0.35), icon: "leaf.fill"),
+        ThemeColorOption(themeColor: .purple, color: Color(red: 0.58, green: 0.35, blue: 0.95), icon: "sparkles"),
+        ThemeColorOption(themeColor: .pink, color: Color(red: 0.91, green: 0.30, blue: 0.58), icon: "heart.fill"),
+        ThemeColorOption(themeColor: .orange, color: Color(red: 1.0, green: 0.58, blue: 0.0), icon: "sun.max.fill"),
     ]
 
     var body: some View {
@@ -31,12 +31,12 @@ struct ThemeColorView: View {
 
                 // Theme Color Options
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
-                    ForEach(themeColors, id: \.name) { themeOption in
+                    ForEach(themeColors, id: \.themeColor.rawValue) { themeOption in
                         ThemeColorCard(
                             themeOption: themeOption,
-                            isSelected: themeManager.currentThemeColor == themeOption.name,
+                            isSelected: themeManager.currentThemeColor == themeOption.themeColor.rawValue,
                             onTap: {
-                                themeManager.updateThemeColor(themeOption.name)
+                                themeManager.updateThemeColor(themeOption.themeColor.rawValue)
                             }
                         )
                     }
@@ -93,7 +93,7 @@ struct ThemeColorView: View {
 }
 
 struct ThemeColorOption {
-    let name: String
+    let themeColor: ThemeColor
     let color: Color
     let icon: String
 }
@@ -122,7 +122,7 @@ struct ThemeColorCard: View {
                         .foregroundColor(.white)
                 }
 
-                Text(themeOption.name)
+                Text(themeOption.themeColor.displayName)
                     .font(AppFont.headline)
                     .foregroundColor(themeOption.color)
             }
