@@ -19,7 +19,7 @@ struct PurchaseSheet: View {
         ZStack(alignment: .topLeading) {
             Color(.systemYellow).opacity(0.08).ignoresSafeArea()
             ScrollView {
-                VStack(spacing: 16) {
+                VStack(spacing: 24) {
                     // Close button
                     HStack {
                         Button(action: { 

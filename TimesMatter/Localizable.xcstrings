@@ -397,6 +397,16 @@
         }
       }
     },
+    "Add Countdown" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加倒计时"
+          }
+        }
+      }
+    },
     "Add to Favorites" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1253,6 +1263,16 @@
         }
       }
     },
+    "No Countdowns Yet" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "还没有倒计时"
+          }
+        }
+      }
+    },
     "No Reminder" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1629,6 +1649,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "支持未来更新"
+          }
+        }
+      }
+    },
+    "Tap the + button to add your first countdown!" : {
+      "localizations" : {
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "点击+按钮添加第一个倒计时"
           }
         }
       }

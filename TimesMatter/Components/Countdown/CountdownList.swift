@@ -183,6 +183,10 @@ class CountdownListModel {
             }
         }
     }
+    
+    func onTapDelete(_ countdown: Countdown) {
+        route = .showDeleteConfirmation(countdown)
+    }
 
     func onDeleteCountdown(_ countdown: Countdown) {
         withErrorReporting {
@@ -209,6 +213,32 @@ class CountdownListModel {
     }
 }
 
+struct CountdownEmptyStateView: View {
+    var onAdd: () -> Void
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Image(systemName: "calendar.badge.plus")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 80, height: 80)
+                .foregroundColor(.secondary)
+            Text("No Countdowns Yet")
+                .font(.title2)
+                .fontWeight(.semibold)
+            Text("Tap the + button to add your first countdown!")
+                .font(.body)
+                .foregroundColor(.secondary)
+            Button(action: onAdd) {
+                Label("Add Countdown", systemImage: "plus")
+            }
+            .buttonStyle(.appRect)
+        }
+        .padding(.horizontal, AppSpacing.large)
+        .padding(.top, AppSpacing.large)
+    }
+}
+
 struct CountdownListView: View {
     @State var model = CountdownListModel()
     @Dependency(\.themeManager) var themeManager
@@ -217,7 +247,12 @@ struct CountdownListView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
-                    if model.orderType == .default {
+                    if model.countdowns.isEmpty {
+                        CountdownEmptyStateView {
+                            Haptics.shared.vibrateIfEnabled()
+                            model.onTapAddCountDown()
+                        }
+                    } else if model.orderType == .default {
                         let now = model.timerService.currentTime
                         let futureCountdowns = model.countdowns.filter { ($0.nextOccurrence ?? $0.date) >= now }
                         let pastCountdowns = model.countdowns.filter { ($0.nextOccurrence ?? $0.date) < now }
@@ -236,7 +271,7 @@ struct CountdownListView: View {
                                             countdown: countdown,
                                             onEdit: { model.onEditCountdown(countdown) },
                                             onToggleFavorite: { model.onToggleFavorite(countdown) },
-                                            onDelete: { model.onDeleteCountdown(countdown) }
+                                            onDelete: { model.onTapDelete(countdown) }
                                         )
                                 }
                             }
@@ -256,7 +291,7 @@ struct CountdownListView: View {
                                             countdown: countdown,
                                             onEdit: { model.onEditCountdown(countdown) },
                                             onToggleFavorite: { model.onToggleFavorite(countdown) },
-                                            onDelete: { model.onDeleteCountdown(countdown) }
+                                            onDelete: { model.onTapDelete(countdown) }
                                         )
                                 }
                             }
@@ -272,16 +307,17 @@ struct CountdownListView: View {
                                     countdown: countdown,
                                     onEdit: { model.onEditCountdown(countdown) },
                                     onToggleFavorite: { model.onToggleFavorite(countdown) },
-                                    onDelete: { model.onDeleteCountdown(countdown) }
+                                    onDelete: { model.onTapDelete(countdown) }
                                 )
                         }
                     }
                 }
+                .frame(maxWidth: .infinity)
                 .padding(.horizontal, AppSpacing.medium)
                 .padding(.bottom, AppSpacing.medium)
             }
-            .appBackground()
             .navigationBarTitleDisplayMode(.inline)
+            .background(ThemeManager.shared.current.background)
             .task {
                 model.scheduleRemindersForFirstLaunch()
             }
