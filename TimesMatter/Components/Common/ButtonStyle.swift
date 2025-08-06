@@ -81,6 +81,4 @@ extension ButtonStyle where Self == AppRectButtonStyle {
     static var appRect: AppRectButtonStyle {
         AppRectButtonStyle()
     }
-    
-    
 }

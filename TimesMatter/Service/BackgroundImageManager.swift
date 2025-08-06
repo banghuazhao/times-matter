@@ -151,4 +151,4 @@ extension DependencyValues {
         get { self[BackgroundImageManagerKey.self] }
         set { self[BackgroundImageManagerKey.self] = newValue }
     }
-} 
+}

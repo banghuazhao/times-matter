@@ -1,10 +1,26 @@
 # TimesMatter ⏰
 
+[![Star on GitHub](https://img.shields.io/github/stars/banghuazhao/times-matter?style=social)](https://github.com/banghuazhao/times-matter)
+[![Download on the App Store](https://img.shields.io/badge/App%20Store-Download-blue?logo=apple)](https://apps.apple.com/us/app/times-matter-smart-reminders/id6748243795?platform=iphone)
+
 A beautiful and intuitive iOS countdown app built with SwiftUI that helps you track important events and milestones in your life.
 
 ## 📱 About
 
 TimesMatter is a modern iOS application designed to help users create and manage countdown timers for important events. Whether it's a birthday, vacation, project deadline, or any significant milestone, TimesMatter provides a clean and elegant way to keep track of time.
+
+---
+
+## 📸 Screenshots
+
+<p align="center">
+  <img src="screenshots/1.webp" alt="TimesMatter Screenshot 1" width="200"/>
+  <img src="screenshots/2.webp" alt="TimesMatter Screenshot 2" width="200"/>
+  <img src="screenshots/3.webp" alt="TimesMatter Screenshot 3" width="200"/>
+  <img src="screenshots/4.webp" alt="TimesMatter Screenshot 4" width="200"/>
+</p>
+
+---
 
 ## ✨ Features
 
@@ -146,6 +162,18 @@ If you have any questions or need support, please:
 1. Check the existing issues
 2. Create a new issue with a detailed description
 3. Contact the development team
+
+---
+
+## ⭐ Get Involved & Download
+
+If you love beautiful, productive apps, please [star this project on GitHub](https://github.com/banghuazhao/times-matter) and help us grow!
+
+[![Star on GitHub](https://img.shields.io/github/stars/banghuazhao/times-matter?style=social)](https://github.com/banghuazhao/times-matter)
+
+You can also experience TimesMatter on your iPhone or iPad:
+
+[![Download on the App Store](https://img.shields.io/badge/App%20Store-Download-blue?logo=apple)](https://apps.apple.com/us/app/times-matter-smart-reminders/id6748243795?platform=iphone)
 
 ---
 
