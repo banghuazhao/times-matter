@@ -28,6 +28,9 @@ class CountdownDetailModel {
     @ObservationIgnored
     @Dependency(\.defaultDatabase) var database
     
+    @ObservationIgnored
+    @Dependency(\.appRatingService) var appRatingService
+    
     let isIphone = UIDevice.current.userInterfaceIdiom == .phone
 
     init(countdown: Countdown, isPreview: Bool = false, onDelete: (() -> Void)? = nil) {
@@ -102,6 +105,10 @@ class CountdownDetailModel {
         route = .showDeleteAlert
     }
     
+    func onTapShare() {
+        appRatingService.incrementPrepareTriggerCount()
+    }
+    
     func onDeleteCountdown() {
         withErrorReporting {
             try database.write { db in
@@ -169,7 +176,7 @@ struct CountdownDetailView: View {
                     }
 
                     HStack(spacing: 5 * scale) {
-                        ForEach(Array(model.timeLeftComponentsFull.enumerated()), id: \ .offset) { _, comp in
+                        ForEach(Array(model.timeLeftComponentsFull.enumerated()), id: \.offset) { _, comp in
                             timerBlock(value: comp.value, label: comp.label, scale: scale)
                         }
                     }
@@ -250,7 +257,7 @@ struct CountdownDetailView: View {
                 .foregroundColor(model.textColor)
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
-            Text(value == 1 && value == 0 ? String(label.dropLast()) : label)
+            Text(label)
                 .font(.system(size: 13 * scale))
                 .foregroundColor(model.textColor)
                 .lineLimit(1)
@@ -261,6 +268,7 @@ struct CountdownDetailView: View {
 
     // MARK: - Share helpers
     private func shareCountdownDetail() {
+        model.onTapShare()
         // Render the ZStack as image (without navigation bar/toolbars)
         let renderer = ImageRenderer(content: shareContentView)
         renderer.scale = UIScreen.main.scale
@@ -310,7 +318,7 @@ struct CountdownDetailView: View {
                             .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
                     }
                     HStack(spacing: 5) {
-                        ForEach(Array(model.timeLeftComponentsFull.enumerated()), id: \ .offset) { _, comp in
+                        ForEach(Array(model.timeLeftComponentsFull.enumerated()), id: \.offset) { _, comp in
                             timerBlock(value: comp.value, label: comp.label, scale: 1.0)
                         }
                     }
@@ -329,6 +337,28 @@ struct CountdownDetailView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height) // Reasonable share size
+        .overlay(alignment: .bottom) {
+            shareWatermark
+        }
+    }
+    
+    private var shareWatermark: some View {
+        let appName = (Bundle.main.infoDictionary?["CFBundleName"] as? String) ?? "Times Matter"
+        let storeLink = "apps.apple.com/app/id\(Constants.AppID.thisAppID)"
+        
+        return VStack(spacing: 2) {
+            Text(appName)
+                .font(.footnote)
+                .fontWeight(.semibold)
+            Text(storeLink)
+                .font(.caption2)
+        }
+        .foregroundColor(.white)
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background(Color.black.opacity(0.35))
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .padding(.bottom, 18)
     }
 }
 
