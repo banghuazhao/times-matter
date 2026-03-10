@@ -6,7 +6,6 @@
 import SharingGRDB
 import SwiftUI
 import SwiftUINavigation
-import WidgetKit
 
 @Observable
 @MainActor
@@ -22,11 +21,6 @@ class CountdownListModel {
 
     @ObservationIgnored
     @Shared(.appStorage("isFirstLaunch")) var isFirstLaunch = true
-    
-    var searchText: String = ""
-    
-    @ObservationIgnored
-    @Shared(.appStorage("showArchivedCountdowns")) var showArchivedCountdowns: Bool = false
 
     // MARK: Filter & Order State
 
@@ -68,16 +62,6 @@ class CountdownListModel {
         if let selectedCategory {
             countdowns = countdowns.filter { $0.categoryID == selectedCategory }
         }
-        
-        if !showArchivedCountdowns {
-            countdowns = countdowns.filter { !$0.isArchived }
-        }
-        
-        let trimmedQuery = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !trimmedQuery.isEmpty {
-            countdowns = countdowns.filter { $0.title.localizedCaseInsensitiveContains(trimmedQuery) }
-        }
-        
         switch filterOption {
         case .all:
             break
@@ -141,7 +125,6 @@ class CountdownListModel {
             ) { [weak self] _ in
                 guard let self else { return }
                 route = nil
-                Task { @MainActor in self.updateWidgetData() }
             }
         )
     }
@@ -173,12 +156,6 @@ class CountdownListModel {
         }
     }
 
-    func onToggleShowArchived() {
-        withAnimation {
-            $showArchivedCountdowns.withLock { $0.toggle() }
-        }
-    }
-
     // MARK: Context Menu Actions
 
     @ObservationIgnored
@@ -191,7 +168,6 @@ class CountdownListModel {
             ) { [weak self] _ in
                 guard let self else { return }
                 route = nil
-                Task { @MainActor in self.updateWidgetData() }
             }
         )
     }
@@ -204,25 +180,6 @@ class CountdownListModel {
                 try Countdown
                     .update(newCountdown)
                     .execute(db)
-            }
-        }
-    }
-
-    func onToggleArchived(_ countdown: Countdown) {
-        withErrorReporting {
-            var newCountdown = countdown
-            newCountdown.isArchived.toggle()
-            try database.write { db in
-                try Countdown
-                    .update(newCountdown)
-                    .execute(db)
-            }
-            
-            if newCountdown.isArchived {
-                ReminderNotificationManager.shared.removeNotification(for: newCountdown)
-            } else {
-                ReminderNotificationManager.shared.removeNotification(for: newCountdown)
-                ReminderNotificationManager.shared.scheduleNotification(for: newCountdown)
             }
         }
     }
@@ -240,7 +197,6 @@ class CountdownListModel {
             }
 
             ReminderNotificationManager.shared.removeNotification(for: countdown)
-            Task { @MainActor in updateWidgetData() }
         }
     }
 
@@ -254,34 +210,6 @@ class CountdownListModel {
                 $0 = false
             }
         }
-    }
-
-    /// Upcoming countdowns for widget: non-archived, future only, sorted by next occurrence (soonest first), max 5.
-    private var widgetUpcomingCountdowns: [Countdown] {
-        let now = timerService.currentTime
-        var list = allCountdowns.filter { !$0.isArchived }
-        list = list.filter { ($0.nextOccurrence ?? $0.date) >= now }
-        list.sort { ($0.nextOccurrence ?? $0.date) < ($1.nextOccurrence ?? $1.date) }
-        return Array(list.prefix(5))
-    }
-
-    /// Writes current upcoming countdowns to App Group and reloads widget timeline.
-    func updateWidgetData() {
-        let now = timerService.currentTime
-        let items: [WidgetCountdownItem] = widgetUpcomingCountdowns.map { c in
-            let target = c.nextOccurrence ?? c.date
-            let time = c.calculateRelativeTime(currentTime: now)
-            return WidgetCountdownItem(
-                title: c.title,
-                targetDate: target.timeIntervalSince1970,
-                number: time.number,
-                label: time.label,
-                backgroundColor: c.backgroundColor,
-                textColor: c.textColor
-            )
-        }
-        WidgetDataManager.save(items)
-        WidgetCenter.shared.reloadTimelines(ofKind: "CountdownWidget")
     }
 }
 
@@ -317,216 +245,190 @@ struct CountdownListView: View {
 
     var body: some View {
         NavigationStack {
-            mainNavigationContent
-        }
-    }
-
-    @ViewBuilder
-    private var mainNavigationContent: some View {
-        ScrollView {
-            countdownListContent
-        }
-        .navigationBarTitleDisplayMode(.inline)
-        .background(ThemeManager.shared.current.background)
-        .searchable(text: $model.searchText, prompt: Text("Search"))
-        .task {
-            model.scheduleRemindersForFirstLaunch()
-            model.updateWidgetData()
-        }
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                filterMenu
-            }
-            ToolbarItem(placement: .principal) {
-                categoryButton
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                addButton
-            }
-        }
-        .sheet(item: $model.route.countdownForm, id: \.self) { model in
-            CountdownFormView(model: model)
-        }
-        .navigationDestination(item: $model.route.countdownDetail) { model in
-            CountdownDetailView(model: model)
-        }
-        .sheet(isPresented: Binding($model.route.selectCategory)) {
-            CategorySelectionSheet(
-                selectedCategory: model.selectedCategory,
-                onSelect: { category in
-                    model.onSelectCategory(category)
-                }
-            )
-            .presentationDetents([.medium, .large])
-            .presentationDragIndicator(.visible)
-        }
-        .alert(
-            item: $model.route.showDeleteConfirmation,
-            title: { countdown in
-                Text(String(localized: "Delete ‘\(countdown.truncatedTitle)’?"))
-            },
-            actions: { countdown in
-                Button("Delete", role: .destructive) {
-                    Haptics.shared.vibrateIfEnabled()
-                    model.onDeleteCountdown(countdown)
-                }
-                Button("Cancel", role: .cancel) {}
-            },
-            message: { countdown in
-                Text(String(localized: "This will permanently delete ‘\(countdown.truncatedTitle)’. This action cannot be undone. Are you sure you want to proceed?"))
-            }
-        )
-    }
-
-    private var filterMenu: some View {
-        Menu {
-            Section("Filter By") {
-                ForEach(CountdownListModel.FilterOption.allCases) { option in
-                    Button(action: {
-                        Haptics.shared.vibrateIfEnabled()
-                        model.onSelectFilter(option)
-                    }) {
-                        HStack {
-                            Text(option.label)
-                            if option == model.filterOption {
-                                Spacer()
-                                Image(systemName: "checkmark")
+            ScrollView {
+                VStack(spacing: 16) {
+                    if model.countdowns.isEmpty {
+                        CountdownEmptyStateView {
+                            Haptics.shared.vibrateIfEnabled()
+                            model.onTapAddCountDown()
+                        }
+                    } else if model.orderType == .default {
+                        let now = model.timerService.currentTime
+                        let futureCountdowns = model.countdowns.filter { ($0.nextOccurrence ?? $0.date) >= now }
+                        let pastCountdowns = model.countdowns.filter { ($0.nextOccurrence ?? $0.date) < now }
+                        if !futureCountdowns.isEmpty {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Upcoming")
+                                    .font(AppFont.headline)
+                                    .padding(.leading, 4)
+                                ForEach(futureCountdowns) { countdown in
+                                    CountdownRow(countdown: countdown)
+                                        .onTapGesture {
+                                            Haptics.shared.vibrateIfEnabled()
+                                            model.onTapCountDown(countdown)
+                                        }
+                                        .countdownContextMenu(
+                                            countdown: countdown,
+                                            onEdit: { model.onEditCountdown(countdown) },
+                                            onToggleFavorite: { model.onToggleFavorite(countdown) },
+                                            onDelete: { model.onTapDelete(countdown) }
+                                        )
+                                }
                             }
                         }
-                    }
-                }
-            }
-            Divider()
-            Section("Sort By") {
-                ForEach(CountdownListModel.OrderType.allCases) { order in
-                    Button(action: {
-                        Haptics.shared.vibrateIfEnabled()
-                        model.onSelectOrder(order)
-                    }) {
-                        HStack {
-                            Text(order.label)
-                            if order == model.orderType {
-                                Spacer()
-                                Image(systemName: "checkmark")
+                        if !pastCountdowns.isEmpty {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("Past")
+                                    .font(AppFont.headline)
+                                    .padding(.leading, 4)
+                                ForEach(pastCountdowns) { countdown in
+                                    CountdownRow(countdown: countdown)
+                                        .onTapGesture {
+                                            Haptics.shared.vibrateIfEnabled()
+                                            model.onTapCountDown(countdown)
+                                        }
+                                        .countdownContextMenu(
+                                            countdown: countdown,
+                                            onEdit: { model.onEditCountdown(countdown) },
+                                            onToggleFavorite: { model.onToggleFavorite(countdown) },
+                                            onDelete: { model.onTapDelete(countdown) }
+                                        )
+                                }
                             }
                         }
-                    }
-                }
-            }
-            Divider()
-            Section("Archived") {
-                Button(action: {
-                    Haptics.shared.vibrateIfEnabled()
-                    model.onToggleShowArchived()
-                }) {
-                    HStack {
-                        Text("Show Archived")
-                        if model.showArchivedCountdowns {
-                            Spacer()
-                            Image(systemName: "checkmark")
+                    } else {
+                        ForEach(model.countdowns) { countdown in
+                            CountdownRow(countdown: countdown)
+                                .onTapGesture {
+                                    Haptics.shared.vibrateIfEnabled()
+                                    model.onTapCountDown(countdown)
+                                }
+                                .countdownContextMenu(
+                                    countdown: countdown,
+                                    onEdit: { model.onEditCountdown(countdown) },
+                                    onToggleFavorite: { model.onToggleFavorite(countdown) },
+                                    onDelete: { model.onTapDelete(countdown) }
+                                )
                         }
                     }
                 }
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, AppSpacing.medium)
+                .padding(.bottom, AppSpacing.medium)
             }
-        } label: {
-            Image(
-                systemName: model.filterOption != .all || model.orderType != .default || model.showArchivedCountdowns ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle"
-            )
-            .font(AppFont.headline)
-            .frame(width: 38, height: 38)
-            .background(themeManager.current.primaryColor.opacity(0.1))
-            .foregroundColor(themeManager.current.primaryColor)
-            .clipShape(Circle())
-        }
-    }
-
-    private var categoryButton: some View {
-        Button(action: {
-            Haptics.shared.vibrateIfEnabled()
-            model.onTapSelectCategory()
-        }) {
-            if let selected = model.allCategories.first(where: { $0.id == model.selectedCategory }) {
-                Text(selected.title)
-            } else {
-                Text("📅 All")
+            .navigationBarTitleDisplayMode(.inline)
+            .background(ThemeManager.shared.current.background)
+            .task {
+                model.scheduleRemindersForFirstLaunch()
             }
-        }
-        .buttonStyle(.appRect)
-    }
-
-    private var addButton: some View {
-        Button(action: {
-            Haptics.shared.vibrateIfEnabled()
-            model.onTapAddCountDown()
-        }) {
-            Image(systemName: "plus")
-        }
-        .buttonStyle(.appCircular)
-    }
-
-    @ViewBuilder
-    private var countdownListContent: some View {
-        VStack(spacing: 16) {
-            if model.countdowns.isEmpty {
-                CountdownEmptyStateView {
-                    Haptics.shared.vibrateIfEnabled()
-                    model.onTapAddCountDown()
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Menu {
+                        // Filter options
+                        Section("Filter By") {
+                            ForEach(CountdownListModel.FilterOption.allCases) { option in
+                                Button(action: {
+                                    Haptics.shared.vibrateIfEnabled()
+                                    model.onSelectFilter(option)
+                                }) {
+                                    HStack {
+                                        Text(option.label)
+                                        if option == model.filterOption {
+                                            Spacer()
+                                            Image(systemName: "checkmark")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Divider()
+                        // Order options
+                        Section("Sort By") {
+                            ForEach(CountdownListModel.OrderType.allCases) { order in
+                                Button(action: {
+                                    Haptics.shared.vibrateIfEnabled()
+                                    model.onSelectOrder(order)
+                                }) {
+                                    HStack {
+                                        Text(order.label)
+                                        if order == model.orderType {
+                                            Spacer()
+                                            Image(systemName: "checkmark")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } label: {
+                        Image(
+                            systemName: model.filterOption != .all || model.orderType != .default ? "line.3.horizontal.decrease.circle.fill" :
+                                "line.3.horizontal.decrease.circle"
+                        )
+                        .font(AppFont.headline)
+                        .frame(width: 38, height: 38)
+                        .background(
+                            themeManager.current.primaryColor.opacity(0.1)
+                        )
+                        .foregroundColor(themeManager.current.primaryColor)
+                        .clipShape(Circle())
+                    }
                 }
-            } else if model.orderType == .default {
-                upcomingAndPastSections
-            } else {
-                flatCountdownList
+                ToolbarItem(placement: .principal) {
+                    Button(action: {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.onTapSelectCategory()
+                    }) {
+                        if let selected = model.allCategories.first(where: { $0.id == model.selectedCategory }) {
+                            Text(selected.title)
+                        } else {
+                            Text("📅 All")
+                        }
+                    }
+                    .buttonStyle(.appRect)
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.onTapAddCountDown()
+                    }) {
+                        Image(systemName: "plus")
+                    }
+                    .buttonStyle(.appCircular)
+                }
             }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.horizontal, AppSpacing.medium)
-        .padding(.bottom, AppSpacing.medium)
-    }
-
-    @ViewBuilder
-    private var upcomingAndPastSections: some View {
-        let now = model.timerService.currentTime
-        let futureCountdowns = model.countdowns.filter { ($0.nextOccurrence ?? $0.date) >= now }
-        let pastCountdowns = model.countdowns.filter { ($0.nextOccurrence ?? $0.date) < now }
-        if !futureCountdowns.isEmpty {
-            countdownSection(title: "Upcoming", countdowns: futureCountdowns)
-        }
-        if !pastCountdowns.isEmpty {
-            countdownSection(title: "Past", countdowns: pastCountdowns)
-        }
-    }
-
-    private func countdownSection(title: String, countdowns: [Countdown]) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(AppFont.headline)
-                .padding(.leading, 4)
-            ForEach(countdowns) { countdown in
-                countdownRow(countdown)
+            .sheet(item: $model.route.countdownForm, id: \.self) { model in
+                CountdownFormView(model: model)
             }
-        }
-    }
-
-    @ViewBuilder
-    private var flatCountdownList: some View {
-        ForEach(model.countdowns) { countdown in
-            countdownRow(countdown)
-        }
-    }
-
-    private func countdownRow(_ countdown: Countdown) -> some View {
-        CountdownRow(countdown: countdown)
-            .onTapGesture {
-                Haptics.shared.vibrateIfEnabled()
-                model.onTapCountDown(countdown)
+            .navigationDestination(item: $model.route.countdownDetail) { model in
+                CountdownDetailView(model: model)
             }
-            .countdownContextMenu(
-                countdown: countdown,
-                onEdit: { model.onEditCountdown(countdown) },
-                onToggleFavorite: { model.onToggleFavorite(countdown) },
-                onToggleArchived: { model.onToggleArchived(countdown) },
-                onDelete: { model.onTapDelete(countdown) }
+            .sheet(isPresented: Binding($model.route.selectCategory)) {
+                CategorySelectionSheet(
+                    selectedCategory: model.selectedCategory,
+                    onSelect: { category in
+                        model.onSelectCategory(category)
+                    }
+                )
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+            }
+            .alert(
+                item: $model.route.showDeleteConfirmation,
+                title: { countdown in
+                    Text(String(localized: "Delete ‘\(countdown.truncatedTitle)’?"))
+                },
+                actions: { countdown in
+                    Button("Delete", role: .destructive) {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.onDeleteCountdown(countdown)
+                    }
+                    Button("Cancel", role: .cancel) {}
+                },
+                message: { countdown in
+                    Text(String(localized: "This will permanently delete ‘\(countdown.truncatedTitle)’. This action cannot be undone. Are you sure you want to proceed?"))
+                }
             )
+        }
     }
 }
 
@@ -536,7 +438,6 @@ struct CountdownContextMenu: ViewModifier {
     let countdown: Countdown
     let onEdit: () -> Void
     let onToggleFavorite: () -> Void
-    let onToggleArchived: () -> Void
     let onDelete: () -> Void
 
     func body(content: Content) -> some View {
@@ -558,16 +459,6 @@ struct CountdownContextMenu: ViewModifier {
                 )
             }
 
-            Button(action: {
-                Haptics.shared.vibrateIfEnabled()
-                onToggleArchived()
-            }) {
-                Label(
-                    countdown.isArchived ? "Unarchive" : "Archive",
-                    systemImage: countdown.isArchived ? "archivebox.fill" : "archivebox"
-                )
-            }
-
             Divider()
 
             Button(role: .destructive, action: {
@@ -585,14 +476,12 @@ extension View {
         countdown: Countdown,
         onEdit: @escaping () -> Void,
         onToggleFavorite: @escaping () -> Void,
-        onToggleArchived: @escaping () -> Void,
         onDelete: @escaping () -> Void
     ) -> some View {
         modifier(CountdownContextMenu(
             countdown: countdown,
             onEdit: onEdit,
             onToggleFavorite: onToggleFavorite,
-            onToggleArchived: onToggleArchived,
             onDelete: onDelete
         ))
     }

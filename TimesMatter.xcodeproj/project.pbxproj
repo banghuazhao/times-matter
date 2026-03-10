@@ -14,8 +14,6 @@
 		996834522E1D267E00D314BA /* MoreApps in Frameworks */ = {isa = PBXBuildFile; productRef = 996834512E1D267E00D314BA /* MoreApps */; };
 		99772B042E23B63D00907F5A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99772B032E23B63D00907F5A /* StoreKit.framework */; };
 		99AD2D4F2E20B96800699F68 /* EasyToast in Frameworks */ = {isa = PBXBuildFile; productRef = 99AD2D4E2E20B96800699F68 /* EasyToast */; };
-		99BABD142E1BAFF100895B3B /* TimesMatterWidget/WidgetDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99BABD152E1BAFF100895B3B /* TimesMatterWidget/WidgetDataTypes.swift */; };
-		99BABD162E1BAFF100895B3B /* TimesMatterWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 99BABD172E1BAFF100895B3B /* TimesMatterWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		99BABECB2E1C924900895B3B /* SharingGRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 99BABECA2E1C924900895B3B /* SharingGRDB */; };
 /* End PBXBuildFile section */
 
@@ -27,35 +25,12 @@
 			remoteGlobalIDString = 99BABCE92E1BAFEE00895B3B;
 			remoteInfo = TimesMatter;
 		};
-		99BABD212E1BAFF100895B3B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 99BABCE22E1BAFEE00895B3B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 99BABD1E2E1BAFF100895B3B;
-			remoteInfo = TimesMatterWidgetExtension;
-		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		99BABD1D2E1BAFF100895B3B /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				99BABD162E1BAFF100895B3B /* TimesMatterWidgetExtension.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		99772B032E23B63D00907F5A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		99BABCEA2E1BAFEE00895B3B /* TimesMatter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimesMatter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99BABCFA2E1BAFF000895B3B /* TimesMatterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimesMatterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		99BABD152E1BAFF100895B3B /* TimesMatterWidget/WidgetDataTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimesMatterWidget/WidgetDataTypes.swift; sourceTree = "<group>"; };
-		99BABD172E1BAFF100895B3B /* TimesMatterWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TimesMatterWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -67,13 +42,6 @@
 				Modules/MoreApps,
 			);
 			target = 99BABCE92E1BAFEE00895B3B /* TimesMatter */;
-		};
-		99BABD242E1BAFF100895B3B /* Exceptions for "TimesMatterWidget" folder in "TimesMatterWidgetExtension" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 99BABD1E2E1BAFF100895B3B /* TimesMatterWidgetExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -89,14 +57,6 @@
 		99BABCFD2E1BAFF000895B3B /* TimesMatterTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = TimesMatterTests;
-			sourceTree = "<group>";
-		};
-		99BABD182E1BAFF100895B3B /* TimesMatterWidget */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				99BABD242E1BAFF100895B3B /* Exceptions for "TimesMatterWidget" folder in "TimesMatterWidgetExtension" target */,
-			);
-			path = TimesMatterWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -124,13 +84,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		99BABD1A2E1BAFF100895B3B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -147,8 +100,6 @@
 			children = (
 				99BABCEC2E1BAFEE00895B3B /* TimesMatter */,
 				99BABCFD2E1BAFF000895B3B /* TimesMatterTests */,
-				99BABD182E1BAFF100895B3B /* TimesMatterWidget */,
-				99BABD152E1BAFF100895B3B /* TimesMatterWidget/WidgetDataTypes.swift */,
 				4144A1562E1CF92500DEB393 /* Frameworks */,
 				99BABCEB2E1BAFEE00895B3B /* Products */,
 			);
@@ -159,7 +110,6 @@
 			children = (
 				99BABCEA2E1BAFEE00895B3B /* TimesMatter.app */,
 				99BABCFA2E1BAFF000895B3B /* TimesMatterTests.xctest */,
-				99BABD172E1BAFF100895B3B /* TimesMatterWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -174,12 +124,10 @@
 				99BABCE62E1BAFEE00895B3B /* Sources */,
 				99BABCE72E1BAFEE00895B3B /* Frameworks */,
 				99BABCE82E1BAFEE00895B3B /* Resources */,
-				99BABD1D2E1BAFF100895B3B /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				99BABD202E1BAFF100895B3B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				99BABCEC2E1BAFEE00895B3B /* TimesMatter */,
@@ -219,26 +167,6 @@
 			productName = TimesMatterTests;
 			productReference = 99BABCFA2E1BAFF000895B3B /* TimesMatterTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		99BABD1E2E1BAFF100895B3B /* TimesMatterWidgetExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 417320522F4EEDBD008ED0BC /* Build configuration list for PBXNativeTarget "TimesMatterWidgetExtension" */;
-			buildPhases = (
-				99BABD1C2E1BAFF100895B3B /* Sources */,
-				99BABD1A2E1BAFF100895B3B /* Frameworks */,
-				99BABD1B2E1BAFF100895B3B /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				99BABD182E1BAFF100895B3B /* TimesMatterWidget */,
-			);
-			name = TimesMatterWidgetExtension;
-			productName = TimesMatterWidgetExtension;
-			productReference = 99BABD172E1BAFF100895B3B /* TimesMatterWidgetExtension.appex */;
-			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -283,7 +211,6 @@
 			targets = (
 				99BABCE92E1BAFEE00895B3B /* TimesMatter */,
 				99BABCF92E1BAFF000895B3B /* TimesMatterTests */,
-				99BABD1E2E1BAFF100895B3B /* TimesMatterWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -303,13 +230,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		99BABD1B2E1BAFF100895B3B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -317,18 +237,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				99BABD142E1BAFF100895B3B /* TimesMatterWidget/WidgetDataTypes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		99BABCF62E1BAFF000895B3B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		99BABD1C2E1BAFF100895B3B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -343,69 +255,9 @@
 			target = 99BABCE92E1BAFEE00895B3B /* TimesMatter */;
 			targetProxy = 99BABCFB2E1BAFF000895B3B /* PBXContainerItemProxy */;
 		};
-		99BABD202E1BAFF100895B3B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 99BABD1E2E1BAFF100895B3B /* TimesMatterWidgetExtension */;
-			targetProxy = 99BABD212E1BAFF100895B3B /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		4173204F2F4EEDB5008ED0BC /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = TimesMatterWidget/TimesMatterWidgetExtension.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = F694X76A5X;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TimesMatterWidget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.appsbay.TimesMatter1.TimesMatterWidgetExtension;
-				PRODUCT_NAME = TimesMatterWidgetExtension;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		417320502F4EEDB5008ED0BC /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = TimesMatterWidget/TimesMatterWidgetExtension.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = F694X76A5X;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TimesMatterWidget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.appsbay.TimesMatter1.TimesMatterWidgetExtension;
-				PRODUCT_NAME = TimesMatterWidgetExtension;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		99BABD0C2E1BAFF000895B3B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReferenceAnchor = 99BABCEC2E1BAFEE00895B3B /* TimesMatter */;
@@ -540,9 +392,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = TimesMatter/TimesMatterApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.1;
+				CURRENT_PROJECT_VERSION = 1.1.0.1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TimesMatter/Info.plist;
@@ -560,7 +411,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.appsbay.TimesMatter1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -574,9 +425,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = TimesMatter/TimesMatterApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.1;
+				CURRENT_PROJECT_VERSION = 1.1.0.1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TimesMatter/Info.plist;
@@ -594,7 +444,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.appsbay.TimesMatter1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -642,15 +492,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		417320522F4EEDBD008ED0BC /* Build configuration list for PBXNativeTarget "TimesMatterWidgetExtension" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4173204F2F4EEDB5008ED0BC /* Debug */,
-				417320502F4EEDB5008ED0BC /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		99BABCE52E1BAFEE00895B3B /* Build configuration list for PBXProject "TimesMatter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
