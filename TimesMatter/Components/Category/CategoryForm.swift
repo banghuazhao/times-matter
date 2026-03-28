@@ -5,7 +5,7 @@
 
 import Dependencies
 import EasyToast
-import SharingGRDB
+import SQLiteData
 import SwiftUI
 import SwiftUINavigation
 

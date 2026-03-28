@@ -7,7 +7,7 @@
 import SwiftUI
 import Dependencies
 import SwiftNavigation
-import SharingGRDB
+import SQLiteData
 import EasyToast
 import PhotosUI
 

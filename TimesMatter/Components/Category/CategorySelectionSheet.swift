@@ -5,7 +5,7 @@
   
 
 import SwiftUI
-import SharingGRDB
+import SQLiteData
 import Dependencies
 
 struct CategorySelectionSheet: View {

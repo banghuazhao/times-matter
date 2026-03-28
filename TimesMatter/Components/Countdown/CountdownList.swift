@@ -3,9 +3,10 @@
 // Copyright Apps Bay Limited. All rights reserved.
 //
 
-import SharingGRDB
+import SQLiteData
 import SwiftUI
 import SwiftUINavigation
+import Sharing
 
 @Observable
 @MainActor

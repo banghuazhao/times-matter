@@ -1,6 +1,6 @@
 import SwiftUI
 import Dependencies
-import SharingGRDB
+import SQLiteData
 
 struct CountdownRow: View {
     let countdown: Countdown
