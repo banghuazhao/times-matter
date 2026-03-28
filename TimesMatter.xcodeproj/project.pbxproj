@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		411888D82F7770C400DE3C9B /* SQLiteData in Frameworks */ = {isa = PBXBuildFile; productRef = 411888D72F7770C400DE3C9B /* SQLiteData */; };
 		4144A1582E1CF92500DEB393 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		418CB51D2E1D210200E4AF36 /* MoreApps in Frameworks */ = {isa = PBXBuildFile; productRef = 418CB51C2E1D210200E4AF36 /* MoreApps */; };
 		993AD8B02E2112BC006637CC /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 993AD8AF2E2112BC006637CC /* GoogleMobileAds */; };
@@ -16,7 +17,6 @@
 		99AD2D4F2E20B96800699F68 /* EasyToast in Frameworks */ = {isa = PBXBuildFile; productRef = 99AD2D4E2E20B96800699F68 /* EasyToast */; };
 		99BABD142E1BAFF100895B3B /* TimesMatterWidget/WidgetDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99BABD152E1BAFF100895B3B /* TimesMatterWidget/WidgetDataTypes.swift */; };
 		99BABD162E1BAFF100895B3B /* TimesMatterWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 99BABD172E1BAFF100895B3B /* TimesMatterWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		99BABECB2E1C924900895B3B /* SharingGRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 99BABECA2E1C924900895B3B /* SharingGRDB */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,11 +108,11 @@
 			files = (
 				99AD2D4F2E20B96800699F68 /* EasyToast in Frameworks */,
 				996833DD2E1CF5C900D314BA /* SwiftUINavigation in Frameworks */,
-				99BABECB2E1C924900895B3B /* SharingGRDB in Frameworks */,
 				99772B042E23B63D00907F5A /* StoreKit.framework in Frameworks */,
 				4144A1582E1CF92500DEB393 /* (null) in Frameworks */,
 				996834522E1D267E00D314BA /* MoreApps in Frameworks */,
 				418CB51D2E1D210200E4AF36 /* MoreApps in Frameworks */,
+				411888D82F7770C400DE3C9B /* SQLiteData in Frameworks */,
 				993AD8B02E2112BC006637CC /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -186,12 +186,12 @@
 			);
 			name = TimesMatter;
 			packageProductDependencies = (
-				99BABECA2E1C924900895B3B /* SharingGRDB */,
 				996833DC2E1CF5C900D314BA /* SwiftUINavigation */,
 				418CB51C2E1D210200E4AF36 /* MoreApps */,
 				996834512E1D267E00D314BA /* MoreApps */,
 				99AD2D4E2E20B96800699F68 /* EasyToast */,
 				993AD8AF2E2112BC006637CC /* GoogleMobileAds */,
+				411888D72F7770C400DE3C9B /* SQLiteData */,
 			);
 			productName = TimesMatter;
 			productReference = 99BABCEA2E1BAFEE00895B3B /* TimesMatter.app */;
@@ -270,11 +270,11 @@
 			mainGroup = 99BABCE12E1BAFEE00895B3B;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				99BABEC92E1C924900895B3B /* XCRemoteSwiftPackageReference "sharing-grdb" */,
 				996833DB2E1CF5C900D314BA /* XCRemoteSwiftPackageReference "swift-navigation" */,
 				996834502E1D267E00D314BA /* XCLocalSwiftPackageReference "TimesMatter/Modules/MoreApps" */,
 				99AD2D4B2E20B70A00699F68 /* XCRemoteSwiftPackageReference "EasyToast" */,
 				418CB66E2E210A8D00E4AF36 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				411888D62F7770C400DE3C9B /* XCRemoteSwiftPackageReference "sqlite-data" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 99BABCEB2E1BAFEE00895B3B /* Products */;
@@ -542,7 +542,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TimesMatter/TimesMatterApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.1;
+				CURRENT_PROJECT_VERSION = 1.1.5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TimesMatter/Info.plist;
@@ -560,7 +560,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.appsbay.TimesMatter1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -576,7 +576,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TimesMatter/TimesMatterApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.1;
+				CURRENT_PROJECT_VERSION = 1.1.5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TimesMatter/Info.plist;
@@ -594,7 +594,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.appsbay.TimesMatter1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -688,6 +688,16 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		411888D62F7770C400DE3C9B /* XCRemoteSwiftPackageReference "sqlite-data" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/sqlite-data";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.1;
+			};
+			traits = (
+			);
+		};
 		418CB66E2E210A8D00E4AF36 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
@@ -712,17 +722,14 @@
 				minimumVersion = 0.4.0;
 			};
 		};
-		99BABEC92E1C924900895B3B /* XCRemoteSwiftPackageReference "sharing-grdb" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/sharing-grdb";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		411888D72F7770C400DE3C9B /* SQLiteData */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 411888D62F7770C400DE3C9B /* XCRemoteSwiftPackageReference "sqlite-data" */;
+			productName = SQLiteData;
+		};
 		418CB51C2E1D210200E4AF36 /* MoreApps */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MoreApps;
@@ -745,11 +752,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 99AD2D4B2E20B70A00699F68 /* XCRemoteSwiftPackageReference "EasyToast" */;
 			productName = EasyToast;
-		};
-		99BABECA2E1C924900895B3B /* SharingGRDB */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 99BABEC92E1C924900895B3B /* XCRemoteSwiftPackageReference "sharing-grdb" */;
-			productName = SharingGRDB;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
