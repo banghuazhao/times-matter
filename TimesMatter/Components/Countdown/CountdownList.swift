@@ -254,49 +254,7 @@ struct CountdownListView: View {
                             model.onTapAddCountDown()
                         }
                     } else if model.orderType == .default {
-                        let now = model.timerService.currentTime
-                        let futureCountdowns = model.countdowns.filter { ($0.nextOccurrence ?? $0.date) >= now }
-                        let pastCountdowns = model.countdowns.filter { ($0.nextOccurrence ?? $0.date) < now }
-                        if !futureCountdowns.isEmpty {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Upcoming")
-                                    .font(AppFont.headline)
-                                    .padding(.leading, 4)
-                                ForEach(futureCountdowns) { countdown in
-                                    CountdownRow(countdown: countdown)
-                                        .onTapGesture {
-                                            Haptics.shared.vibrateIfEnabled()
-                                            model.onTapCountDown(countdown)
-                                        }
-                                        .countdownContextMenu(
-                                            countdown: countdown,
-                                            onEdit: { model.onEditCountdown(countdown) },
-                                            onToggleFavorite: { model.onToggleFavorite(countdown) },
-                                            onDelete: { model.onTapDelete(countdown) }
-                                        )
-                                }
-                            }
-                        }
-                        if !pastCountdowns.isEmpty {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Past")
-                                    .font(AppFont.headline)
-                                    .padding(.leading, 4)
-                                ForEach(pastCountdowns) { countdown in
-                                    CountdownRow(countdown: countdown)
-                                        .onTapGesture {
-                                            Haptics.shared.vibrateIfEnabled()
-                                            model.onTapCountDown(countdown)
-                                        }
-                                        .countdownContextMenu(
-                                            countdown: countdown,
-                                            onEdit: { model.onEditCountdown(countdown) },
-                                            onToggleFavorite: { model.onToggleFavorite(countdown) },
-                                            onDelete: { model.onTapDelete(countdown) }
-                                        )
-                                }
-                            }
-                        }
+                        DefaultCountdownView(model: model)
                     } else {
                         ForEach(model.countdowns) { countdown in
                             CountdownRow(countdown: countdown)
@@ -429,6 +387,56 @@ struct CountdownListView: View {
                     Text(String(localized: "This will permanently delete ‘\(countdown.truncatedTitle)’. This action cannot be undone. Are you sure you want to proceed?"))
                 }
             )
+        }
+    }
+}
+
+struct DefaultCountdownView: View {
+    let model: CountdownListModel
+    
+    var body: some View {
+        let now = model.timerService.currentTime
+        let futureCountdowns = model.countdowns.filter { ($0.nextOccurrence ?? $0.date) >= now }
+        let pastCountdowns = model.countdowns.filter { ($0.nextOccurrence ?? $0.date) < now }
+        if !futureCountdowns.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Upcoming")
+                    .font(AppFont.headline)
+                    .padding(.leading, 4)
+                ForEach(futureCountdowns) { countdown in
+                    CountdownRow(countdown: countdown)
+                        .onTapGesture {
+                            Haptics.shared.vibrateIfEnabled()
+                            model.onTapCountDown(countdown)
+                        }
+                        .countdownContextMenu(
+                            countdown: countdown,
+                            onEdit: { model.onEditCountdown(countdown) },
+                            onToggleFavorite: { model.onToggleFavorite(countdown) },
+                            onDelete: { model.onTapDelete(countdown) }
+                        )
+                }
+            }
+        }
+        if !pastCountdowns.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Past")
+                    .font(AppFont.headline)
+                    .padding(.leading, 4)
+                ForEach(pastCountdowns) { countdown in
+                    CountdownRow(countdown: countdown)
+                        .onTapGesture {
+                            Haptics.shared.vibrateIfEnabled()
+                            model.onTapCountDown(countdown)
+                        }
+                        .countdownContextMenu(
+                            countdown: countdown,
+                            onEdit: { model.onEditCountdown(countdown) },
+                            onToggleFavorite: { model.onToggleFavorite(countdown) },
+                            onDelete: { model.onTapDelete(countdown) }
+                        )
+                }
+            }
         }
     }
 }
