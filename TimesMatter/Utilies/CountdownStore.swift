@@ -60,12 +60,8 @@ struct CountdownStore {
         reminder: .init(type: .everyYear, time: .atEventTime, soundName: "Sunny Step.mp3")
     )
     
-    static let seedLive: [Countdown.Draft] = [
-        firstUse,
-        longPressToEdit,
-        christmas,
-        newYear
-    ]
+    /// Intentionally light — onboarding creates the user's first countdown.
+    static let seedLive: [Countdown.Draft] = []
 
     static let seedDebug: [Countdown.Draft] = [
         testSecond,

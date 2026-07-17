@@ -5,8 +5,8 @@
 //  Created by Lulin Yang on 2025/7/12.
 //
 
-import SwiftUI
 import Dependencies
+import SwiftUI
 
 struct PurchaseSheet: View {
     @Dependency(\.purchaseManager) var purchaseManager
@@ -14,120 +14,131 @@ struct PurchaseSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var isPurchasing = false
     @State private var showSuccessModal = false
-    
+    @State private var errorMessage: String?
+
     var body: some View {
         ZStack(alignment: .topLeading) {
-            Color(.systemYellow).opacity(0.08).ignoresSafeArea()
+            LinearGradient(
+                colors: [
+                    themeManager.current.primaryColor.opacity(0.18),
+                    themeManager.current.background
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+
             ScrollView {
                 VStack(spacing: 24) {
-                    // Close button
                     HStack {
-                        Button(action: { 
+                        Button {
                             Haptics.shared.vibrateIfEnabled()
-                            dismiss() 
-                        }) {
+                            dismiss()
+                        } label: {
                             Image(systemName: "xmark")
-                        
                         }
                         .buttonStyle(.appCircular)
+                        .accessibilityLabel(String(localized: "Close"))
                         Spacer()
                     }
                     .padding(.top, 12)
                     .padding(.leading, 12)
 
-                    // Top image
                     ZStack {
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.pink, Color.orange, Color.yellow, Color.purple, Color.green]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                        .frame(width: 90, height: 90)
-                        .clipShape(RoundedRectangle(cornerRadius: 18))
+                        Circle()
+                            .fill(themeManager.current.primaryColor.opacity(0.2))
+                            .frame(width: 96, height: 96)
+                        Image(systemName: "crown.fill")
+                            .font(.system(size: 40))
+                            .foregroundStyle(.yellow)
+                    }
+                    .accessibilityHidden(true)
 
-                        Image(systemName: "bell.circle.fill")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 60, height: 60)
-                            .foregroundStyle(Color(red: 1.0, green: 0.92, blue: 0.88)) // Cuter pastel peach
-                            .shadow(radius: 6)
-                       
+                    VStack(spacing: 8) {
+                        Text(String(localized: "Times Matter Premium"))
+                            .font(.title2.weight(.bold))
+                            .multilineTextAlignment(.center)
+                        Text(String(localized: "Unlock the full toolkit for beautiful countdowns—built for people who never want to miss what matters."))
+                            .font(.body)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
                     }
-                    .frame(width: 90, height: 90)
-                    
-                    // Title & description
-                    Text("Enjoy an ad-free experience with Premium!")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                        .padding(.bottom, 12)
-                    VStack(alignment: .leading, spacing: 10) {
-                        HStack(alignment: .top) {
-                            Text("• ").font(.title3).fontWeight(.semibold)
-                            Text("No Ads: ")
-                                .fontWeight(.semibold) + Text("Say goodbye to ads and hello to smoother event tracking.")
+
+                    VStack(alignment: .leading, spacing: 14) {
+                        ForEach(PremiumFeature.allCases) { feature in
+                            HStack(alignment: .top, spacing: 12) {
+                                Image(systemName: feature.systemImage)
+                                    .font(.title3)
+                                    .foregroundStyle(themeManager.current.primaryColor)
+                                    .frame(width: 28)
+                                    .accessibilityHidden(true)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(feature.title)
+                                        .font(.headline)
+                                    Text(feature.subtitle)
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .accessibilityElement(children: .combine)
                         }
-                        //HStack(alignment: .top) {
-                        //    Text("• ").font(.title3).fontWeight(.bold)
-                        //    Text("Unlimited Habits: ")
-                        //        .fontWeight(.semibold) + Text("Create and track as many healthy habits as you want—no limits.")
-                        //}
                     }
-                    .font(.body)
+                    .padding()
+                    .background(themeManager.current.card)
+                    .clipShape(RoundedRectangle(cornerRadius: AppCornerRadius.card))
                     .padding(.horizontal)
 
-                    // Purchase button
+                    Text(String(localized: "Free includes \(PremiumLimits.freeCountdownLimit) countdowns. Premium is a one-time unlock."))
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+
                     if let product = purchaseManager.premiumProduct {
                         if purchaseManager.isPremiumUserPurchased {
-                            Text("You are now Premium user!")
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
-                                .padding(.bottom, 12)
+                            Label(String(localized: "You’re a Premium member"), systemImage: "checkmark.seal.fill")
+                                .font(.headline)
+                                .foregroundStyle(themeManager.current.primaryColor)
                         } else {
-                            Button(action: {
+                            Button {
                                 Haptics.shared.vibrateIfEnabled()
-                                Task {
-                                    isPurchasing = true
-                                    let result = await purchaseManager.purchasePremium()
-                                    switch result {
-                                    case .success:
-                                        showSuccessModal = true
-                                    case .failure(let error):
-                                        print("Purchase failed: \(error.localizedDescription)")
-                                    }
-                                    isPurchasing = false
-                                }
-                            }) {
+                                Task { await purchase() }
+                            } label: {
                                 HStack {
                                     if isPurchasing {
                                         ProgressView()
-                                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                            .scaleEffect(0.8)
+                                            .tint(.white)
                                     }
-                                    Text("\(product.displayPrice) - Upgrade to Premium")
-                                        .font(.subheadline)
+                                    Text(String(localized: "\(product.displayPrice) — Unlock Premium"))
+                                        .font(.headline)
                                 }
-                                .padding(.vertical, 12)
-                                .padding(.horizontal, 20)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 14)
                                 .background(themeManager.current.primaryColor)
                                 .foregroundStyle(.white)
-                                .clipShape(.rect(cornerRadius: 16))
+                                .clipShape(RoundedRectangle(cornerRadius: 16))
                             }
                             .padding(.horizontal)
                             .disabled(isPurchasing)
+                            .accessibilityHint(String(localized: "One-time purchase"))
                         }
                     } else {
                         ProgressView()
-                        Text("Loading product...")
-                                    .foregroundStyle(.secondary)
-                                    .padding(.top, 4)
+                        Text(String(localized: "Loading product…"))
+                            .foregroundStyle(.secondary)
                     }
-                    // Links
+
+                    if let errorMessage {
+                        Text(errorMessage)
+                            .font(.footnote)
+                            .foregroundStyle(.red)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
+
                     VStack(spacing: 16) {
-                        Button("Restore Purchases") {
+                        Button(String(localized: "Restore Purchases")) {
                             Haptics.shared.vibrateIfEnabled()
                             Task {
                                 isPurchasing = true
@@ -135,24 +146,18 @@ struct PurchaseSheet: View {
                                 isPurchasing = false
                             }
                         }
-                        .foregroundStyle(themeManager.current.primaryColor)
-                        
-                        Button("Contact Support") {
-                            Haptics.shared.vibrateIfEnabled()
+                        Button(String(localized: "Contact Support")) {
                             if let url = URL(string: "https://apps-bay.github.io/Apps-Bay-Website/contact/") {
                                 UIApplication.shared.open(url)
                             }
                         }
-                        .foregroundStyle(themeManager.current.primaryColor)
-                        
-                        Button("Privacy Policy") {
-                            Haptics.shared.vibrateIfEnabled()
+                        Button(String(localized: "Privacy Policy")) {
                             if let url = URL(string: "https://apps-bay.github.io/Apps-Bay-Website/privacy/") {
                                 UIApplication.shared.open(url)
                             }
                         }
-                        .foregroundStyle(themeManager.current.primaryColor)
                     }
+                    .foregroundStyle(themeManager.current.primaryColor)
                     .font(.body)
                     .padding(.bottom, 24)
                 }
@@ -168,6 +173,23 @@ struct PurchaseSheet: View {
             isPurchasing = false
         }
     }
+
+    private func purchase() async {
+        isPurchasing = true
+        errorMessage = nil
+        let result = await purchaseManager.purchasePremium()
+        switch result {
+        case .success:
+            showSuccessModal = true
+        case .failure(let error):
+            if case .userCancelled = error {
+                break
+            } else {
+                errorMessage = error.localizedDescription
+            }
+        }
+        isPurchasing = false
+    }
 }
 
 struct ConfettiDot: Identifiable {
@@ -178,12 +200,11 @@ struct ConfettiDot: Identifiable {
     let size: CGFloat
 }
 
-
-
 struct PremiumSuccessView: View {
     var onContinue: (() -> Void)? = nil
     @State private var animate = false
     @Environment(\.dismiss) var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private let confetti: [ConfettiDot] = (0..<20).map { _ in
         ConfettiDot(
@@ -203,68 +224,55 @@ struct PremiumSuccessView: View {
             )
             .ignoresSafeArea()
 
-            // Confetti
-            ForEach(confetti) { dot in
-                Circle()
-                    .fill(dot.color)
-                    .frame(width: dot.size, height: dot.size)
-                    .position(x: dot.x, y: animate ? dot.y : dot.y - 80)
-                    .opacity(0.6)
-                    .animation(.easeOut(duration: 1.2), value: animate)
+            if !reduceMotion {
+                ForEach(confetti) { dot in
+                    Circle()
+                        .fill(dot.color)
+                        .frame(width: dot.size, height: dot.size)
+                        .position(x: dot.x, y: animate ? dot.y : dot.y - 80)
+                        .opacity(0.6)
+                        .animation(.easeOut(duration: 1.2), value: animate)
+                }
             }
 
             VStack(spacing: 26) {
-                ZStack {
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                gradient: Gradient(colors: [Color.purple.opacity(0.3), Color.blue.opacity(0.2)]),
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
-                        .frame(width: 110, height: 110)
-                        .blur(radius: 6)
-                    Image(systemName: "sparkles")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 70, height: 70)
-                        .foregroundStyle(.indigo)
-                        .shadow(color: .indigo.opacity(0.3), radius: 10)
-                }
+                Image(systemName: "sparkles")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 70, height: 70)
+                    .foregroundStyle(.indigo)
+                    .accessibilityHidden(true)
 
-                Text("You're All Set!")
+                Text(String(localized: "You’re All Set!"))
                     .font(.system(size: 26, weight: .semibold))
-                    .foregroundStyle(.primary)
 
-                Text("✨ Thanks for unlocking the full experience.")
+                Text(String(localized: "Premium is unlocked. Enjoy unlimited countdowns, custom sounds, photo backgrounds, and premium share cards."))
                     .font(.body)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
 
-                Divider()
-
                 VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
-                        Text("Ad-free experience")
-                    }
-                    HStack {
-                        Image(systemName: "heart.fill").foregroundStyle(.pink)
-                        Text("Support for future updates")
+                    ForEach([
+                        String(localized: "Unlimited countdowns"),
+                        String(localized: "Ad-free experience"),
+                        String(localized: "Custom sounds & photos"),
+                        String(localized: "Premium share cards"),
+                    ], id: \.self) { line in
+                        Label(line, systemImage: "checkmark.circle.fill")
+                            .foregroundStyle(.primary)
                     }
                 }
                 .font(.body)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 Button {
-                    if let action = onContinue {
-                        action()
+                    if let onContinue {
+                        onContinue()
                     } else {
                         dismiss()
                     }
                 } label: {
-                    Text("Continue")
+                    Text(String(localized: "Continue"))
                         .font(.headline)
                         .padding(.vertical, 12)
                         .padding(.horizontal, 44)
@@ -277,7 +285,6 @@ struct PremiumSuccessView: View {
                         )
                         .foregroundStyle(.white)
                         .clipShape(.rect(cornerRadius: 18))
-                        .shadow(radius: 4)
                 }
             }
             .padding(36)
@@ -291,7 +298,6 @@ struct PremiumSuccessView: View {
         }
     }
 }
-
 
 #Preview {
     PurchaseSheet()

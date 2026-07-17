@@ -13,11 +13,11 @@ struct Haptics {
      = true
     static let shared = Haptics()
     func vibrateIfEnabled() {
-        print("Vibration setting is \(vibrateEnabled ? "ON" : "OFF")") // debug
         if vibrateEnabled {
             let generator = UIImpactFeedbackGenerator(style: .light)
             generator.prepare()
             generator.impactOccurred()
         }
+        ButtonSound.playIfEnabled()
     }
 }

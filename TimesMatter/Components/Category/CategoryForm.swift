@@ -171,7 +171,7 @@ struct CategoryFormView: View {
                         Haptics.shared.vibrateIfEnabled()
                         dismiss()
                     }
-                    .buttonStyle(.appRect)
+                    .appToolbarStyle(prominent: false)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(model.isEditing ? "Done" : "Edit") {
@@ -180,7 +180,7 @@ struct CategoryFormView: View {
                             model.isEditing.toggle()
                         }
                     }
-                    .buttonStyle(.appRect)
+                    .appToolbarStyle(prominent: model.isEditing)
                 }
             }
         }

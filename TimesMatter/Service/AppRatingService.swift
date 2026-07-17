@@ -9,6 +9,13 @@ import Sharing
 import StoreKit
 import SwiftUI
 
+enum RatingTrigger: String {
+    case savedCountdown
+    case sharedCard
+    case completedOnboarding
+    case enabledReminder
+}
+
 @Observable
 class AppRatingService {
     @ObservationIgnored
@@ -17,25 +24,34 @@ class AppRatingService {
     @Shared(.appStorage("lastRatingPromptDate")) private var lastRatingPromptDate: Date?
     @ObservationIgnored
     @Shared(.appStorage("hasRatedApp")) private var hasRatedApp: Bool = false
+    @ObservationIgnored
+    @Shared(.appStorage("referralShareCount")) private var referralShareCount: Int = 0
 
-    // Minimum days between rating prompts (to avoid spam)
-    private let minimumDaysBetweenPrompts: TimeInterval = 30 * 24 * 60 * 60 // 30 days
+    private let minimumDaysBetweenPrompts: TimeInterval = 30 * 24 * 60 * 60
 
-    /// Increments the rate prepare trigger count and checks if we should show a rating prompt
-    func incrementPrepareTriggerCount() {
+    /// Call after meaningful positive moments (save, share, onboarding).
+    func recordMeaningfulAction(_ trigger: RatingTrigger) {
         $ratePrepareTriggerCount.withLock { $0 += 1 }
-        print("Rate Prepare Trigger  count: \(ratePrepareTriggerCount)")
 
-        // Check if we should show rating prompt
-        checkAndShowRatingPrompt()
+        if trigger == .sharedCard {
+            $referralShareCount.withLock { $0 += 1 }
+        }
+
+        // Onboarding: wait a beat so the success UI settles.
+        let delay: TimeInterval = trigger == .completedOnboarding ? 1.2 : 0.35
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            self.checkAndShowRatingPrompt(forceSoft: trigger == .sharedCard || trigger == .completedOnboarding)
+        }
     }
 
-    /// Checks if conditions are met to show a rating prompt
-    private func checkAndShowRatingPrompt() {
-        // Don't show if user has already rated
+    /// Legacy entry point used by save flows.
+    func incrementPrepareTriggerCount() {
+        recordMeaningfulAction(.savedCountdown)
+    }
+
+    private func checkAndShowRatingPrompt(forceSoft: Bool = false) {
         guard !hasRatedApp else { return }
 
-        // Don't show if we've shown a prompt recently
         if let lastPrompt = lastRatingPromptDate {
             let daysSinceLastPrompt = Date().timeIntervalSince(lastPrompt)
             if daysSinceLastPrompt < minimumDaysBetweenPrompts {
@@ -43,26 +59,23 @@ class AppRatingService {
             }
         }
 
-        // Check if current prepare trigger count matches any threshold
-        guard ratePrepareTriggerCount.isMultiple(of: 3) else { return }
+        // Soft moments can prompt earlier; otherwise every 3 meaningful actions.
+        if forceSoft {
+            if ratePrepareTriggerCount < 1 { return }
+        } else {
+            guard ratePrepareTriggerCount.isMultiple(of: 3) else { return }
+        }
 
-        // Show rating prompt
         showRatingPrompt()
     }
 
-    /// Shows the system rating prompt
     private func showRatingPrompt() {
-        print("showRatingPrompt")
-        // Update last prompt date
         $lastRatingPromptDate.withLock { $0 = Date() }
-
-        // Request review using StoreKit
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.requestRating()
         }
     }
 
-    /// Manually trigger rating prompt (for testing or manual rating button)
     @MainActor
     func requestRating() {
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
@@ -73,40 +86,40 @@ class AppRatingService {
         }
     }
 
-    /// Opens the App Store review page
     func openAppStoreReview() {
         let appID = Constants.AppID.thisAppID
         let reviewURL = "https://itunes.apple.com/app/id\(appID)?action=write-review"
-
         if let url = URL(string: reviewURL) {
             UIApplication.shared.open(url)
         }
     }
 
-    /// Opens the App Store app page
     func openAppStorePage() {
         let appID = Constants.AppID.thisAppID
         let appURL = "https://apps.apple.com/app/id\(appID)"
-
         if let url = URL(string: appURL) {
             UIApplication.shared.open(url)
         }
     }
 
-    /// Resets the rating state (for testing purposes)
+    var shareReferralURL: URL? {
+        URL(string: "https://apps.apple.com/app/id\(Constants.AppID.thisAppID)")
+    }
+
+    var shareReferralMessage: String {
+        String(localized: "I’ve been using Times Matter to track countdowns and reminders. Try it free:")
+    }
+
     func resetRatingState() {
         $ratePrepareTriggerCount.withLock { $0 = 0 }
         $lastRatingPromptDate.withLock { $0 = nil }
         $hasRatedApp.withLock { $0 = false }
     }
 
-    /// Checks if user has rated the app
     var userHasRated: Bool {
         hasRatedApp
     }
 }
-
-// MARK: - Dependency Injection
 
 extension DependencyValues {
     var appRatingService: AppRatingService {

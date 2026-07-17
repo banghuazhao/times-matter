@@ -47,9 +47,18 @@ class CountdownFormModel: HashableObject {
     var route: Route?
     
     var showTitleEmptyToast = false
+    var showLimitReached = false
+    var showPurchaseSheet = false
+
+    @ObservationIgnored
+    @FetchAll(Countdown.all) var allCountdowns
     
     var isPremiumUser: Bool {
         purchaseManager.isPremiumUserPurchased
+    }
+
+    var activeCountdownCount: Int {
+        allCountdowns.filter { !$0.isArchived }.count
     }
     
     init(countdown: Countdown.Draft, onSave: ((Countdown) -> Void)? = nil) {
@@ -63,6 +72,19 @@ class CountdownFormModel: HashableObject {
             showTitleEmptyToast = true
             return
         }
+
+        if !isEdit {
+            let isPremium = purchaseManager.isPremiumUserPurchased
+            guard PremiumLimits.canCreateCountdown(activeCount: activeCountdownCount, isPremium: isPremium) else {
+                showLimitReached = true
+                return
+            }
+        }
+
+        // Custom sounds require Premium.
+        if !isPremiumUser, countdown.reminder.soundName != "Default" {
+            countdown.reminder.soundName = "Default"
+        }
         
         withErrorReporting {
             let updatedCountDown = try database.write { [countdown] db in
@@ -73,7 +95,7 @@ class CountdownFormModel: HashableObject {
             }
             
             guard let updatedCountDown else { return }
-            appRatingService.incrementPrepareTriggerCount()
+            appRatingService.recordMeaningfulAction(.savedCountdown)
             
             ReminderNotificationManager.shared.removeNotification(for: updatedCountDown)
             ReminderNotificationManager.shared.scheduleNotification(for: updatedCountDown)
@@ -322,19 +344,17 @@ struct CountdownFormView: View {
              .appBackground(theme: themeManager.current)
              .toolbar {
                  ToolbarItem(placement: .topBarLeading) {
-                     Button {
+                     Button("Close", systemImage: "xmark") {
                          dismiss()
-                     } label: {
-                         Text("Dismiss")
                      }
-                     .buttonStyle(.appRect)
+                     .labelStyle(.iconOnly)
+                     .appToolbarStyle(iconOnly: true)
                  }
                  ToolbarItem(placement: .topBarTrailing) {
-                     Button {
+                     Button(model.isEdit ? String(localized: "Update") : String(localized: "Save")) {
                          model.onTapSave()
-                     } label: {
-                         Text(model.isEdit ? String(localized: "Update") : String(localized: "Save"))
-                     }.buttonStyle(.appRect)
+                     }
+                     .appToolbarStyle(prominent: true)
                  }
              }
              .navigationTitle(
@@ -372,6 +392,20 @@ struct CountdownFormView: View {
                  .presentationDetents([.large])
              }
              .toast(isPresented: $model.showTitleEmptyToast, message: String(localized:"Event title is empty"), type: .warning)
+             .alert(
+                String(localized: "Free limit reached"),
+                isPresented: $model.showLimitReached
+             ) {
+                 Button(String(localized: "Upgrade to Premium")) {
+                     model.showPurchaseSheet = true
+                 }
+                 Button(String(localized: "Not Now"), role: .cancel) {}
+             } message: {
+                 Text(String(localized: "Free accounts can track up to \(PremiumLimits.freeCountdownLimit) active countdowns. Upgrade for unlimited events."))
+             }
+             .sheet(isPresented: $model.showPurchaseSheet) {
+                 PurchaseSheet()
+             }
         }
     }
 }

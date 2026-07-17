@@ -184,7 +184,7 @@ enum ReminderTime: String, Codable, CaseIterable {
     }
 }
 
-struct CountdownReminder: Codable, Equatable {
+struct CountdownReminder: Codable, Equatable, Hashable {
     var type: ReminderType = .onlyOnce
     var time: ReminderTime = .atEventTime
     var soundName: String = "Default"

@@ -14,8 +14,16 @@ class ChangeBackgroundSheetModel {
     @ObservationIgnored
     @Dependency(\.backgroundImageManager) var backgroundImageManager
 
+    @ObservationIgnored
+    @Dependency(\.purchaseManager) var purchaseManager
+
     var selectedTab: Tab = .image
     var selectedPhoto: PhotosPickerItem?
+    var showPurchaseSheet = false
+
+    var isPremium: Bool {
+        purchaseManager.isPremiumUserPurchased
+    }
 
     enum Tab: String, CaseIterable, Identifiable {
         case image = "Background Image"
@@ -65,6 +73,11 @@ class ChangeBackgroundSheetModel {
     }
 
     func selectPhoto(_ photo: PhotosPickerItem?) {
+        guard isPremium else {
+            selectedPhoto = nil
+            showPurchaseSheet = true
+            return
+        }
         selectedPhoto = photo
         if let photo {
             Task {
@@ -197,90 +210,99 @@ struct ChangeBackgroundSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button {
+                    Button("Close", systemImage: "xmark") {
                         Haptics.shared.vibrateIfEnabled()
                         dismiss()
-                    } label: {
-                        Image(systemName: "xmark")
                     }
-                    .buttonStyle(.appCircular)
+                    .labelStyle(.iconOnly)
+                    .appToolbarStyle(iconOnly: true)
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
+                    Button("Done") {
                         Haptics.shared.vibrateIfEnabled()
                         model.applyChanges()
                         dismiss()
-                    } label: {
-                        Text("Done")
                     }
-                    .buttonStyle(.appRect)
+                    .appToolbarStyle(prominent: true)
                 }
             }
         }
     }
 
     private var backgroundImage: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: AppSpacing.small) {
-                PhotosPicker(selection: Binding(
-                    get: { model.selectedPhoto },
-                    set: { model.selectPhoto($0) }
-                ), matching: .images, photoLibrary: .shared()) { [model] in
-                    if let backgroundImageName = model.countdown.backgroundImageName,
-                       let uiImage = UIImage(contentsOfFile: backgroundImageName) {
-                        ZStack(alignment: .topTrailing) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .frame(width: 66, height: 100)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(model.primaryColor, lineWidth: 2)
-                                )
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(model.primaryColor)
-                                .offset(x: -4, y: 4)
-                        }
-                    } else {
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.gray.opacity(0.2))
-                            .frame(width: 66, height: 100)
-                            .overlay(
-                                Image(systemName: "photo")
-                                    .font(.system(size: 20))
-                                    .foregroundStyle(.secondary)
-                            )
-                    }
-                }
+        let selectedImageName = model.countdown.backgroundImageName
+        let accent = model.primaryColor
+        let customThumb = selectedImageName.flatMap { UIImage(contentsOfFile: $0) }
 
-                ForEach(PredefinedImages.backgroundImages, id: \.self) { name in
-                    ZStack(alignment: .topTrailing) {
-                        Image(name, bundle: .main)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 66, height: 100)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(model.countdown.backgroundImageName == name ? model.primaryColor : Color.clear, lineWidth: 2)
+        return VStack(alignment: .leading, spacing: AppSpacing.small) {
+            if !model.isPremium {
+                Label(String(localized: "Photo backgrounds require Premium"), systemImage: "crown.fill")
+                    .font(AppFont.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, AppSpacing.medium)
+            }
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: AppSpacing.small) {
+                    if model.isPremium {
+                        PhotosPicker(selection: Binding(
+                            get: { model.selectedPhoto },
+                            set: { model.selectPhoto($0) }
+                        ), matching: .images) {
+                            BackgroundThumb(
+                                uiImage: customThumb,
+                                assetName: nil,
+                                isSelected: customThumb != nil,
+                                accent: accent,
+                                showsPhotoPlaceholder: customThumb == nil
                             )
-                            .onTapGesture {
-                                Haptics.shared.vibrateIfEnabled()
-                                model.selectPredefinedImage(name)
-                            }
-                        if model.countdown.backgroundImageName == name {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(model.primaryColor)
-                                .offset(x: -4, y: 4)
                         }
+                        .accessibilityLabel(String(localized: "Choose photo from library"))
+                    } else {
+                        Button {
+                            model.showPurchaseSheet = true
+                        } label: {
+                            BackgroundThumb(
+                                uiImage: nil,
+                                assetName: nil,
+                                isSelected: false,
+                                accent: accent,
+                                showsPhotoPlaceholder: true
+                            )
+                            .overlay {
+                                Image(systemName: "lock.fill")
+                                    .foregroundStyle(.white)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(String(localized: "Photo backgrounds, Premium"))
+                    }
+
+                    ForEach(PredefinedImages.backgroundImages, id: \.self) { name in
+                        Button {
+                            Haptics.shared.vibrateIfEnabled()
+                            model.selectPredefinedImage(name)
+                        } label: {
+                            BackgroundThumb(
+                                uiImage: nil,
+                                assetName: name,
+                                isSelected: selectedImageName == name,
+                                accent: accent,
+                                showsPhotoPlaceholder: false
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(String(localized: "Background \(name)"))
                     }
                 }
+                .padding(.horizontal, AppSpacing.medium)
             }
-            .padding(.horizontal, AppSpacing.medium)
+            .frame(height: 100)
         }
-        .frame(height: 100)
+        .sheet(isPresented: $model.showPurchaseSheet) {
+            PurchaseSheet()
+        }
     }
 
     @ViewBuilder
@@ -310,26 +332,28 @@ struct ChangeBackgroundSheet: View {
                 .frame(width: 60, height: 100)
 
                 ForEach(PredefinedColors.backgroundColors, id: \.hexIntWithAlpha) { color in
-                    ZStack(alignment: .topTrailing) {
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(color)
-                            .frame(width: 66, height: 100)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(model.countdown.backgroundColor == color.hexIntWithAlpha ? model.primaryColor : Color.clear, lineWidth: 2)
-                            )
-                            .onTapGesture {
-                                Haptics.shared.vibrateIfEnabled()
-                                model.updateBackgroundColor(color)
-                            }
+                    Button {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.updateBackgroundColor(color)
+                    } label: {
+                        ZStack(alignment: .topTrailing) {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(color)
+                                .frame(width: 66, height: 100)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(model.countdown.backgroundColor == color.hexIntWithAlpha ? model.primaryColor : Color.clear, lineWidth: 2)
+                                )
 
-                        if model.countdown.backgroundColor == color.hexIntWithAlpha {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(.white)
-                                .background(Circle().fill(Color.black.opacity(0.3)))
-                                .offset(x: -4, y: 4)
+                            if model.countdown.backgroundColor == color.hexIntWithAlpha {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.white)
+                                    .background(Circle().fill(Color.black.opacity(0.3)))
+                                    .offset(x: -4, y: 4)
+                            }
                         }
                     }
+                    .buttonStyle(.plain)
                 }
             }
             .padding(.horizontal, AppSpacing.medium)
@@ -351,26 +375,28 @@ struct ChangeBackgroundSheet: View {
                 .labelsHidden()
 
                 ForEach(PredefinedColors.textColors, id: \.hexIntWithAlpha) { color in
-                    ZStack(alignment: .topTrailing) {
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(color)
-                            .frame(width: 50, height: 50)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(model.countdown.textColor == color.hexIntWithAlpha ? model.primaryColor : Color.clear, lineWidth: 2)
-                            )
-                            .onTapGesture {
-                                Haptics.shared.vibrateIfEnabled()
-                                model.updateTextColor(color)
-                            }
+                    Button {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.updateTextColor(color)
+                    } label: {
+                        ZStack(alignment: .topTrailing) {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(color)
+                                .frame(width: 50, height: 50)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(model.countdown.textColor == color.hexIntWithAlpha ? model.primaryColor : Color.clear, lineWidth: 2)
+                                )
 
-                        if model.countdown.textColor == color.hexIntWithAlpha {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(.white)
-                                .background(Circle().fill(Color.black.opacity(0.3)))
-                                .offset(x: -4, y: 4)
+                            if model.countdown.textColor == color.hexIntWithAlpha {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(.white)
+                                    .background(Circle().fill(Color.black.opacity(0.3)))
+                                    .offset(x: -4, y: 4)
+                            }
                         }
                     }
+                    .buttonStyle(.plain)
                 }
             }
             .padding(.horizontal, AppSpacing.medium)
@@ -383,39 +409,88 @@ struct ChangeBackgroundSheet: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: AppSpacing.small) {
                 ForEach(LayoutType.allCases, id: \.self) { layout in
-                    ZStack(alignment: .topTrailing) {
-                        VStack(spacing: 8) {
-                            Image(systemName: layout.iconName)
-                                .font(.system(size: 24, weight: .semibold))
-                                .foregroundStyle(model.countdown.layout == layout ? model.primaryColor : .gray)
-                            Text(layout.displayName)
-                                .font(AppFont.footnote)
-                                .foregroundStyle(model.countdown.layout == layout ? model.primaryColor : .gray)
-                        }
-                        .frame(width: 80, height: 80)
-                        .background(
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(model.countdown.layout == layout ? model.primaryColor.opacity(0.12) : Color.gray.opacity(0.1))
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(model.countdown.layout == layout ? model.primaryColor : Color.clear, lineWidth: 2)
-                        )
-                        .onTapGesture {
-                            model.updateLayout(layout)
-                        }
+                    Button {
+                        Haptics.shared.vibrateIfEnabled()
+                        model.updateLayout(layout)
+                    } label: {
+                        ZStack(alignment: .topTrailing) {
+                            VStack(spacing: AppSpacing.small) {
+                                Image(systemName: layout.iconName)
+                                    .font(AppFont.title3)
+                                    .symbolRenderingMode(AppSymbol.renderingMode)
+                                    .foregroundStyle(model.countdown.layout == layout ? model.primaryColor : .secondary)
+                                Text(layout.displayName)
+                                    .font(AppFont.footnote)
+                                    .foregroundStyle(model.countdown.layout == layout ? model.primaryColor : .secondary)
+                            }
+                            .frame(width: 80, height: 80)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(model.countdown.layout == layout ? model.primaryColor.opacity(0.12) : Color.secondary.opacity(0.1))
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(model.countdown.layout == layout ? model.primaryColor : Color.clear, lineWidth: 2)
+                            )
 
-                        if model.countdown.layout == layout {
-                            Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(model.primaryColor)
-                                .offset(x: -4, y: 4)
+                            if model.countdown.layout == layout {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundStyle(model.primaryColor)
+                                    .offset(x: -4, y: 4)
+                            }
                         }
                     }
+                    .buttonStyle(.plain)
                 }
             }
             .padding(.horizontal, AppSpacing.medium)
         }
         .frame(height: 100)
+    }
+}
+
+private struct BackgroundThumb: View {
+    let uiImage: UIImage?
+    let assetName: String?
+    let isSelected: Bool
+    let accent: Color
+    let showsPhotoPlaceholder: Bool
+
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            Group {
+                if let uiImage {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                } else if let assetName {
+                    Image(assetName, bundle: .main)
+                        .resizable()
+                        .scaledToFill()
+                } else if showsPhotoPlaceholder {
+                    Color.secondary.opacity(0.2)
+                        .overlay {
+                            Image(systemName: "photo")
+                                .font(AppFont.title3)
+                                .foregroundStyle(.secondary)
+                        }
+                } else {
+                    Color.secondary.opacity(0.15)
+                }
+            }
+            .frame(width: 66, height: 100)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(isSelected ? accent : Color.clear, lineWidth: 2)
+            )
+
+            if isSelected {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundStyle(accent)
+                    .offset(x: -4, y: 4)
+            }
+        }
     }
 }
 

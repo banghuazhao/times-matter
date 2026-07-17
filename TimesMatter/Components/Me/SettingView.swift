@@ -5,8 +5,8 @@
 //  Created by Lulin Yang on 2025/7/11.
 //
 
-import SwiftUI
 import Dependencies
+import SwiftUI
 
 struct SettingView: View {
     @AppStorage("buttonSoundEnabled") private var buttonSoundEnabled: Bool = true
@@ -17,15 +17,24 @@ struct SettingView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: AppSpacing.large) {
-                settingsSection(title: "Feedback") {
+                settingsSection(title: String(localized: "Feedback")) {
                     Toggle(isOn: $vibrateEnabled) {
                         Text(String(localized: "Vibrate"))
                             .font(AppFont.body)
                             .foregroundStyle(themeManager.current.textPrimary)
                     }
                     .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
+                    .accessibilityHint(String(localized: "Plays haptic feedback on taps"))
+
+                    Toggle(isOn: $buttonSoundEnabled) {
+                        Text(String(localized: "Button Sounds"))
+                            .font(AppFont.body)
+                            .foregroundStyle(themeManager.current.textPrimary)
+                    }
+                    .toggleStyle(SwitchToggleStyle(tint: themeManager.current.primaryColor))
+                    .accessibilityHint(String(localized: "Plays a soft tap sound on key actions"))
                 }
-                settingsSection(title: "Appearance") {
+                settingsSection(title: String(localized: "Appearance")) {
                     Toggle(isOn: $darkModeEnabled) {
                         Text(String(localized: "Dark Mode"))
                             .font(AppFont.body)

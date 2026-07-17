@@ -10,7 +10,8 @@ import SwiftUI
 
 struct ThemeColorView: View {
     @Dependency(\.themeManager) var themeManager
-    @Environment(\.dismiss) private var dismiss
+    @Dependency(\.purchaseManager) var purchaseManager
+    @State private var showPurchaseSheet = false
 
     private let themeColors: [ThemeColorOption] = [
         ThemeColorOption(themeColor: .default, color: Color(red: 0.914, green: 0.420, blue: 0.369), icon: "flame.fill"),
@@ -21,6 +22,10 @@ struct ThemeColorView: View {
         ThemeColorOption(themeColor: .orange, color: Color(red: 1.0, green: 0.58, blue: 0.0), icon: "sun.max.fill"),
     ]
 
+    private var isPremium: Bool {
+        purchaseManager.isPremiumUserPurchased
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: AppSpacing.large) {
@@ -29,48 +34,52 @@ struct ThemeColorView: View {
                     .foregroundStyle(themeManager.current.textSecondary)
                     .multilineTextAlignment(.center)
 
-                // Theme Color Options
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
                     ForEach(themeColors, id: \.themeColor.rawValue) { themeOption in
+                        let locked = PremiumFeature.isThemeExclusive(themeOption.themeColor) && !isPremium
                         ThemeColorCard(
                             themeOption: themeOption,
                             isSelected: themeManager.currentThemeColor == themeOption.themeColor.rawValue,
+                            isLocked: locked,
                             onTap: {
-                                themeManager.updateThemeColor(themeOption.themeColor.rawValue)
+                                if locked {
+                                    showPurchaseSheet = true
+                                } else {
+                                    themeManager.updateThemeColor(themeOption.themeColor.rawValue)
+                                }
                             }
                         )
                     }
                 }
                 .padding(.horizontal)
 
-                // Preview Section
                 VStack(alignment: .leading, spacing: AppSpacing.medium) {
                     Text(String(localized: "Preview"))
                         .appSectionHeader(theme: themeManager.current)
 
                     VStack(spacing: AppSpacing.medium) {
-                        // Sample button
                         HStack {
-                                                    Button(action: {
-                            Haptics.shared.vibrateIfEnabled()
-                        }) {
-                            Text(String(localized: "Sample Button"))
-                        }
+                            Button(action: {
+                                Haptics.shared.vibrateIfEnabled()
+                            }) {
+                                Text(String(localized: "Sample Button"))
+                            }
                             .buttonStyle(.appRect)
-                            
+
                             Button(action: {
                                 Haptics.shared.vibrateIfEnabled()
                             }) {
                                 Image(systemName: "plus")
                             }
                             .buttonStyle(.appCircular)
+                            .accessibilityLabel(String(localized: "Sample add button"))
                         }
 
-                        // Sample card
                         VStack(alignment: .leading, spacing: AppSpacing.small) {
                             HStack {
                                 Image(systemName: "star.fill")
                                     .foregroundStyle(themeManager.current.primaryColor)
+                                    .accessibilityHidden(true)
                                 Text(String(localized: "Sample Card"))
                                     .font(AppFont.headline)
                                     .foregroundStyle(themeManager.current.textPrimary)
@@ -84,11 +93,20 @@ struct ThemeColorView: View {
                     }
                 }
                 .padding(.horizontal)
+
+                Text(String(localized: "Purple, Pink, and Orange themes unlock with Premium."))
+                    .font(AppFont.caption)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
             }
             .navigationTitle("Theme Color")
             .navigationBarTitleDisplayMode(.inline)
         }
         .background(themeManager.current.background)
+        .sheet(isPresented: $showPurchaseSheet) {
+            PurchaseSheet()
+        }
     }
 }
 
@@ -102,22 +120,22 @@ struct ThemeColorCard: View {
     @Dependency(\.themeManager) var themeManager
     let themeOption: ThemeColorOption
     let isSelected: Bool
+    var isLocked: Bool = false
     let onTap: () -> Void
 
     var body: some View {
-        Button(action: { 
+        Button(action: {
             Haptics.shared.vibrateIfEnabled()
-            onTap() 
+            onTap()
         }) {
             VStack(spacing: AppSpacing.medium) {
-                // Color circle with icon
                 ZStack {
                     Circle()
                         .fill(themeOption.color)
                         .frame(width: 50, height: 50)
                         .shadow(color: themeOption.color.opacity(0.3), radius: 8, x: 0, y: 4)
 
-                    Image(systemName: themeOption.icon)
+                    Image(systemName: isLocked ? "lock.fill" : themeOption.icon)
                         .font(.title)
                         .foregroundStyle(.white)
                 }
@@ -125,6 +143,12 @@ struct ThemeColorCard: View {
                 Text(themeOption.themeColor.displayName)
                     .font(AppFont.headline)
                     .foregroundStyle(themeOption.color)
+
+                if isLocked {
+                    Text(String(localized: "Premium"))
+                        .font(AppFont.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
             .frame(maxWidth: .infinity)
             .padding(AppSpacing.medium)
@@ -137,6 +161,12 @@ struct ThemeColorCard: View {
             .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
         }
         .buttonStyle(PlainButtonStyle())
+        .accessibilityLabel(
+            isLocked
+                ? String(localized: "\(themeOption.themeColor.displayName) theme, Premium")
+                : themeOption.themeColor.displayName
+        )
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 

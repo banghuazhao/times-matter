@@ -122,8 +122,7 @@ struct CountdownDetailView: View {
     @Environment(\.dismiss) private var dismiss
     
     // Share state
-    @State private var isShareSheetPresented = false
-    @State private var shareImage: UIImage? = nil
+    @State private var isShareCardPresented = false
     
     var body: some View {
         let scale = model.isPreview ? 0.6 : 1.0
@@ -169,13 +168,13 @@ struct CountdownDetailView: View {
                     }
 
                     HStack(spacing: 5 * scale) {
-                        ForEach(Array(model.timeLeftComponentsFull.enumerated()), id: \ .offset) { _, comp in
+                        ForEach(Array(model.timeLeftComponentsFull.enumerated()), id: \.offset) { _, comp in
                             timerBlock(value: comp.value, label: comp.label, scale: scale)
                         }
                     }
                     .padding(.vertical, 12 * scale)
                     .padding(.horizontal, AppSpacing.medium * scale)
-                    .background(RoundedRectangle(cornerRadius: 16 * scale).fill(Color.black.opacity(0.18)))
+                    .modifier(CountdownGlassChrome(cornerRadius: 16 * scale))
                 }
                 .padding(.vertical, AppSpacing.medium * scale)
                 if model.countdown.layout != .bottom {
@@ -189,32 +188,32 @@ struct CountdownDetailView: View {
         }
         .toolbar {
             if !model.isPreview {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
                     Button("Delete", systemImage: "trash") {
                         Haptics.shared.vibrateIfEnabled()
                         model.onTapDelete()
                     }
                     .labelStyle(.iconOnly)
-                    .buttonStyle(.appWhiteCircular)
 
                     Button("Share", systemImage: "square.and.arrow.up") {
                         Haptics.shared.vibrateIfEnabled()
-                        shareCountdownDetail()
+                        isShareCardPresented = true
                     }
                     .labelStyle(.iconOnly)
-                    .buttonStyle(.appWhiteCircular)
+                    .accessibilityLabel(String(localized: "Share countdown card"))
 
                     Button("Edit", systemImage: "pencil") {
                         Haptics.shared.vibrateIfEnabled()
                         model.onTapEdit()
                     }
                     .labelStyle(.iconOnly)
-                    .buttonStyle(.appWhiteCircular)
+                    .accessibilityLabel(String(localized: "Edit countdown"))
                 }
             }
         }
         .toolbar(.hidden, for: .tabBar)
-        .navigationBarTint(.white)
+        .toolbarColorScheme(.dark, for: .navigationBar)
+        .tint(.white)
         .sheet(item: $model.route.edit, id: \.self) { model in
             CountdownFormView(model: model)
         }
@@ -231,11 +230,18 @@ struct CountdownDetailView: View {
                 Text(String(localized: "This will permanently delete ‘\(model.countdown.truncatedTitle)’. This action cannot be undone. Are you sure you want to proceed?"))
             }
         )
-        .sheet(isPresented: $isShareSheetPresented) {
-            if let shareImage {
-                ShareSheet(activityItems: [shareImage])
-            }
+        .sheet(isPresented: $isShareCardPresented) {
+            let relative = model.countdown.calculateRelativeTime(currentTime: model.timerService.currentTime)
+            ShareCardSheet(
+                countdown: model.countdown,
+                relativeNumber: relative.number,
+                relativeLabel: relative.label,
+                backgroundColor: model.bgColor,
+                textColor: model.textColor,
+                backgroundImageName: model.countdown.backgroundImageName
+            )
         }
+        .accessibilityElement(children: .contain)
     }
 
     // Helper for timer block
@@ -257,94 +263,21 @@ struct CountdownDetailView: View {
         .frame(minWidth: 56 * scale)
     }
 
-    // MARK: - Share helpers
-    private func shareCountdownDetail() {
-        // Render the ZStack as image (without navigation bar/toolbars)
-        let renderer = ImageRenderer(content: shareContentView)
-        renderer.scale = displayScale
-        if let image = renderer.uiImage {
-            self.shareImage = image
-            self.isShareSheetPresented = true
-        }
-    }
+}
 
-    private var displayScale: CGFloat {
-        UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .first?
-            .screen
-            .scale ?? 3
-    }
+private struct CountdownGlassChrome: ViewModifier {
+    var cornerRadius: CGFloat
 
-    private var shareCanvasSize: CGSize {
-        let scene = UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .first
-        if let bounds = scene?.screen.bounds {
-            return bounds.size
-        }
-        return CGSize(width: 390, height: 844)
-    }
-
-    // The content to share (the main ZStack)
     @ViewBuilder
-    private var shareContentView: some View {
-        ZStack {
-            if let bgName = model.countdown.backgroundImageName, !bgName.isEmpty {
-                if let uiImage = UIImage(contentsOfFile: bgName) {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFill()
-                        .ignoresSafeArea()
-                } else {
-                    if let _ = UIImage(named: bgName, in: .main, with: nil) {
-                        Image(bgName, bundle: .main)
-                            .resizable()
-                            .scaledToFill()
-                            .ignoresSafeArea()
-                    } else {
-                        model.bgColor.ignoresSafeArea()
-                    }
-                }
-            } else {
-                model.bgColor.ignoresSafeArea()
-            }
-            VStack {
-                if model.countdown.layout != .top {
-                    Spacer(minLength: 0)
-                }
-                VStack(spacing: AppSpacing.large) {
-                    VStack(spacing: AppSpacing.small) {
-                        Text(model.countdown.title)
-                            .font(AppFont.title)
-                            .foregroundStyle(model.textColor)
-                            .multilineTextAlignment(.center)
-                            .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
-                        Text(model.countdown.timeSummary)
-                            .font(AppFont.body)
-                            .foregroundStyle(model.textColor)
-                            .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
-                    }
-                    HStack(spacing: 5) {
-                        ForEach(Array(model.timeLeftComponentsFull.enumerated()), id: \.offset) { _, comp in
-                            timerBlock(value: comp.value, label: comp.label, scale: 1.0)
-                        }
-                    }
-                    .padding(.vertical, AppSpacing.smallMedium)
-                    .padding(.horizontal, AppSpacing.medium)
-                    .background(RoundedRectangle(cornerRadius: AppCornerRadius.card).fill(Color.black.opacity(0.18)))
-                }
-                .padding(.vertical, AppSpacing.medium)
-                if model.countdown.layout != .bottom {
-                    Spacer(minLength: 0)
-                }
-            }
-            .padding(.vertical, model.isIphone ? 0 : AppSpacing.large)
-            .padding(.vertical, AppSpacing.large)
-            .padding(.horizontal, AppSpacing.medium)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+    func body(content: Content) -> some View {
+        let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+        if #available(iOS 26.0, *) {
+            content
+                .background(shape.fill(Color.black.opacity(0.12)))
+                .glassEffect(.regular, in: shape)
+        } else {
+            content.background(shape.fill(Color.black.opacity(0.18)))
         }
-        .frame(width: shareCanvasSize.width, height: shareCanvasSize.height)
     }
 }
 

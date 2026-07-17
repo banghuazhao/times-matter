@@ -18,6 +18,7 @@
       }
     },
     "%@ - Upgrade to Premium" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -26,6 +27,9 @@
           }
         }
       }
+    },
+    "%@ — Unlock Premium" : {
+
     },
     "%@ ago" : {
       "localizations" : {
@@ -97,6 +101,32 @@
         }
       }
     },
+    "%@ theme, Premium" : {
+
+    },
+    "%@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@, %2$@"
+          }
+        }
+      }
+    },
+    "%@, Premium" : {
+
+    },
+    "%@: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@: %2$@"
+          }
+        }
+      }
+    },
     "%lld" : {
       "localizations" : {
         "zh-Hans" : {
@@ -107,7 +137,18 @@
         }
       }
     },
+    "%lld of %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld"
+          }
+        }
+      }
+    },
     "• " : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -138,6 +179,7 @@
       }
     },
     "✨ Thanks for unlocking the full experience." : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -148,6 +190,7 @@
       }
     },
     "🌅 Sunrise" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -158,6 +201,7 @@
       }
     },
     "🌅 Sunset" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -168,6 +212,7 @@
       }
     },
     "🌟 Special Event" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -208,6 +253,7 @@
       }
     },
     "🎉 Anniversary" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -228,6 +274,7 @@
       }
     },
     "🏖️ Vacation" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -278,6 +325,7 @@
       }
     },
     "📅 Project Deadline" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -298,6 +346,7 @@
       }
     },
     "🦷 Dentist Appointment" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -318,6 +367,7 @@
       }
     },
     "🚗 Car Service" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -397,6 +447,15 @@
         }
       }
     },
+    "Ad-Free Experience" : {
+
+    },
+    "Add a countdown to see what’s next." : {
+
+    },
+    "Add a Home Screen or Lock Screen widget to glance at your next countdown without opening the app." : {
+
+    },
     "Add Countdown" : {
       "localizations" : {
         "zh-Hans" : {
@@ -417,6 +476,9 @@
         }
       }
     },
+    "Advertisement" : {
+
+    },
     "All" : {
       "localizations" : {
         "zh-Hans" : {
@@ -427,6 +489,9 @@
         }
       }
     },
+    "All Events" : {
+
+    },
     "Animals" : {
       "localizations" : {
         "zh-Hans" : {
@@ -436,6 +501,21 @@
           }
         }
       }
+    },
+    "Anniversary" : {
+
+    },
+    "Anytime" : {
+
+    },
+    "Appearance" : {
+
+    },
+    "Archive" : {
+
+    },
+    "Archived" : {
+
     },
     "At Event Time" : {
       "localizations" : {
@@ -457,6 +537,15 @@
         }
       }
     },
+    "Autumn" : {
+
+    },
+    "Back" : {
+
+    },
+    "Back to School" : {
+
+    },
     "Background & Text Color" : {
       "localizations" : {
         "zh-Hans" : {
@@ -466,6 +555,9 @@
           }
         }
       }
+    },
+    "Background %@" : {
+
     },
     "Background Color" : {
       "localizations" : {
@@ -487,6 +579,9 @@
         }
       }
     },
+    "Birthday" : {
+
+    },
     "Blue" : {
       "localizations" : {
         "zh-Hans" : {
@@ -507,6 +602,12 @@
         }
       }
     },
+    "Button Sounds" : {
+
+    },
+    "By category" : {
+
+    },
     "Cancel" : {
       "localizations" : {
         "zh-Hans" : {
@@ -517,6 +618,9 @@
         }
       }
     },
+    "Car Service" : {
+
+    },
     "Categories" : {
       "localizations" : {
         "zh-Hans" : {
@@ -526,6 +630,9 @@
           }
         }
       }
+    },
+    "Categories will appear as you add events." : {
+
     },
     "Category" : {
       "localizations" : {
@@ -547,6 +654,12 @@
         }
       }
     },
+    "Choose avatar" : {
+
+    },
+    "Choose photo from library" : {
+
+    },
     "Choose your avatar" : {
       "localizations" : {
         "zh-Hans" : {
@@ -556,6 +669,15 @@
           }
         }
       }
+    },
+    "Christmas" : {
+
+    },
+    "Classic" : {
+
+    },
+    "Close" : {
+
     },
     "Compact Time Format" : {
       "localizations" : {
@@ -597,6 +719,22 @@
         }
       }
     },
+    "COUNTING DOWN" : {
+
+    },
+    "Counting down to %@ with Times Matter: https://apps.apple.com/app/id%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Counting down to %1$@ with Times Matter: https://apps.apple.com/app/id%2$@"
+          }
+        }
+      }
+    },
+    "Creates a new countdown event" : {
+
+    },
     "Custom" : {
       "localizations" : {
         "zh-Hans" : {
@@ -607,6 +745,9 @@
         }
       }
     },
+    "Custom Reminder Sounds" : {
+
+    },
     "Custom Repeat" : {
       "localizations" : {
         "zh-Hans" : {
@@ -616,6 +757,12 @@
           }
         }
       }
+    },
+    "Custom sounds & photos" : {
+
+    },
+    "Custom sounds are a Premium feature" : {
+
     },
     "Customize Background" : {
       "localizations" : {
@@ -646,6 +793,9 @@
           }
         }
       }
+    },
+    "Date" : {
+
     },
     "Date (Future → Past)" : {
       "localizations" : {
@@ -739,7 +889,11 @@
         }
       }
     },
+    "Dentist Appointment" : {
+
+    },
     "Dismiss" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -759,6 +913,9 @@
         }
       }
     },
+    "Double tap to open details. Long press for more actions." : {
+
+    },
     "Edit" : {
       "localizations" : {
         "zh-Hans" : {
@@ -768,6 +925,9 @@
           }
         }
       }
+    },
+    "Edit countdown" : {
+
     },
     "Edit Countdown" : {
       "localizations" : {
@@ -779,7 +939,14 @@
         }
       }
     },
+    "Enable reminders" : {
+
+    },
+    "Enable reminders so we can nudge you before your event." : {
+
+    },
     "Enjoy an ad-free experience with Premium!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -808,6 +975,9 @@
           }
         }
       }
+    },
+    "Event title" : {
+
     },
     "Event title is empty" : {
       "localizations" : {
@@ -991,6 +1161,15 @@
         }
       }
     },
+    "Exclusive Themes" : {
+
+    },
+    "Export beautiful Story-ready cards without watermarks." : {
+
+    },
+    "Favorite" : {
+
+    },
     "Favorites" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1011,6 +1190,9 @@
         }
       }
     },
+    "Filter and sort" : {
+
+    },
     "Filter By" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1020,6 +1202,9 @@
           }
         }
       }
+    },
+    "Focus on your events without banners or interruptions." : {
+
     },
     "Food" : {
       "localizations" : {
@@ -1031,6 +1216,18 @@
         }
       }
     },
+    "Free accounts can track up to %lld active countdowns. Archive an event or unlock Premium for unlimited countdowns." : {
+
+    },
+    "Free accounts can track up to %lld active countdowns. Upgrade for unlimited events." : {
+
+    },
+    "Free includes %lld countdowns. Premium is a one-time unlock." : {
+
+    },
+    "Free limit reached" : {
+
+    },
     "Gallery" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1041,6 +1238,9 @@
         }
       }
     },
+    "Get Started" : {
+
+    },
     "Green" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1050,6 +1250,12 @@
           }
         }
       }
+    },
+    "Halloween" : {
+
+    },
+    "Holidays" : {
+
     },
     "hour" : {
       "localizations" : {
@@ -1070,6 +1276,9 @@
           }
         }
       }
+    },
+    "I’ve been using Times Matter to track countdowns and reminders. Try it free:" : {
+
     },
     "In the Future" : {
       "localizations" : {
@@ -1101,6 +1310,9 @@
         }
       }
     },
+    "Invite Friends" : {
+
+    },
     "Layout" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1122,6 +1334,7 @@
       }
     },
     "Loading product..." : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1130,6 +1343,15 @@
           }
         }
       }
+    },
+    "Loading product…" : {
+
+    },
+    "Lunar New Year" : {
+
+    },
+    "Make it yours" : {
+
     },
     "Me" : {
       "localizations" : {
@@ -1141,6 +1363,9 @@
         }
       }
     },
+    "Mid-Autumn Festival" : {
+
+    },
     "Middle" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1150,6 +1375,9 @@
           }
         }
       }
+    },
+    "Minimal" : {
+
     },
     "minute" : {
       "localizations" : {
@@ -1243,6 +1471,9 @@
         }
       }
     },
+    "Never miss the moment" : {
+
+    },
     "New Countdown" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1253,7 +1484,14 @@
         }
       }
     },
+    "New Year" : {
+
+    },
+    "Next up" : {
+
+    },
     "No Ads: " : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1272,6 +1510,9 @@
           }
         }
       }
+    },
+    "No events in the next 7 days." : {
+
     },
     "No Reminder" : {
       "localizations" : {
@@ -1293,6 +1534,9 @@
         }
       }
     },
+    "Not Now" : {
+
+    },
     "Note: When a category is deleted, all countdowns in that category will be moved to '📅 All' category." : {
       "localizations" : {
         "zh-Hans" : {
@@ -1302,6 +1546,9 @@
           }
         }
       }
+    },
+    "Nothing upcoming" : {
+
     },
     "Now" : {
       "localizations" : {
@@ -1323,6 +1570,12 @@
         }
       }
     },
+    "Onboarding progress" : {
+
+    },
+    "One-time purchase" : {
+
+    },
     "Only Once" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1332,6 +1585,9 @@
           }
         }
       }
+    },
+    "Opens the App Store review page" : {
+
     },
     "Orange" : {
       "localizations" : {
@@ -1363,6 +1619,18 @@
         }
       }
     },
+    "Photo Backgrounds" : {
+
+    },
+    "Photo backgrounds require Premium" : {
+
+    },
+    "Photo backgrounds, Premium" : {
+
+    },
+    "Pick a starting point—you can edit everything next." : {
+
+    },
     "Pick Background Color" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1372,6 +1640,9 @@
           }
         }
       }
+    },
+    "Pick playful and calming sounds for each reminder." : {
+
     },
     "Pick Text Color" : {
       "localizations" : {
@@ -1393,6 +1664,12 @@
         }
       }
     },
+    "Plays a soft tap sound on key actions" : {
+
+    },
+    "Plays haptic feedback on taps" : {
+
+    },
     "Please describe your issue below" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1402,6 +1679,21 @@
           }
         }
       }
+    },
+    "Premium" : {
+
+    },
+    "Premium is unlocked. Enjoy unlimited countdowns, custom sounds, photo backgrounds, and premium share cards." : {
+
+    },
+    "Premium share cards" : {
+
+    },
+    "Premium Share Cards" : {
+
+    },
+    "Premium style — upgrade to export without limits" : {
+
     },
     "Preview" : {
       "localizations" : {
@@ -1423,6 +1715,12 @@
         }
       }
     },
+    "Pro tip" : {
+
+    },
+    "Project Deadline" : {
+
+    },
     "Purple" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1432,6 +1730,9 @@
           }
         }
       }
+    },
+    "Purple, Pink, and Orange themes unlock with Premium." : {
+
     },
     "Rate Us" : {
       "localizations" : {
@@ -1503,6 +1804,9 @@
         }
       }
     },
+    "Sample add button" : {
+
+    },
     "Sample Button" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1534,6 +1838,7 @@
       }
     },
     "Say goodbye to ads and hello to smoother event tracking." : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1573,6 +1878,9 @@
         }
       }
     },
+    "Selected" : {
+
+    },
     "Settings" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1583,7 +1891,11 @@
         }
       }
     },
+    "Share" : {
+
+    },
     "Share App" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1592,6 +1904,12 @@
           }
         }
       }
+    },
+    "Share Card" : {
+
+    },
+    "Share countdown card" : {
+
     },
     "Shows hours, minutes, or seconds" : {
       "localizations" : {
@@ -1643,7 +1961,35 @@
         }
       }
     },
+    "Special Event" : {
+
+    },
+    "Spring" : {
+
+    },
+    "Spring Break" : {
+
+    },
+    "Start Counting" : {
+
+    },
+    "Story" : {
+
+    },
+    "Style" : {
+
+    },
+    "Summer" : {
+
+    },
+    "Summer Trip" : {
+
+    },
+    "Sunrise" : {
+
+    },
     "Support for future updates" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1672,6 +2018,9 @@
           }
         }
       }
+    },
+    "Thanksgiving" : {
+
     },
     "Theme Color" : {
       "localizations" : {
@@ -1719,6 +2068,12 @@
         }
       }
     },
+    "This Season" : {
+
+    },
+    "This week" : {
+
+    },
     "This will permanently delete ‘%@’. This action cannot be undone. Are you sure you want to proceed?" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1739,6 +2094,9 @@
         }
       }
     },
+    "Times Matter" : {
+
+    },
     "Times Matter  |  Smart Reminders" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1748,6 +2106,12 @@
           }
         }
       }
+    },
+    "Times Matter Premium" : {
+
+    },
+    "Today" : {
+
     },
     "Top" : {
       "localizations" : {
@@ -1759,6 +2123,18 @@
         }
       }
     },
+    "Track birthdays, deadlines, and milestones—and see what’s next in seconds." : {
+
+    },
+    "Track every birthday, deadline, and milestone—no caps." : {
+
+    },
+    "Unarchive" : {
+
+    },
+    "Uncategorized" : {
+
+    },
     "Unit" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1768,6 +2144,18 @@
           }
         }
       }
+    },
+    "Unlimited countdowns" : {
+
+    },
+    "Unlimited Countdowns" : {
+
+    },
+    "Unlock Purple, Pink, and Orange accent themes." : {
+
+    },
+    "Unlock the full toolkit for beautiful countdowns—built for people who never want to miss what matters." : {
+
     },
     "Upcoming" : {
       "localizations" : {
@@ -1809,6 +2197,12 @@
         }
       }
     },
+    "Use your own photos as countdown backgrounds." : {
+
+    },
+    "Uses this template for your countdown" : {
+
+    },
     "v%@  Check for Updates" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1818,6 +2212,12 @@
           }
         }
       }
+    },
+    "Vacation" : {
+
+    },
+    "Valentine’s Day" : {
+
     },
     "Vibrate" : {
       "localizations" : {
@@ -1881,6 +2281,9 @@
         }
       }
     },
+    "Welcome to Times Matter" : {
+
+    },
     "Welcome, Premium user!" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1890,6 +2293,15 @@
           }
         }
       }
+    },
+    "What are you counting down to?" : {
+
+    },
+    "Winter" : {
+
+    },
+    "Winter Holiday" : {
+
     },
     "year" : {
       "comment" : "Singular year unit",
@@ -1944,6 +2356,7 @@
       }
     },
     "You are now Premium user!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1953,7 +2366,14 @@
         }
       }
     },
+    "You’re a Premium member" : {
+
+    },
+    "You’re all set" : {
+
+    },
     "You're All Set!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -1962,6 +2382,12 @@
           }
         }
       }
+    },
+    "You’re All Set!" : {
+
+    },
+    "Your first countdown is ready. Tip: long-press a card for quick actions, or add a Home Screen widget." : {
+
     },
     "Your Name" : {
       "localizations" : {

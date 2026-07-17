@@ -11,7 +11,13 @@ struct ReminderSheet: View {
     @Binding var reminder: CountdownReminder
     @State private var selectedTab = 0
     @Dependency(\.themeManager) var themeManager
+    @Dependency(\.purchaseManager) var purchaseManager
     @State private var audioPlayer: AVAudioPlayer?
+    @State private var showPurchaseSheet = false
+
+    private var isPremium: Bool {
+        purchaseManager.isPremiumUserPurchased
+    }
 
     // Find all mp3 files in the bundle (regardless of folder)
     private var musicFiles: [String] {
@@ -124,15 +130,32 @@ struct ReminderSheet: View {
     private var soundTabView: some View {
         ScrollView {
             LazyVStack(spacing: AppSpacing.small) {
+                if !isPremium {
+                    Button {
+                        showPurchaseSheet = true
+                    } label: {
+                        Label(
+                            String(localized: "Custom sounds are a Premium feature"),
+                            systemImage: "crown.fill"
+                        )
+                        .font(AppFont.subheadline)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(AppSpacing.medium)
+                        .background(themeManager.current.primaryColor.opacity(0.12))
+                        .clipShape(RoundedRectangle(cornerRadius: AppCornerRadius.card))
+                    }
+                    .buttonStyle(.plain)
+                }
+
                 // System default sound at the top
                 ForEach(systemSounds, id: \.self) { sound in
                     SoundOptionRow(
                         fileName: sound,
                         isSelected: reminder.soundName == sound,
+                        isLocked: false,
                         onTap: {
                             stopSound()
                             reminder.soundName = sound
-                            // No preview for system default
                         }
                     )
                 }
@@ -141,7 +164,12 @@ struct ReminderSheet: View {
                     SoundOptionRow(
                         fileName: file.replacingOccurrences(of: ".mp3", with: ""),
                         isSelected: reminder.soundName == file,
+                        isLocked: !isPremium,
                         onTap: {
+                            guard isPremium else {
+                                showPurchaseSheet = true
+                                return
+                            }
                             stopSound()
                             reminder.soundName = file
                             playSound(named: file)
@@ -151,6 +179,9 @@ struct ReminderSheet: View {
             }
             .padding(.horizontal, AppSpacing.medium)
             .padding(.vertical, AppSpacing.medium)
+        }
+        .sheet(isPresented: $showPurchaseSheet) {
+            PurchaseSheet()
         }
     }
 
@@ -245,6 +276,7 @@ struct ReminderTimeCard: View {
 struct SoundOptionRow: View {
     let fileName: String
     let isSelected: Bool
+    var isLocked: Bool = false
     let onTap: () -> Void
     @Dependency(\.themeManager) var themeManager
 
@@ -254,10 +286,11 @@ struct SoundOptionRow: View {
             onTap() 
         }) {
             HStack(spacing: AppSpacing.medium) {
-                Image(systemName: "speaker.wave.2")
+                Image(systemName: isLocked ? "lock.fill" : "speaker.wave.2")
                     .font(.title3)
                     .foregroundStyle(isSelected ? themeManager.current.primaryColor : themeManager.current.textSecondary)
                     .frame(width: 24)
+                    .accessibilityHidden(true)
 
                 Text(fileName)
                     .font(AppFont.body)
@@ -265,10 +298,15 @@ struct SoundOptionRow: View {
 
                 Spacer()
 
-                if isSelected {
+                if isLocked {
+                    Text(String(localized: "Premium"))
+                        .font(AppFont.caption)
+                        .foregroundStyle(.secondary)
+                } else if isSelected {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.title3)
                         .foregroundStyle(themeManager.current.primaryColor)
+                        .accessibilityLabel(String(localized: "Selected"))
                 }
             }
             .padding(AppSpacing.medium)
@@ -283,6 +321,7 @@ struct SoundOptionRow: View {
             .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
         }
         .buttonStyle(PlainButtonStyle())
+        .accessibilityLabel(isLocked ? String(localized: "\(fileName), Premium") : fileName)
     }
 }
 

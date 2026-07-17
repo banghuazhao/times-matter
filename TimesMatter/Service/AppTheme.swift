@@ -233,9 +233,7 @@ enum AppSymbol {
 extension View {
     func appCardStyle(theme: AppTheme = ThemeManager.shared.current) -> some View {
         padding(AppSpacing.medium)
-            .background(theme.card)
-            .clipShape(.rect(cornerRadius: AppCornerRadius.card))
-            .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
+            .modifier(AppSurfaceModifier(cornerRadius: AppCornerRadius.card, theme: theme))
     }
 
     func appSectionHeader(theme: AppTheme = ThemeManager.shared.current) -> some View {
@@ -251,8 +249,7 @@ extension View {
     func appInfoSection(theme: AppTheme = ThemeManager.shared.current) -> some View {
         padding(.vertical, AppSpacing.small)
             .padding(.horizontal, AppSpacing.medium)
-            .background(theme.secondaryGray.opacity(0.1))
-            .clipShape(.rect(cornerRadius: AppCornerRadius.info))
+            .modifier(AppSurfaceModifier(cornerRadius: AppCornerRadius.info, theme: theme, materialFallback: true))
     }
 
     func appButtonStyle(theme: AppTheme = ThemeManager.shared.current, filled: Bool = true) -> some View {
@@ -260,18 +257,63 @@ extension View {
             .padding(.vertical, AppSpacing.smallMedium)
             .padding(.horizontal, AppSpacing.large)
             .frame(minHeight: AppSpacing.touchTarget)
-            .background(filled ? theme.primaryColor : Color.clear)
             .foregroundStyle(filled ? Color.white : theme.primaryColor)
-            .clipShape(.rect(cornerRadius: AppCornerRadius.button))
-            .contentShape(.rect(cornerRadius: AppCornerRadius.button))
+            .modifier(AppFilledCapsuleModifier(filled: filled, tint: theme.primaryColor))
     }
 
+    /// Liquid Glass on iOS 26; ultra-thin material on iOS 18–25.
     @ViewBuilder
-    func appGlassIfAvailable() -> some View {
+    func appGlassEffect(in shape: some Shape = RoundedRectangle(cornerRadius: AppCornerRadius.card, style: .continuous)) -> some View {
         if #available(iOS 26.0, *) {
-            self.glassEffect()
+            self.glassEffect(.regular.interactive(), in: shape)
         } else {
-            self
+            self.background(shape.fill(.ultraThinMaterial))
+        }
+    }
+}
+
+/// Floating surface: glass on iOS 26, card + soft shadow on iOS 18–25.
+private struct AppSurfaceModifier: ViewModifier {
+    var cornerRadius: CGFloat
+    var theme: AppTheme
+    var materialFallback: Bool = false
+
+    func body(content: Content) -> some View {
+        let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+        if #available(iOS 26.0, *) {
+            content
+                .background(shape.fill(theme.card.opacity(0.55)))
+                .glassEffect(.regular, in: shape)
+        } else if materialFallback {
+            content
+                .background(shape.fill(.ultraThinMaterial))
+        } else {
+            content
+                .background(theme.card)
+                .clipShape(shape)
+                .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
+        }
+    }
+}
+
+private struct AppFilledCapsuleModifier: ViewModifier {
+    var filled: Bool
+    var tint: Color
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content
+                .clipShape(Capsule())
+                .glassEffect(
+                    filled ? .regular.tint(tint).interactive() : .regular.tint(tint.opacity(0.35)).interactive(),
+                    in: .capsule
+                )
+        } else {
+            content
+                .background(filled ? tint : tint.opacity(0.12))
+                .clipShape(Capsule())
+                .contentShape(Capsule())
         }
     }
 }

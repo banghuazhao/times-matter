@@ -251,23 +251,31 @@ struct MeView: View {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
                 NavigationLink(destination: MoreAppsView()) {
                     moreItem(icon: "storefront", title: String(localized: "More Apps"))
-                    
                 }
                 Button {
                     model.onTapRateUs(openURL: openURL)
                 } label: {
                     moreItem(icon: "star.fill", title: String(localized: "Rate Us"))
                 }
+                .accessibilityHint(String(localized: "Opens the App Store review page"))
+
                 Button {
                     model.onTapFeedback(openURL: openURL)
                 } label: {
                     moreItem(icon: "envelope.fill", title: String(localized: "Feedback"))
                 }
-                if let appURL = model.onTapShareApp() {
-                    ShareLink(item: appURL) {
-                        moreItem(icon: "square.and.arrow.up", title: String(localized: "Share App"))
-                        
+
+                if let appURL = model.appRatingService.shareReferralURL {
+                    ShareLink(
+                        item: appURL,
+                        subject: Text(String(localized: "Times Matter")),
+                        message: Text(model.appRatingService.shareReferralMessage)
+                    ) {
+                        moreItem(icon: "gift.fill", title: String(localized: "Invite Friends"))
                     }
+                    .simultaneousGesture(TapGesture().onEnded {
+                        model.appRatingService.recordMeaningfulAction(.sharedCard)
+                    })
                 }
             }
         }

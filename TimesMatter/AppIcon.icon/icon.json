@@ -1,0 +1,60 @@
+{
+  "fill" : {
+    "solid" : "display-p3:0.957,0.635,0.478,1.000"
+  },
+  "fill-specializations" : [
+    {
+      "appearance" : "dark",
+      "value" : {
+        "solid" : "display-p3:0.35,0.18,0.14,1.000"
+      }
+    }
+  ],
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name" : "01_Background.svg",
+          "name" : "Background",
+          "hidden" : true
+        },
+        {
+          "image-name" : "02_Shadow.svg",
+          "name" : "Shadow",
+          "position" : {
+            "scale" : 1.0,
+            "translation-in-points" : [12.0, -8.0]
+          }
+        }
+      ],
+      "lighting" : "combined",
+      "name" : "Back",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.35
+      },
+      "specular" : true,
+      "blur-material" : 0.3
+    },
+    {
+      "layers" : [
+        {
+          "image-name" : "03_Clock.svg",
+          "name" : "Clock"
+        }
+      ],
+      "lighting" : "individual",
+      "name" : "Front",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.45
+      },
+      "specular" : true,
+      "blur-material" : 0.2
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [],
+    "squares" : "shared"
+  }
+}

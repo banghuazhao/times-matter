@@ -38,7 +38,7 @@ class CountdownListModel {
     }
 
     enum FilterOption: String, CaseIterable, Identifiable {
-        case all, favorites, inThePast, inTheFuture
+        case all, favorites, inThePast, inTheFuture, archived
         var id: String { rawValue }
         var label: String {
             switch self {
@@ -46,6 +46,7 @@ class CountdownListModel {
             case .favorites: return String(localized: "Favorites")
             case .inThePast: return String(localized: "In the Past")
             case .inTheFuture: return String(localized: "In the Future")
+            case .archived: return String(localized: "Archived")
             }
         }
     }
@@ -58,6 +59,10 @@ class CountdownListModel {
     @ObservationIgnored
     @Dependency(\.timerService) var timerService
 
+    var activeCountdownCount: Int {
+        allCountdowns.filter { !$0.isArchived }.count
+    }
+
     var countdowns: [Countdown] {
         var countdowns = allCountdowns
         if let selectedCategory {
@@ -65,13 +70,15 @@ class CountdownListModel {
         }
         switch filterOption {
         case .all:
-            break
+            countdowns = countdowns.filter { !$0.isArchived }
         case .favorites:
-            countdowns = countdowns.filter { $0.isFavorite }
+            countdowns = countdowns.filter { $0.isFavorite && !$0.isArchived }
         case .inThePast:
-            countdowns = countdowns.filter { ($0.nextOccurrence ?? $0.date) < Date() }
+            countdowns = countdowns.filter { !$0.isArchived && ($0.nextOccurrence ?? $0.date) < Date() }
         case .inTheFuture:
-            countdowns = countdowns.filter { ($0.nextOccurrence ?? $0.date) >= Date() }
+            countdowns = countdowns.filter { !$0.isArchived && ($0.nextOccurrence ?? $0.date) >= Date() }
+        case .archived:
+            countdowns = countdowns.filter(\.isArchived)
         }
         countdowns.sort {
             switch orderType {
@@ -106,26 +113,38 @@ class CountdownListModel {
         case countdownDetail(CountdownDetailModel)
         case selectCategory
         case showDeleteConfirmation(Countdown)
+        case showPurchase
+        case showLimitReached
     }
 
     var route: Route?
+
+    @ObservationIgnored
+    @Dependency(\.purchaseManager) var purchaseManager
 
     func onTapCountDown(_ countdown: Countdown) {
         route = .countdownDetail(
             CountdownDetailModel(countdown: countdown) { [weak self] in
                 guard let self else { return }
                 route = nil
+                syncWidgets()
             }
         )
     }
 
     func onTapAddCountDown() {
+        let isPremium = purchaseManager.isPremiumUserPurchased
+        guard PremiumLimits.canCreateCountdown(activeCount: activeCountdownCount, isPremium: isPremium) else {
+            route = .showLimitReached
+            return
+        }
         route = .countdownForm(
             CountdownFormModel(
                 countdown: Countdown.Draft()
             ) { [weak self] _ in
                 guard let self else { return }
                 route = nil
+                syncWidgets()
             }
         )
     }
@@ -169,6 +188,7 @@ class CountdownListModel {
             ) { [weak self] _ in
                 guard let self else { return }
                 route = nil
+                syncWidgets()
             }
         )
     }
@@ -182,6 +202,25 @@ class CountdownListModel {
                     .update(newCountdown)
                     .execute(db)
             }
+            syncWidgets()
+        }
+    }
+
+    func onToggleArchive(_ countdown: Countdown) {
+        withErrorReporting {
+            var newCountdown = countdown
+            newCountdown.isArchived.toggle()
+            try database.write { db in
+                try Countdown
+                    .update(newCountdown)
+                    .execute(db)
+            }
+            if newCountdown.isArchived {
+                ReminderNotificationManager.shared.removeNotification(for: newCountdown)
+            } else {
+                ReminderNotificationManager.shared.scheduleNotification(for: newCountdown)
+            }
+            syncWidgets()
         }
     }
     
@@ -198,19 +237,22 @@ class CountdownListModel {
             }
 
             ReminderNotificationManager.shared.removeNotification(for: countdown)
+            syncWidgets()
         }
     }
 
     func scheduleRemindersForFirstLaunch() {
         if isFirstLaunch {
-            for countdown in countdowns {
-                ReminderNotificationManager.shared.removeNotification(for: countdown)
-                ReminderNotificationManager.shared.scheduleNotification(for: countdown)
-            }
+            ReminderNotificationManager.shared.rescheduleAll(for: allCountdowns)
             $isFirstLaunch.withLock {
                 $0 = false
             }
         }
+        syncWidgets()
+    }
+
+    func syncWidgets() {
+        WidgetDataExporter.export(countdowns: allCountdowns)
     }
 }
 
@@ -219,14 +261,23 @@ struct CountdownEmptyStateView: View {
 
     var body: some View {
         ContentUnavailableView {
-            Label("No Countdowns Yet", systemImage: "calendar.badge.plus")
+            VStack(spacing: AppSpacing.medium) {
+                Image("EmptyCountdowns")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 220, maxHeight: 220)
+                    .accessibilityHidden(true)
+                Text("No Countdowns Yet")
+                    .font(AppFont.title2)
+            }
         } description: {
             Text("Tap the + button to add your first countdown!")
         } actions: {
             Button(action: onAdd) {
                 Label("Add Countdown", systemImage: "plus")
             }
-            .buttonStyle(.appRect)
+            .buttonStyle(.appRectFilled)
+            .accessibilityHint(String(localized: "Creates a new countdown event"))
         }
         .padding(.horizontal, AppSpacing.large)
         .padding(.top, AppSpacing.large)
@@ -306,19 +357,13 @@ struct CountdownListView: View {
                             }
                         }
                     } label: {
-                        Image(
-                            systemName: model.filterOption != .all || model.orderType != .default
-                                ? "line.3.horizontal.decrease.circle.fill"
-                                : "line.3.horizontal.decrease.circle"
-                        )
-                        .font(AppSymbol.font)
+                        Label("Filter and sort", systemImage: model.filterOption != .all || model.orderType != .default
+                            ? "line.3.horizontal.decrease.circle.fill"
+                            : "line.3.horizontal.decrease.circle")
+                        .labelStyle(.iconOnly)
                         .symbolRenderingMode(AppSymbol.renderingMode)
-                        .frame(width: AppSpacing.touchTarget, height: AppSpacing.touchTarget)
-                        .background(themeManager.current.primaryColor.opacity(0.12))
-                        .foregroundStyle(themeManager.current.primaryColor)
-                        .clipShape(Circle())
-                        .contentShape(Circle())
                     }
+                    .appToolbarStyle(iconOnly: true)
                     .accessibilityLabel(String(localized: "Filter and sort"))
                 }
                 ToolbarItem(placement: .principal) {
@@ -332,7 +377,7 @@ struct CountdownListView: View {
                             Text("📅 All")
                         }
                     }
-                    .buttonStyle(.appRect)
+                    .appToolbarStyle(prominent: false)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Add Countdown", systemImage: "plus") {
@@ -340,7 +385,7 @@ struct CountdownListView: View {
                         model.onTapAddCountDown()
                     }
                     .labelStyle(.iconOnly)
-                    .buttonStyle(.appCircular)
+                    .appToolbarStyle(prominent: true, iconOnly: true)
                 }
             }
             .sheet(item: $model.route.countdownForm, id: \.self) { model in
@@ -359,6 +404,9 @@ struct CountdownListView: View {
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
             }
+            .sheet(isPresented: Binding($model.route.showPurchase)) {
+                PurchaseSheet()
+            }
             .alert(
                 item: $model.route.showDeleteConfirmation,
                 title: { countdown in
@@ -375,6 +423,22 @@ struct CountdownListView: View {
                     Text(String(localized: "This will permanently delete ‘\(countdown.truncatedTitle)’. This action cannot be undone. Are you sure you want to proceed?"))
                 }
             )
+            .alert(
+                String(localized: "Free limit reached"),
+                isPresented: Binding($model.route.showLimitReached)
+            ) {
+                Button(String(localized: "Upgrade to Premium")) {
+                    model.route = .showPurchase
+                }
+                Button(String(localized: "Not Now"), role: .cancel) {
+                    model.route = nil
+                }
+            } message: {
+                Text(String(localized: "Free accounts can track up to \(PremiumLimits.freeCountdownLimit) active countdowns. Archive an event or unlock Premium for unlimited countdowns."))
+            }
+            .onAppear {
+                model.syncWidgets()
+            }
         }
     }
 
@@ -391,8 +455,10 @@ struct CountdownListView: View {
             countdown: countdown,
             onEdit: { model.onEditCountdown(countdown) },
             onToggleFavorite: { model.onToggleFavorite(countdown) },
+            onToggleArchive: { model.onToggleArchive(countdown) },
             onDelete: { model.onTapDelete(countdown) }
         )
+        .accessibilityHint(String(localized: "Double tap to open details. Long press for more actions."))
     }
 }
 
@@ -409,6 +475,7 @@ struct DefaultCountdownView: View {
                     .font(AppFont.headline)
                     .foregroundStyle(.primary)
                     .padding(.leading, AppSpacing.xSmall)
+                    .accessibilityAddTraits(.isHeader)
                 ForEach(futureCountdowns) { countdown in
                     Button {
                         Haptics.shared.vibrateIfEnabled()
@@ -421,6 +488,7 @@ struct DefaultCountdownView: View {
                         countdown: countdown,
                         onEdit: { model.onEditCountdown(countdown) },
                         onToggleFavorite: { model.onToggleFavorite(countdown) },
+                        onToggleArchive: { model.onToggleArchive(countdown) },
                         onDelete: { model.onTapDelete(countdown) }
                     )
                 }
@@ -432,6 +500,7 @@ struct DefaultCountdownView: View {
                     .font(AppFont.headline)
                     .foregroundStyle(.primary)
                     .padding(.leading, AppSpacing.xSmall)
+                    .accessibilityAddTraits(.isHeader)
                 ForEach(pastCountdowns) { countdown in
                     Button {
                         Haptics.shared.vibrateIfEnabled()
@@ -444,6 +513,7 @@ struct DefaultCountdownView: View {
                         countdown: countdown,
                         onEdit: { model.onEditCountdown(countdown) },
                         onToggleFavorite: { model.onToggleFavorite(countdown) },
+                        onToggleArchive: { model.onToggleArchive(countdown) },
                         onDelete: { model.onTapDelete(countdown) }
                     )
                 }
@@ -458,6 +528,7 @@ struct CountdownContextMenu: ViewModifier {
     let countdown: Countdown
     let onEdit: () -> Void
     let onToggleFavorite: () -> Void
+    let onToggleArchive: () -> Void
     let onDelete: () -> Void
 
     func body(content: Content) -> some View {
@@ -479,6 +550,16 @@ struct CountdownContextMenu: ViewModifier {
                 )
             }
 
+            Button(action: {
+                Haptics.shared.vibrateIfEnabled()
+                onToggleArchive()
+            }) {
+                Label(
+                    countdown.isArchived ? "Unarchive" : "Archive",
+                    systemImage: countdown.isArchived ? "tray.and.arrow.up" : "tray.and.arrow.down"
+                )
+            }
+
             Divider()
 
             Button(role: .destructive, action: {
@@ -496,12 +577,14 @@ extension View {
         countdown: Countdown,
         onEdit: @escaping () -> Void,
         onToggleFavorite: @escaping () -> Void,
+        onToggleArchive: @escaping () -> Void,
         onDelete: @escaping () -> Void
     ) -> some View {
         modifier(CountdownContextMenu(
             countdown: countdown,
             onEdit: onEdit,
             onToggleFavorite: onToggleFavorite,
+            onToggleArchive: onToggleArchive,
             onDelete: onDelete
         ))
     }
