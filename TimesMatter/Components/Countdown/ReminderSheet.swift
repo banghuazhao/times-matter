@@ -46,7 +46,7 @@ struct ReminderSheet: View {
                         VStack(spacing: 4) {
                             Text(tab == 0 ? "Reminder" : "Sound")
                                 .font(AppFont.subheadlineSemibold)
-                                .foregroundColor(selectedTab == tab ? themeManager.current.primaryColor : themeManager.current.textSecondary)
+                                .foregroundStyle(selectedTab == tab ? themeManager.current.primaryColor : themeManager.current.textSecondary)
 
                             Rectangle()
                                 .fill(selectedTab == tab ? themeManager.current.primaryColor : Color.clear)
@@ -79,7 +79,7 @@ struct ReminderSheet: View {
                 VStack(alignment: .leading, spacing: AppSpacing.medium) {
                     Text("Reminder Type")
                         .font(AppFont.headline)
-                        .foregroundColor(themeManager.current.textPrimary)
+                        .foregroundStyle(themeManager.current.textPrimary)
                         .padding(.horizontal, AppSpacing.medium)
 
                     LazyVGrid(columns: reminderTypeColumns, spacing: AppSpacing.small) {
@@ -101,7 +101,7 @@ struct ReminderSheet: View {
                     VStack(alignment: .leading, spacing: AppSpacing.medium) {
                         Text("Reminder Time")
                             .font(AppFont.headline)
-                            .foregroundColor(themeManager.current.textPrimary)
+                            .foregroundStyle(themeManager.current.textPrimary)
                             .padding(.horizontal, AppSpacing.medium)
 
                         LazyVGrid(columns: reminderTimeColumns, spacing: AppSpacing.small) {
@@ -187,7 +187,7 @@ struct ReminderTypeCard: View {
         }) {
             Text(type.displayName)
                 .font(AppFont.caption)
-                .foregroundColor(isSelected ? .white : themeManager.current.primaryColor)
+                .foregroundStyle(isSelected ? .white : themeManager.current.primaryColor)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .minimumScaleFactor(0.8)
@@ -221,7 +221,7 @@ struct ReminderTimeCard: View {
         }) {
             Text(time.displayName)
                 .font(AppFont.caption)
-                .foregroundColor(isSelected ? .white : themeManager.current.primaryColor)
+                .foregroundStyle(isSelected ? .white : themeManager.current.primaryColor)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .minimumScaleFactor(0.8)
@@ -256,19 +256,19 @@ struct SoundOptionRow: View {
             HStack(spacing: AppSpacing.medium) {
                 Image(systemName: "speaker.wave.2")
                     .font(.title3)
-                    .foregroundColor(isSelected ? themeManager.current.primaryColor : themeManager.current.textSecondary)
+                    .foregroundStyle(isSelected ? themeManager.current.primaryColor : themeManager.current.textSecondary)
                     .frame(width: 24)
 
                 Text(fileName)
                     .font(AppFont.body)
-                    .foregroundColor(themeManager.current.textPrimary)
+                    .foregroundStyle(themeManager.current.textPrimary)
 
                 Spacer()
 
                 if isSelected {
                     Image(systemName: "checkmark.circle.fill")
                         .font(.title3)
-                        .foregroundColor(themeManager.current.primaryColor)
+                        .foregroundStyle(themeManager.current.primaryColor)
                 }
             }
             .padding(AppSpacing.medium)

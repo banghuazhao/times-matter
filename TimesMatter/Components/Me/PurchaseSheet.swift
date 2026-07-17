@@ -49,7 +49,7 @@ struct PurchaseSheet: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 60, height: 60)
-                            .foregroundColor(Color(red: 1.0, green: 0.92, blue: 0.88)) // Cuter pastel peach
+                            .foregroundStyle(Color(red: 1.0, green: 0.92, blue: 0.88)) // Cuter pastel peach
                             .shadow(radius: 6)
                        
                     }
@@ -113,8 +113,8 @@ struct PurchaseSheet: View {
                                 .padding(.vertical, 12)
                                 .padding(.horizontal, 20)
                                 .background(themeManager.current.primaryColor)
-                                .foregroundColor(.white)
-                                .cornerRadius(16)
+                                .foregroundStyle(.white)
+                                .clipShape(.rect(cornerRadius: 16))
                             }
                             .padding(.horizontal)
                             .disabled(isPurchasing)
@@ -122,7 +122,7 @@ struct PurchaseSheet: View {
                     } else {
                         ProgressView()
                         Text("Loading product...")
-                                    .foregroundColor(.gray)
+                                    .foregroundStyle(.secondary)
                                     .padding(.top, 4)
                     }
                     // Links
@@ -135,7 +135,7 @@ struct PurchaseSheet: View {
                                 isPurchasing = false
                             }
                         }
-                        .foregroundColor(themeManager.current.primaryColor)
+                        .foregroundStyle(themeManager.current.primaryColor)
                         
                         Button("Contact Support") {
                             Haptics.shared.vibrateIfEnabled()
@@ -143,7 +143,7 @@ struct PurchaseSheet: View {
                                 UIApplication.shared.open(url)
                             }
                         }
-                        .foregroundColor(themeManager.current.primaryColor)
+                        .foregroundStyle(themeManager.current.primaryColor)
                         
                         Button("Privacy Policy") {
                             Haptics.shared.vibrateIfEnabled()
@@ -151,7 +151,7 @@ struct PurchaseSheet: View {
                                 UIApplication.shared.open(url)
                             }
                         }
-                        .foregroundColor(themeManager.current.primaryColor)
+                        .foregroundStyle(themeManager.current.primaryColor)
                     }
                     .font(.body)
                     .padding(.bottom, 24)
@@ -229,28 +229,28 @@ struct PremiumSuccessView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 70, height: 70)
-                        .foregroundColor(.indigo)
+                        .foregroundStyle(.indigo)
                         .shadow(color: .indigo.opacity(0.3), radius: 10)
                 }
 
                 Text("You're All Set!")
                     .font(.system(size: 26, weight: .semibold))
-                    .foregroundColor(.primary)
+                    .foregroundStyle(.primary)
 
                 Text("✨ Thanks for unlocking the full experience.")
                     .font(.body)
                     .multilineTextAlignment(.center)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
 
                 Divider()
 
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
-                        Image(systemName: "checkmark.circle.fill").foregroundColor(.green)
+                        Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
                         Text("Ad-free experience")
                     }
                     HStack {
-                        Image(systemName: "heart.fill").foregroundColor(.pink)
+                        Image(systemName: "heart.fill").foregroundStyle(.pink)
                         Text("Support for future updates")
                     }
                 }
@@ -275,8 +275,8 @@ struct PremiumSuccessView: View {
                                 endPoint: .trailing
                             )
                         )
-                        .foregroundColor(.white)
-                        .cornerRadius(18)
+                        .foregroundStyle(.white)
+                        .clipShape(.rect(cornerRadius: 18))
                         .shadow(radius: 4)
                 }
             }

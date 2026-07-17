@@ -15,17 +15,17 @@ struct CompactTimeFormatPopover: View {
             HStack(spacing: AppSpacing.small) {
                 Image(systemName: "clock.arrow.circlepath")
                     .font(.title2)
-                    .foregroundColor(themeManager.current.primaryColor)
+                    .foregroundStyle(themeManager.current.primaryColor)
                 
                 Text("Compact Time Format")
                     .font(AppFont.headline)
-                    .foregroundColor(themeManager.current.textPrimary)
+                    .foregroundStyle(themeManager.current.textPrimary)
             }
             
             // Description
             Text("Automatically adjusts time display based on remaining duration for better readability.")
                 .font(AppFont.subheadline)
-                .foregroundColor(themeManager.current.textSecondary)
+                .foregroundStyle(themeManager.current.textSecondary)
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
             
@@ -35,45 +35,45 @@ struct CompactTimeFormatPopover: View {
                 HStack(alignment: .top, spacing: AppSpacing.small) {
                     Image(systemName: "clock")
                         .font(.subheadline)
-                        .foregroundColor(themeManager.current.primaryColor)
+                        .foregroundStyle(themeManager.current.primaryColor)
                         .frame(width: 20)
                     
                     VStack(alignment: .leading, spacing: AppSpacing.small) {
                         Text("Less than 1 day")
                             .font(AppFont.subheadlineSemibold)
-                            .foregroundColor(themeManager.current.textPrimary)
+                            .foregroundStyle(themeManager.current.textPrimary)
                         
                         Text("Shows hours, minutes, or seconds")
                             .font(AppFont.caption)
-                            .foregroundColor(themeManager.current.textSecondary)
+                            .foregroundStyle(themeManager.current.textSecondary)
                     }
                     Spacer()
                 }
                 .padding(AppSpacing.small)
                 .background(themeManager.current.secondaryGray.opacity(0.05))
-                .cornerRadius(AppCornerRadius.info)
+                .clipShape(.rect(cornerRadius: AppCornerRadius.info))
                 
                 // Rule 2
                 HStack(alignment: .top, spacing: AppSpacing.small) {
                     Image(systemName: "calendar")
                         .font(.subheadline)
-                        .foregroundColor(themeManager.current.primaryColor)
+                        .foregroundStyle(themeManager.current.primaryColor)
                         .frame(width: 20)
                     
                     VStack(alignment: .leading, spacing: AppSpacing.small) {
                         Text("1 day or more")
                             .font(AppFont.subheadlineSemibold)
-                            .foregroundColor(themeManager.current.textPrimary)
+                            .foregroundStyle(themeManager.current.textPrimary)
                         
                         Text("Shows the selected time format")
                             .font(AppFont.caption)
-                            .foregroundColor(themeManager.current.textSecondary)
+                            .foregroundStyle(themeManager.current.textSecondary)
                     }
                     Spacer()
                 }
                 .padding(AppSpacing.small)
                 .background(themeManager.current.secondaryGray.opacity(0.05))
-                .cornerRadius(AppCornerRadius.info)
+                .clipShape(.rect(cornerRadius: AppCornerRadius.info))
             }
         }
         .padding(AppSpacing.large)

@@ -28,7 +28,7 @@ struct CategorySelectionSheet: View {
                     Spacer()
                     if selectedCategory == nil {
                         Image(systemName: "checkmark")
-                            .foregroundColor(themeManager.current.primaryColor)
+                            .foregroundStyle(themeManager.current.primaryColor)
                     }
                 }
                 .contentShape(Rectangle()) // Make the whole row tappable
@@ -48,7 +48,7 @@ struct CategorySelectionSheet: View {
                         Spacer()
                         if category.id == selectedCategory {
                             Image(systemName: "checkmark")
-                                .foregroundColor(themeManager.current.primaryColor)
+                                .foregroundStyle(themeManager.current.primaryColor)
                         }
                     }
                     .contentShape(Rectangle())

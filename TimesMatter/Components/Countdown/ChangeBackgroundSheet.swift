@@ -173,10 +173,10 @@ struct ChangeBackgroundSheet: View {
                                 VStack(spacing: 4) {
                                     Image(systemName: tab.iconName)
                                         .font(.system(size: 22, weight: .semibold))
-                                        .foregroundColor(model.selectedTab == tab ? model.primaryColor : .gray)
+                                        .foregroundStyle(model.selectedTab == tab ? model.primaryColor : .gray)
                                     Text(tab.displayName)
                                         .font(AppFont.footnote)
-                                        .foregroundColor(model.selectedTab == tab ? model.primaryColor : .gray)
+                                        .foregroundStyle(model.selectedTab == tab ? model.primaryColor : .gray)
                                         .lineLimit(2)
                                 }
                                 .frame(width: 70)
@@ -240,7 +240,7 @@ struct ChangeBackgroundSheet: View {
                                         .stroke(model.primaryColor, lineWidth: 2)
                                 )
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(model.primaryColor)
+                                .foregroundStyle(model.primaryColor)
                                 .offset(x: -4, y: 4)
                         }
                     } else {
@@ -250,7 +250,7 @@ struct ChangeBackgroundSheet: View {
                             .overlay(
                                 Image(systemName: "photo")
                                     .font(.system(size: 20))
-                                    .foregroundColor(.gray)
+                                    .foregroundStyle(.secondary)
                             )
                     }
                 }
@@ -272,7 +272,7 @@ struct ChangeBackgroundSheet: View {
                             }
                         if model.countdown.backgroundImageName == name {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(model.primaryColor)
+                                .foregroundStyle(model.primaryColor)
                                 .offset(x: -4, y: 4)
                         }
                     }
@@ -325,7 +325,7 @@ struct ChangeBackgroundSheet: View {
 
                         if model.countdown.backgroundColor == color.hexIntWithAlpha {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .background(Circle().fill(Color.black.opacity(0.3)))
                                 .offset(x: -4, y: 4)
                         }
@@ -366,7 +366,7 @@ struct ChangeBackgroundSheet: View {
 
                         if model.countdown.textColor == color.hexIntWithAlpha {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .background(Circle().fill(Color.black.opacity(0.3)))
                                 .offset(x: -4, y: 4)
                         }
@@ -387,10 +387,10 @@ struct ChangeBackgroundSheet: View {
                         VStack(spacing: 8) {
                             Image(systemName: layout.iconName)
                                 .font(.system(size: 24, weight: .semibold))
-                                .foregroundColor(model.countdown.layout == layout ? model.primaryColor : .gray)
+                                .foregroundStyle(model.countdown.layout == layout ? model.primaryColor : .gray)
                             Text(layout.displayName)
                                 .font(AppFont.footnote)
-                                .foregroundColor(model.countdown.layout == layout ? model.primaryColor : .gray)
+                                .foregroundStyle(model.countdown.layout == layout ? model.primaryColor : .gray)
                         }
                         .frame(width: 80, height: 80)
                         .background(
@@ -407,7 +407,7 @@ struct ChangeBackgroundSheet: View {
 
                         if model.countdown.layout == layout {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(model.primaryColor)
+                                .foregroundStyle(model.primaryColor)
                                 .offset(x: -4, y: 4)
                         }
                     }

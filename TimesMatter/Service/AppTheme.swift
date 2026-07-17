@@ -43,37 +43,38 @@ enum ThemeColor: String, CaseIterable {
         }
     }
 
+    /// Brand accent — coral default matches existing identity.
     var primaryColor: Color {
         switch self {
         case .default:
-            return Color(red: 0.914, green: 0.420, blue: 0.369)
+            Color(red: 0.914, green: 0.420, blue: 0.369)
         case .blue:
-            return Color(red: 0.0, green: 0.48, blue: 1.0) // #007AFF - Blue
+            Color(red: 0.0, green: 0.48, blue: 1.0)
         case .green:
-            return Color(red: 0.20, green: 0.78, blue: 0.35) // #34C759 - Green
+            Color(red: 0.20, green: 0.78, blue: 0.35)
         case .purple:
-            return Color(red: 0.58, green: 0.35, blue: 0.95) // #AF5CF7 - Purple
+            Color(red: 0.58, green: 0.35, blue: 0.95)
         case .pink:
-            return Color(red: 0.91, green: 0.30, blue: 0.58) // #E84D94 - Pink
+            Color(red: 0.91, green: 0.30, blue: 0.58)
         case .orange:
-            return Color(red: 1.0, green: 0.58, blue: 0.0) // #FF9400 - Orange
+            Color(red: 1.0, green: 0.58, blue: 0.0)
         }
     }
 
     var backgroundColor: Color {
         switch self {
         case .default:
-            return Color(red: 0.98, green: 0.95, blue: 0.94) // Light warm background
+            Color(red: 0.98, green: 0.95, blue: 0.94)
         case .blue:
-            return Color(red: 0.95, green: 0.97, blue: 1.0) // Light blue background
+            Color(red: 0.95, green: 0.97, blue: 1.0)
         case .green:
-            return Color(red: 0.94, green: 0.98, blue: 0.95) // Light green background
+            Color(red: 0.94, green: 0.98, blue: 0.95)
         case .purple:
-            return Color(red: 0.97, green: 0.95, blue: 1.0) // Light purple background
+            Color(red: 0.97, green: 0.95, blue: 1.0)
         case .pink:
-            return Color(red: 0.99, green: 0.95, blue: 0.97) // Light pink background
+            Color(red: 0.99, green: 0.95, blue: 0.97)
         case .orange:
-            return Color(red: 1.0, green: 0.97, blue: 0.94) // Light orange background
+            Color(red: 1.0, green: 0.97, blue: 0.94)
         }
     }
 }
@@ -82,14 +83,14 @@ enum ThemeColor: String, CaseIterable {
 
 struct BaseTheme: AppTheme {
     let primaryColor: Color
-    let secondaryGray = Color(red: 0.56, green: 0.56, blue: 0.58) // #8E8E93
+    let secondaryGray = Color(.secondaryLabel)
     let background: Color
-    let card = Color.white
-    let success = Color(red: 0.20, green: 0.78, blue: 0.35) // #34C759
-    let warning = Color(red: 1.0, green: 0.80, blue: 0.0) // #FFCC00
-    let error = Color(red: 1.0, green: 0.23, blue: 0.19) // #FF3B30
-    let textPrimary = Color(red: 0.11, green: 0.11, blue: 0.12) // #1C1C1E
-    let textSecondary = Color(red: 0.56, green: 0.56, blue: 0.58) // #8E8E93
+    let card = Color(.secondarySystemGroupedBackground)
+    let success = Color(.systemGreen)
+    let warning = Color(.systemYellow)
+    let error = Color(.systemRed)
+    let textPrimary = Color(.label)
+    let textSecondary = Color(.secondaryLabel)
 
     init(themeColor: ThemeColor) {
         primaryColor = themeColor.primaryColor
@@ -99,14 +100,14 @@ struct BaseTheme: AppTheme {
 
 struct DarkBaseTheme: AppTheme {
     let primaryColor: Color
-    let secondaryGray = Color(red: 0.56, green: 0.56, blue: 0.58)
-    let background = Color(red: 0.10, green: 0.10, blue: 0.12) // #1A1A1F
-    let card = Color(red: 0.16, green: 0.16, blue: 0.18) // #29292E
-    let success = Color(red: 0.20, green: 0.78, blue: 0.35)
-    let warning = Color(red: 1.0, green: 0.80, blue: 0.0)
-    let error = Color(red: 1.0, green: 0.23, blue: 0.19)
-    let textPrimary = Color.white
-    let textSecondary = Color(red: 0.7, green: 0.7, blue: 0.75)
+    let secondaryGray = Color(.secondaryLabel)
+    let background = Color(.systemGroupedBackground)
+    let card = Color(.secondarySystemGroupedBackground)
+    let success = Color(.systemGreen)
+    let warning = Color(.systemYellow)
+    let error = Color(.systemRed)
+    let textPrimary = Color(.label)
+    let textSecondary = Color(.secondaryLabel)
 
     init(themeColor: ThemeColor) {
         primaryColor = themeColor.primaryColor
@@ -135,7 +136,7 @@ class ThemeManager: ObservableObject {
     static let shared = ThemeManager()
 
     var currentThemeColor: String {
-        return selectedThemeColor
+        selectedThemeColor
     }
 
     func updateThemeColor(_ themeColorName: String) {
@@ -164,40 +165,52 @@ extension DependencyValues {
     }
 }
 
-// MARK: - Typography
+// MARK: - Typography (Dynamic Type roles)
 
-struct AppFont {
-    static let largeTitle = Font.system(size: 34, weight: .bold)
-    static let title = Font.system(size: 28, weight: .semibold)
-    static let title2 = Font.system(size: 22, weight: .semibold)
-    static let title3 = Font.system(size: 19, weight: .semibold)
-    static let headline = Font.system(size: 17, weight: .semibold)
-    static let body = Font.system(size: 17, weight: .regular)
-    static let subheadline = Font.system(size: 15, weight: .regular)
-    static let subheadlineSemibold = Font.system(size: 15, weight: .semibold)
-    static let caption = Font.system(size: 13, weight: .regular)
-    static let footnote = Font.system(size: 12, weight: .regular)
+enum AppFont {
+    static let largeTitle = Font.largeTitle.weight(.bold)
+    static let title = Font.title.weight(.semibold)
+    static let title2 = Font.title2.weight(.semibold)
+    static let title3 = Font.title3.weight(.semibold)
+    static let headline = Font.headline
+    static let body = Font.body
+    static let subheadline = Font.subheadline
+    static let subheadlineSemibold = Font.subheadline.weight(.semibold)
+    static let caption = Font.caption
+    static let footnote = Font.footnote
 }
 
-// MARK: - Spacing & Layout
+// MARK: - Spacing & Layout (4/8pt grid)
 
-struct AppSpacing {
+enum AppSpacing {
+    static let xSmall: CGFloat = 4
     static let small: CGFloat = 8
     static let smallMedium: CGFloat = 12
     static let medium: CGFloat = 16
     static let large: CGFloat = 24
+    static let xLarge: CGFloat = 32
+    static let touchTarget: CGFloat = 44
 }
 
-struct AppCornerRadius {
+enum AppCornerRadius {
     static let info: CGFloat = 12
     static let card: CGFloat = 16
     static let button: CGFloat = 12
+    static let capsule: CGFloat = 18
     static let avatar: CGFloat = 25
+}
+
+// MARK: - Animation
+
+enum AppAnimation {
+    static let quick: Animation = .smooth(duration: 0.2)
+    static let standard: Animation = .smooth(duration: 0.28)
+    static let snappy: Animation = .snappy(duration: 0.25)
 }
 
 // MARK: - Shadows
 
-struct AppShadow {
+enum AppShadow {
     static let card = ShadowStyle(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
 }
 
@@ -208,19 +221,26 @@ struct ShadowStyle {
     let y: CGFloat
 }
 
+// MARK: - Symbol config
+
+enum AppSymbol {
+    static let font = Font.body.weight(.semibold)
+    static let renderingMode = SymbolRenderingMode.hierarchical
+}
+
 // MARK: - Reusable Modifiers
 
 extension View {
     func appCardStyle(theme: AppTheme = ThemeManager.shared.current) -> some View {
         padding(AppSpacing.medium)
             .background(theme.card)
-            .cornerRadius(AppCornerRadius.card)
+            .clipShape(.rect(cornerRadius: AppCornerRadius.card))
             .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
     }
 
     func appSectionHeader(theme: AppTheme = ThemeManager.shared.current) -> some View {
         font(AppFont.headline)
-            .foregroundColor(theme.textPrimary)
+            .foregroundStyle(theme.textPrimary)
             .padding(.vertical, AppSpacing.small)
     }
 
@@ -232,15 +252,26 @@ extension View {
         padding(.vertical, AppSpacing.small)
             .padding(.horizontal, AppSpacing.medium)
             .background(theme.secondaryGray.opacity(0.1))
-            .cornerRadius(AppCornerRadius.info)
+            .clipShape(.rect(cornerRadius: AppCornerRadius.info))
     }
 
     func appButtonStyle(theme: AppTheme = ThemeManager.shared.current, filled: Bool = true) -> some View {
         font(AppFont.headline)
-            .padding(.vertical, AppSpacing.small)
+            .padding(.vertical, AppSpacing.smallMedium)
             .padding(.horizontal, AppSpacing.large)
+            .frame(minHeight: AppSpacing.touchTarget)
             .background(filled ? theme.primaryColor : Color.clear)
-            .foregroundColor(filled ? .white : theme.primaryColor)
-            .cornerRadius(AppCornerRadius.button)
+            .foregroundStyle(filled ? Color.white : theme.primaryColor)
+            .clipShape(.rect(cornerRadius: AppCornerRadius.button))
+            .contentShape(.rect(cornerRadius: AppCornerRadius.button))
+    }
+
+    @ViewBuilder
+    func appGlassIfAvailable() -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect()
+        } else {
+            self
+        }
     }
 }

@@ -29,22 +29,22 @@ public struct MoreAppsView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 48, height: 48)
-                            .cornerRadius(8)
+                            .clipShape(.rect(cornerRadius: 8))
                     }
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text(app.title)
-                            .foregroundColor(.primary)
+                            .foregroundStyle(.primary)
                             .font(.headline)
 
                         Text(app.detail)
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
 
                     Spacer()
                     Image(systemName: "chevron.right")
-                        .foregroundColor(.gray)
+                        .foregroundStyle(.secondary)
                 }
                 .padding(.vertical, 4)
             }

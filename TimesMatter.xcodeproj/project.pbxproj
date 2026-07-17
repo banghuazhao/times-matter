@@ -534,7 +534,7 @@
 			repositoryURL = "https://github.com/pointfreeco/sqlite-data";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.6.1;
+				minimumVersion = 1.7.0;
 			};
 		};
 		418CB66E2E210A8D00E4AF36 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
@@ -542,7 +542,7 @@
 			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 12.7.0;
+				minimumVersion = 13.6.0;
 			};
 		};
 		996833DB2E1CF5C900D314BA /* XCRemoteSwiftPackageReference "swift-navigation" */ = {
@@ -550,7 +550,7 @@
 			repositoryURL = "https://github.com/pointfreeco/swift-navigation";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.3.1;
+				minimumVersion = 2.10.3;
 			};
 		};
 		99AD2D4B2E20B70A00699F68 /* XCRemoteSwiftPackageReference "EasyToast" */ = {
@@ -558,7 +558,7 @@
 			repositoryURL = "https://github.com/banghuazhao/EasyToast";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.4.0;
+				minimumVersion = 0.5.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

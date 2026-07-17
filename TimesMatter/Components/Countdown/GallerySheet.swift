@@ -127,7 +127,7 @@ struct GallerySheet: View {
                 HStack {
                     Text("Events Gallery")
                         .font(AppFont.title2)
-                        .foregroundColor(textPrimaryColor)
+                        .foregroundStyle(textPrimaryColor)
 
                     Spacer()
 
@@ -136,7 +136,7 @@ struct GallerySheet: View {
                     } label: {
                         Image(systemName: "xmark.circle.fill")
                             .font(.title2)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
                 }
                 .padding(.horizontal, 20)

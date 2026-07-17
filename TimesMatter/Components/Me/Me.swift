@@ -87,6 +87,14 @@ class MeViewModel: HashableObject {
     func onTapShareApp() -> URL? {
         URL(string: "https://itunes.apple.com/app/id\(Constants.AppID.thisAppID)")
     }
+
+    var userNameBinding: Binding<String> {
+        Binding($userName)
+    }
+
+    var userAvatarBinding: Binding<String> {
+        Binding($userAvatar)
+    }
 }
 
 struct MeView: View {
@@ -106,30 +114,29 @@ struct MeView: View {
                     
 
                     // App info section (moved below othersView)
-                    VStack(spacing: 4) {
+                    VStack(spacing: AppSpacing.xSmall) {
                         Text("Times Matter  |  Smart Reminders")
-                            .font(.footnote)
+                            .font(AppFont.footnote)
                             .fontWeight(.semibold)
-                            .foregroundColor(.gray)
+                            .foregroundStyle(.secondary)
                         Button {
                             model.onTapCheckForUpdates(openURL: openURL)
                         } label: {
                             Text("v\(model.appVersion)  Check for Updates")
-                                .font(.footnote)
-                                .foregroundColor(.gray)
+                                .font(AppFont.footnote)
+                                .foregroundStyle(.secondary)
                                 .underline()
                         }
                     }
                     
                     
                     if !model.isPremiumUser {
-                        BannerView()
-                            .frame(height: 50)
+                        AdBannerView()
                     }
                 }
                 .padding(.vertical)
             }
-            .scrollDismissesKeyboard(.immediately)
+            .scrollDismissesKeyboard(.interactively)
             .sheet(isPresented: $model.showPurchaseSheet) {
                 PurchaseSheet()
             }
@@ -149,23 +156,24 @@ struct MeView: View {
                 }) {
                     Text(model.userAvatar)
                         .font(.system(size: 40))
-                        .frame(width: 50, height: 50)
+                        .frame(width: AppSpacing.touchTarget + 6, height: AppSpacing.touchTarget + 6)
                         .background(model.themeManager.current.card)
                         .clipShape(Circle())
+                        .accessibilityLabel(String(localized: "Choose avatar"))
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.plain)
                 .sheet(isPresented: $model.showEmojiPicker) {
-                    EmojiPickerView(selectedEmoji: $model.userAvatar, title: String(localized: "Choose your avatar"))
+                    EmojiPickerView(selectedEmoji: model.userAvatarBinding, title: String(localized: "Choose your avatar"))
                         .presentationDetents([.medium])
                         .presentationDragIndicator(.visible)
                 }
-                VStack(alignment: .leading, spacing: 4) {
-                    TextField("Your Name", text: $model.userName)
+                VStack(alignment: .leading, spacing: AppSpacing.xSmall) {
+                    TextField("Your Name", text: model.userNameBinding)
                         .font(AppFont.headline)
                         .fontWeight(.bold)
                         .padding(AppSpacing.small)
                         .background(model.themeManager.current.background)
-                        .cornerRadius(AppCornerRadius.button)
+                        .clipShape(.rect(cornerRadius: AppCornerRadius.button))
                         .lineLimit(1)
                 }
                 Spacer()
@@ -197,11 +205,11 @@ struct MeView: View {
             } else {
                 HStack(spacing: 8) {
                     Image(systemName: "crown.fill")
-                        .foregroundColor(.yellow)
+                        .foregroundStyle(.yellow)
                         .font(.title3)
                     Text(String(localized: "Welcome, Premium user!"))
                         .font(.headline)
-                        .foregroundColor(model.themeManager.current.primaryColor)
+                        .foregroundStyle(model.themeManager.current.primaryColor)
                 }
                 .padding(.vertical, 8)
                 .padding(.horizontal, 16)
@@ -210,7 +218,7 @@ struct MeView: View {
                     RoundedRectangle(cornerRadius: AppCornerRadius.button)
                         .stroke(model.themeManager.current.primaryColor, lineWidth: 1.5)
                 )
-                .cornerRadius(AppCornerRadius.button)
+                .clipShape(.rect(cornerRadius: AppCornerRadius.button))
                 .shadow(color: AppShadow.card.color, radius: 4, x: 0, y: 2)
             }
         }
@@ -237,12 +245,10 @@ struct MeView: View {
     }
     
     private var othersView: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: AppSpacing.medium) {
             Text("Others")
-                .font(.headline)
-                .fontWeight(.semibold)
-                .foregroundColor(.primary)
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 24) {
+                .appSectionHeader(theme: model.themeManager.current)
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
                 NavigationLink(destination: MoreAppsView()) {
                     moreItem(icon: "storefront", title: String(localized: "More Apps"))
                     
@@ -272,17 +278,17 @@ struct MeView: View {
         VStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.title2)
-                .foregroundColor(model.themeManager.current.primaryColor)
-                .frame(width: 36, height: 36)
+                .foregroundStyle(model.themeManager.current.primaryColor)
+                .frame(width: 44, height: 44)
                 .clipShape(Circle())
             Text(title)
                 .font(.caption)
-                .foregroundColor(model.themeManager.current.textPrimary)
+                .foregroundStyle(model.themeManager.current.textPrimary)
         }
         .frame(maxWidth: .infinity)
         .padding(AppSpacing.small)
         .background(model.themeManager.current.card)
-        .cornerRadius(AppCornerRadius.card)
+        .clipShape(.rect(cornerRadius: AppCornerRadius.card))
         .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
     }
     
@@ -290,19 +296,19 @@ struct MeView: View {
         VStack(spacing: AppSpacing.small) {
             Image(systemName: icon)
                 .font(.title2)
-                .foregroundColor(model.themeManager.current.primaryColor)
-                .frame(width: 36, height: 36)
+                .foregroundStyle(model.themeManager.current.primaryColor)
+                .frame(width: 44, height: 44)
                 .clipShape(Circle())
             Text(title)
                 .font(AppFont.caption)
-                .foregroundColor(model.themeManager.current.textPrimary)
+                .foregroundStyle(model.themeManager.current.textPrimary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
         }
         .frame(maxWidth: .infinity)
         .padding(AppSpacing.small)
         .background(model.themeManager.current.card)
-        .cornerRadius(AppCornerRadius.card)
+        .clipShape(.rect(cornerRadius: AppCornerRadius.card))
         .shadow(color: AppShadow.card.color, radius: AppShadow.card.radius, x: AppShadow.card.x, y: AppShadow.card.y)
     }
 }

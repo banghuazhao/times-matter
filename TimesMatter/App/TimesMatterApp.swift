@@ -31,7 +31,6 @@ struct TimesMatterApp: App {
                     await requestNotificationPermissions()
                 }
                 .onChange(of: scenePhase) { _, newPhase in
-                    print("scenePhase: \(newPhase)")
                     if newPhase == .active {
                         if !purchaseManager.isPremiumUserPurchased {
                             openAd.tryToPresentAd()
@@ -92,7 +91,7 @@ struct TimesMatterApp: App {
 
             MeView()
                 .tabItem {
-                    Label("Me", systemImage: "list.bullet")
+                    Label("Me", systemImage: "person.fill")
                 }
                 .onAppear {
                     AdManager.requestATTPermission(with: 1)

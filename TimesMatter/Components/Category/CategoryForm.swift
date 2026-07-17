@@ -90,7 +90,7 @@ struct CategoryFormView: View {
                                 Spacer()
                                 if model.selectedCategory == nil {
                                     Image(systemName: "checkmark")
-                                        .foregroundColor(themeManager.current.primaryColor)
+                                        .foregroundStyle(themeManager.current.primaryColor)
                                 }
                             }
                             .contentShape(Rectangle())
@@ -125,7 +125,7 @@ struct CategoryFormView: View {
                                     Spacer()
                                     if category.id == model.selectedCategory {
                                         Image(systemName: "checkmark")
-                                            .foregroundColor(themeManager.current.primaryColor)
+                                            .foregroundStyle(themeManager.current.primaryColor)
                                     }
                                 }
                                 .contentShape(Rectangle())
@@ -157,7 +157,7 @@ struct CategoryFormView: View {
                     if model.allCategories.count > 0 {
                         Text("Note: When a category is deleted, all countdowns in that category will be moved to '📅 All' category.")
                             .font(AppFont.footnote)
-                            .foregroundColor(themeManager.current.textSecondary)
+                            .foregroundStyle(themeManager.current.textSecondary)
                             .multilineTextAlignment(.leading)
                     }
                 }

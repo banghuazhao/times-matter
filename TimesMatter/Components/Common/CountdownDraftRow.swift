@@ -17,7 +17,7 @@ struct CountdownDraftRow: View {
                         .font(AppFont.title3)
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
-                        .foregroundColor(Color(hex: countdown.textColor))
+                        .foregroundStyle(Color(hex: countdown.textColor))
                         .lineLimit(1)
                         .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
                     if countdown.isFavorite {
@@ -29,7 +29,7 @@ struct CountdownDraftRow: View {
                 // Secondary description: always show timeSummary
                 Text(countdown.timeSummary)
                     .font(AppFont.caption)
-                    .foregroundColor(Color(hex: countdown.textColor))
+                    .foregroundStyle(Color(hex: countdown.textColor))
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
@@ -45,14 +45,14 @@ struct CountdownDraftRow: View {
                     .font(AppFont.title2)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
-                    .foregroundColor(countdown.textColor.toColor)
+                    .foregroundStyle(countdown.textColor.toColor)
                     .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
                 
                 Text(time.label)
                     .font(AppFont.subheadline)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
-                    .foregroundColor(countdown.textColor.toColor.opacity(0.8))
+                    .foregroundStyle(countdown.textColor.toColor.opacity(0.8))
                     .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
             }
             .frame(width: 80)

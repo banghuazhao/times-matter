@@ -148,7 +148,7 @@ struct CountdownFormView: View {
                            
                             TextField("Enter event title", text: $model.countdown.title)
                                 .font(AppFont.subheadlineSemibold)
-                                .foregroundColor(textPrimaryColor)
+                                .foregroundStyle(textPrimaryColor)
                             
                             Button {
                                 model.onTapEventGallery()
@@ -177,7 +177,7 @@ struct CountdownFormView: View {
                         VStack(alignment: .leading, spacing: AppSpacing.smallMedium) {
                             Text("Repeat")
                                 .font(AppFont.subheadlineSemibold)
-                                .foregroundColor(textPrimaryColor)
+                                .foregroundStyle(textPrimaryColor)
                                 
                             LazyVGrid(
                                 columns: [
@@ -213,7 +213,7 @@ struct CountdownFormView: View {
                         HStack(spacing: AppSpacing.smallMedium) {
                             Text("Reminder")
                                 .font(AppFont.subheadlineSemibold)
-                                .foregroundColor(textPrimaryColor)
+                                .foregroundStyle(textPrimaryColor)
                             Spacer()
                             Button {
                                 model.route = .showingReminderSheet
@@ -235,7 +235,7 @@ struct CountdownFormView: View {
                         HStack(spacing: AppSpacing.smallMedium) {
                             Text("Background & Text Color")
                                 .font(AppFont.subheadlineSemibold)
-                                .foregroundColor(textPrimaryColor)
+                                .foregroundStyle(textPrimaryColor)
                             Spacer()
                             Button {
                                 model.showChangeBackgroundSheet()
@@ -262,13 +262,13 @@ struct CountdownFormView: View {
                              HStack {
                                  Text("Compact Time Format")
                                      .font(AppFont.subheadlineSemibold)
-                                     .foregroundColor(textPrimaryColor)
+                                     .foregroundStyle(textPrimaryColor)
                                  
                                  Button {
                                      model.route = .showCompactTimeFormatInfo
                                  } label: {
                                      Image(systemName: "questionmark.circle")
-                                         .foregroundColor(secondaryGrayColor)
+                                         .foregroundStyle(secondaryGrayColor)
                                          .font(AppFont.subheadline)
                                  }
                                  .popover(isPresented: Binding($model.route.showCompactTimeFormatInfo)) {
@@ -292,7 +292,7 @@ struct CountdownFormView: View {
                         HStack(spacing: AppSpacing.smallMedium) {
                             Text("Category")
                                 .font(AppFont.subheadlineSemibold)
-                                .foregroundColor(textPrimaryColor)
+                                .foregroundStyle(textPrimaryColor)
                             
                             Spacer()
                             
@@ -315,8 +315,7 @@ struct CountdownFormView: View {
                  .padding()
                 
                 if !model.isPremiumUser {
-                    BannerView()
-                        .frame(height: 50)
+                    AdBannerView()
                         .padding(.bottom, AppSpacing.medium)
                 }
              }
@@ -372,7 +371,7 @@ struct CountdownFormView: View {
                  )
                  .presentationDetents([.large])
              }
-             .easyToast(isPresented: $model.showTitleEmptyToast, message: String(localized:"Event title is empty"))
+             .toast(isPresented: $model.showTitleEmptyToast, message: String(localized:"Event title is empty"), type: .warning)
         }
     }
 }
@@ -393,12 +392,12 @@ struct RepeatTypeButton: View {
                 .padding(.vertical, 6)
                 .frame(maxWidth: .infinity)
                 .background(isSelected ? primaryColor : .clear)
-                .foregroundColor(isSelected ? .white : primaryColor)
+                .foregroundStyle(isSelected ? .white : primaryColor)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(primaryColor, lineWidth: 1)
                 )
-                .cornerRadius(8)
+                .clipShape(.rect(cornerRadius: 8))
         }
     }
 }
@@ -416,12 +415,12 @@ struct CustomRepeatButton: View {
                 .padding(.vertical, 6)
                 .frame(maxWidth: .infinity)
                 .background(isSelected ? primaryColor : .clear)
-                .foregroundColor(isSelected ? .white : primaryColor)
+                .foregroundStyle(isSelected ? .white : primaryColor)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(primaryColor, lineWidth: 1)
                 )
-                .cornerRadius(8)
+                .clipShape(.rect(cornerRadius: 8))
         }
     }
 }
@@ -454,7 +453,7 @@ struct CustomRepeatSheet: View {
                 HStack {
                     Text("Custom Repeat")
                         .font(AppFont.title2)
-                        .foregroundColor(textPrimaryColor)
+                        .foregroundStyle(textPrimaryColor)
                     
                     Spacer()
                     
@@ -463,7 +462,7 @@ struct CustomRepeatSheet: View {
                     } label: {
                         Image(systemName: "xmark.circle.fill")
                             .font(.title2)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                     }
                 }
                 .padding(.horizontal, 20)
@@ -479,7 +478,7 @@ struct CustomRepeatSheet: View {
                             VStack(spacing: 8) {
                                 Text("Interval")
                                     .font(AppFont.caption)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                                     .textCase(.uppercase)
                                     .tracking(0.5)
                                 
@@ -499,7 +498,7 @@ struct CustomRepeatSheet: View {
                             VStack(spacing: 8) {
                                 Text("Unit")
                                     .font(AppFont.caption)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                                     .textCase(.uppercase)
                                     .tracking(0.5)
                                 
@@ -533,14 +532,14 @@ struct CustomRepeatSheet: View {
                         VStack(spacing: 8) {
                             Text("Preview")
                                 .font(AppFont.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                                 .textCase(.uppercase)
                                 .tracking(0.5)
                             
                             
                             Text(repeatSummary)
                                 .font(AppFont.subheadline)
-                                .foregroundColor(textPrimaryColor)
+                                .foregroundStyle(textPrimaryColor)
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal, 20)
                         }

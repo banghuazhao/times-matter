@@ -10,12 +10,14 @@ import AppTrackingTransparency
 import GoogleMobileAds
 import SwiftUI
 
-class AdManager {
+enum AdManager {
     static var isAuthorized = false
 
-    struct GoogleAdsID {
-        static let bannerViewAdUnitID = Bundle.main.object(forInfoDictionaryKey: "bannerViewAdUnitID") as? String ?? "ca-app-pub-3940256099942544/2934735716"
-        static let appOpenAdID = Bundle.main.object(forInfoDictionaryKey: "appOpenAdID") as? String ?? "ca-app-pub-3940256099942544/5575463023"
+    enum GoogleAdsID {
+        static let bannerViewAdUnitID = Bundle.main.object(forInfoDictionaryKey: "bannerViewAdUnitID") as? String
+            ?? "ca-app-pub-3940256099942544/2934735716"
+        static let appOpenAdID = Bundle.main.object(forInfoDictionaryKey: "appOpenAdID") as? String
+            ?? "ca-app-pub-3940256099942544/5575463023"
     }
 
     static func requestATTPermission(with time: TimeInterval = 0) {
@@ -24,30 +26,18 @@ class AdManager {
             ATTrackingManager.requestTrackingAuthorization { status in
                 switch status {
                 case .authorized:
-                    // Tracking authorization dialog was shown
-                    // and we are authorized
-                    print("Authorized")
                     isAuthorized = true
-    
-                    // Now that we are authorized we can get the IDFA
-                    print(ASIdentifierManager.shared().advertisingIdentifier)
-                case .denied:
-                    // Tracking authorization dialog was
-                    // shown and permission is denied
-                    print("Denied")
-                case .notDetermined:
-                    // Tracking authorization dialog has not been shown
-                    print("Not Determined")
-                case .restricted:
-                    print("Restricted")
+                case .denied, .notDetermined, .restricted:
+                    break
                 @unknown default:
-                    print("Unknown")
+                    break
                 }
             }
         }
     }
 }
 
+@MainActor
 final class OpenAd: NSObject, ObservableObject, FullScreenContentDelegate {
     var appOpenAd: AppOpenAd?
     var loadTime = Date()
@@ -55,150 +45,188 @@ final class OpenAd: NSObject, ObservableObject, FullScreenContentDelegate {
     var bypassAdThisTime = false
 
     func requestAppOpenAd() {
-        print("[DEBUG] requestAppOpenAd called")
         let request = Request()
         request.scene = UIApplication.shared.connectedScenes.first as? UIWindowScene
         AppOpenAd.load(
             with: AdManager.GoogleAdsID.appOpenAdID,
-            request: request,
-            completionHandler: { appOpenAdIn, error in
-                if let error = error {
-                    print("[OPEN AD] Failed to load: \(error)")
-                } else {
-                    print("[OPEN AD] Ad is ready")
+            request: request
+        ) { [weak self] appOpenAdIn, error in
+            Task { @MainActor in
+                if error != nil {
+                    self?.appOpenAd = nil
+                    return
                 }
-                self.appOpenAd = appOpenAdIn
-                self.appOpenAd?.fullScreenContentDelegate = self
-                self.loadTime = Date()
+                self?.appOpenAd = appOpenAdIn
+                self?.appOpenAd?.fullScreenContentDelegate = self
+                self?.loadTime = Date()
             }
-        )
+        }
     }
 
     func tryToPresentAd() {
-        print("[DEBUG] tryToPresentAd called")
         if let gOpenAd = appOpenAd, wasLoadTimeLessThanNHoursAgo(thresholdN: 4) {
-            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-            let window = windowScene?.windows.first
             if bypassAdThisTime {
                 bypassAdThisTime = false
                 return
             }
-            if appHasEnterBackgroundBefore {
-                print("[DEBUG] Presenting App Open Ad")
-                gOpenAd.present(from: (window?.rootViewController)!)
-            } else {
-                print("[DEBUG] appHasEnterBackgroundBefore is false, not presenting ad")
-            }
+            guard appHasEnterBackgroundBefore else { return }
+            guard let root = Self.topViewController() else { return }
+            gOpenAd.present(from: root)
         } else {
-            print("[DEBUG] No ad loaded or ad expired, requesting new ad")
             requestAppOpenAd()
         }
     }
 
     func wasLoadTimeLessThanNHoursAgo(thresholdN: Int) -> Bool {
-        let now = Date()
-        let timeIntervalBetweenNowAndLoadTime = now.timeIntervalSince(loadTime)
-        let secondsPerHour = 3600.0
-        let intervalInHours = timeIntervalBetweenNowAndLoadTime / secondsPerHour
+        let intervalInHours = Date().timeIntervalSince(loadTime) / 3600.0
         return intervalInHours < Double(thresholdN)
     }
 
     func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
-        print("[OPEN AD] Failed to present: \(error)")
         requestAppOpenAd()
     }
 
     func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
-        print("[OPEN AD] Ad dismissed")
         requestAppOpenAd()
+    }
+
+    private static func topViewController(base: UIViewController? = nil) -> UIViewController? {
+        let root: UIViewController?
+        if let base {
+            root = base
+        } else {
+            let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+            root = scenes
+                .flatMap(\.windows)
+                .first(where: \.isKeyWindow)?
+                .rootViewController
+        }
+        if let nav = root as? UINavigationController {
+            return topViewController(base: nav.visibleViewController)
+        }
+        if let tab = root as? UITabBarController {
+            return topViewController(base: tab.selectedViewController)
+        }
+        if let presented = root?.presentedViewController {
+            return topViewController(base: presented)
+        }
+        return root
     }
 }
 
-struct BannerView: UIViewControllerRepresentable {
-    @State var viewWidth: CGFloat = .zero
-    private let bannerView = GoogleMobileAds.BannerView()
-    private let adUnitID = AdManager.GoogleAdsID.bannerViewAdUnitID
+/// Reserved-height adaptive banner for SwiftUI, sized with large anchored adaptive APIs (GMA 13+).
+struct AdBannerView: View {
+    @State private var adHeight: CGFloat = 0
+    @State private var didFail = false
 
-    func makeUIViewController(context: Context) -> some UIViewController {
-        let bannerViewController = BannerViewController()
-        bannerView.adUnitID = adUnitID
-        bannerView.rootViewController = bannerViewController
-        bannerView.delegate = context.coordinator
-        bannerView.translatesAutoresizingMaskIntoConstraints = false
-        bannerViewController.view.addSubview(bannerView)
-        // Constrain GADBannerView to the bottom of the view.
-        NSLayoutConstraint.activate([
-            bannerView.bottomAnchor.constraint(
-                equalTo: bannerViewController.view.safeAreaLayoutGuide.bottomAnchor),
-            bannerView.centerXAnchor.constraint(equalTo: bannerViewController.view.centerXAnchor),
-        ])
-        bannerViewController.delegate = context.coordinator
+    var body: some View {
+        Group {
+            if didFail {
+                Color.clear.frame(height: 0)
+            } else {
+                AdBannerRepresentable(
+                    adHeight: $adHeight,
+                    didFail: $didFail
+                )
+                .frame(height: adHeight > 0 ? adHeight : 100)
+                .frame(maxWidth: .infinity)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(String(localized: "Advertisement"))
+            }
+        }
+        .animation(.smooth(duration: 0.25), value: adHeight)
+        .animation(.smooth(duration: 0.25), value: didFail)
+    }
+}
 
-        return bannerViewController
+private struct AdBannerRepresentable: UIViewControllerRepresentable {
+    @Binding var adHeight: CGFloat
+    @Binding var didFail: Bool
+
+    func makeUIViewController(context: Context) -> AdBannerViewController {
+        let controller = AdBannerViewController()
+        controller.delegate = context.coordinator
+        return controller
     }
 
-    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-        guard viewWidth != .zero else { return }
-
-        bannerView.adSize = currentOrientationAnchoredAdaptiveBanner(width: viewWidth)
-        let request = Request()
-        request.scene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-        bannerView.load(request)
+    func updateUIViewController(_ uiViewController: AdBannerViewController, context: Context) {
+        uiViewController.loadBannerIfNeeded()
     }
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
 
-    class Coordinator: NSObject, BannerViewControllerWidthDelegate, BannerViewDelegate {
-        let parent: BannerView
+    final class Coordinator: NSObject, AdBannerViewControllerDelegate {
+        var parent: AdBannerRepresentable
 
-        init(_ parent: BannerView) {
+        init(_ parent: AdBannerRepresentable) {
             self.parent = parent
         }
 
-        // MARK: - BannerViewControllerWidthDelegate methods
-
-        func bannerViewController(
-            _ bannerViewController: BannerViewController, didUpdate width: CGFloat
-        ) {
-            parent.viewWidth = width
+        func adBanner(_ controller: AdBannerViewController, didUpdateHeight height: CGFloat) {
+            parent.adHeight = height
+            parent.didFail = false
         }
 
-        // MARK: - BannerViewDelegate methods
-
-        private func bannerViewDidReceiveAd(_ bannerView: BannerView) {
-            print("DID RECEIVE Banner AD")
-        }
-
-        private func bannerView(_ bannerView: BannerView, didFailToReceiveAdWithError error: Error) {
-            print("DID NOT RECEIVE Banner AD: \(error.localizedDescription)")
+        func adBannerDidFailToLoad(_ controller: AdBannerViewController) {
+            parent.didFail = true
+            parent.adHeight = 0
         }
     }
 }
 
-protocol BannerViewControllerWidthDelegate: AnyObject {
-    func bannerViewController(_ bannerViewController: BannerViewController, didUpdate width: CGFloat)
+private protocol AdBannerViewControllerDelegate: AnyObject {
+    func adBanner(_ controller: AdBannerViewController, didUpdateHeight height: CGFloat)
+    func adBannerDidFailToLoad(_ controller: AdBannerViewController)
 }
 
-class BannerViewController: UIViewController {
-    weak var delegate: BannerViewControllerWidthDelegate?
+private final class AdBannerViewController: UIViewController, BannerViewDelegate {
+    weak var delegate: AdBannerViewControllerDelegate?
+    private let bannerView = GoogleMobileAds.BannerView()
+    private var lastWidth: CGFloat = 0
+    private var hasLoadedForWidth: CGFloat = 0
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        delegate?.bannerViewController(
-            self, didUpdate: view.frame.inset(by: view.safeAreaInsets).size.width)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .clear
+        bannerView.adUnitID = AdManager.GoogleAdsID.bannerViewAdUnitID
+        bannerView.rootViewController = self
+        bannerView.delegate = self
+        bannerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(bannerView)
+        NSLayoutConstraint.activate([
+            bannerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            bannerView.topAnchor.constraint(equalTo: view.topAnchor),
+            bannerView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
+        ])
     }
 
-    override func viewWillTransition(
-        to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator
-    ) {
-        coordinator.animate { _ in
-            // do nothing
-        } completion: { _ in
-            self.delegate?.bannerViewController(
-                self, didUpdate: self.view.frame.inset(by: self.view.safeAreaInsets).size.width)
-        }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        let width = view.bounds.width
+        guard width > 0 else { return }
+        lastWidth = width
+        loadBannerIfNeeded()
+    }
+
+    func loadBannerIfNeeded() {
+        let width = lastWidth > 0 ? lastWidth : view.bounds.width
+        guard width > 0, abs(width - hasLoadedForWidth) > 0.5 else { return }
+        hasLoadedForWidth = width
+        bannerView.adSize = largeAnchoredAdaptiveBanner(width: width)
+        let request = Request()
+        request.scene = view.window?.windowScene
+            ?? UIApplication.shared.connectedScenes.first as? UIWindowScene
+        bannerView.load(request)
+    }
+
+    func bannerViewDidReceiveAd(_ bannerView: GoogleMobileAds.BannerView) {
+        let height = bannerView.adSize.size.height
+        delegate?.adBanner(self, didUpdateHeight: height)
+    }
+
+    func bannerView(_ bannerView: GoogleMobileAds.BannerView, didFailToReceiveAdWithError error: Error) {
+        delegate?.adBannerDidFailToLoad(self)
     }
 }
