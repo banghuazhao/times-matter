@@ -405,7 +405,10 @@ struct ChangeBackgroundSheet: View {
     }
 
     private var videoBackground: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.small) {
+        let hasVideo = model.countdown.backgroundVideoPath != nil
+        let primaryColor = model.primaryColor
+
+        return VStack(alignment: .leading, spacing: AppSpacing.small) {
             if !model.isPremium {
                 Label(String(localized: "Video backgrounds require Premium"), systemImage: "crown.fill")
                     .font(AppFont.caption)
@@ -428,16 +431,14 @@ struct ChangeBackgroundSheet: View {
                         matching: .videos
                     ) {
                         Label(
-                            model.countdown.backgroundVideoPath == nil
-                                ? String(localized: "Choose Video")
-                                : String(localized: "Change Video"),
+                            hasVideo ? String(localized: "Change Video") : String(localized: "Choose Video"),
                             systemImage: "video.badge.plus"
                         )
                         .font(AppFont.subheadline)
                         .padding(.horizontal, 14)
                         .padding(.vertical, 10)
-                        .background(model.primaryColor.opacity(0.12))
-                        .foregroundStyle(model.primaryColor)
+                        .background(primaryColor.opacity(0.12))
+                        .foregroundStyle(primaryColor)
                         .clipShape(Capsule())
                     }
                 } else {
