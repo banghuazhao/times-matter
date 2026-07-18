@@ -137,6 +137,16 @@
         }
       }
     },
+    "%lld · %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld · %2$lld"
+          }
+        }
+      }
+    },
     "%lld of %lld" : {
       "localizations" : {
         "en" : {
@@ -157,6 +167,15 @@
           }
         }
       }
+    },
+    "• Keep backups somewhere safe (Files, iCloud Drive, or email)." : {
+
+    },
+    "• Merge keeps your current events and adds items from the backup." : {
+
+    },
+    "• Replace deletes current countdowns and categories before importing." : {
+
     },
     "⏰ Reminders" : {
       "localizations" : {
@@ -579,6 +598,12 @@
         }
       }
     },
+    "Backup" : {
+
+    },
+    "Backup & Restore" : {
+
+    },
     "Birthday" : {
 
     },
@@ -709,6 +734,12 @@
         }
       }
     },
+    "Could not create backup file." : {
+
+    },
+    "Could not read backup file." : {
+
+    },
     "Countdowns" : {
       "localizations" : {
         "zh-Hans" : {
@@ -718,6 +749,9 @@
           }
         }
       }
+    },
+    "Countdowns · Categories" : {
+
     },
     "COUNTING DOWN" : {
 
@@ -733,6 +767,9 @@
       }
     },
     "Creates a new countdown event" : {
+
+    },
+    "Creates a shareable backup file" : {
 
     },
     "Custom" : {
@@ -1164,8 +1201,24 @@
     "Exclusive Themes" : {
 
     },
+    "Export a JSON backup of your countdowns and categories, or restore from a previous backup. Custom photo backgrounds are included when possible." : {
+
+    },
+    "Export Backup" : {
+
+    },
     "Export beautiful Story-ready cards without watermarks." : {
 
+    },
+    "Exported %lld countdowns and %lld categories." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Exported %1$lld countdowns and %2$lld categories."
+          }
+        }
+      }
     },
     "Favorite" : {
 
@@ -1277,8 +1330,24 @@
         }
       }
     },
+    "How should we import?" : {
+
+    },
     "I’ve been using Times Matter to track countdowns and reminders. Try it free:" : {
 
+    },
+    "Import Backup" : {
+
+    },
+    "Imported %lld countdowns and %lld categories." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Imported %1$lld countdowns and %2$lld categories."
+          }
+        }
+      }
     },
     "In the Future" : {
       "localizations" : {
@@ -1362,6 +1431,12 @@
           }
         }
       }
+    },
+    "Merge adds backup items alongside your current data. Replace clears everything first." : {
+
+    },
+    "Merge with Existing" : {
+
     },
     "Mid-Autumn Festival" : {
 
@@ -1744,6 +1819,9 @@
         }
       }
     },
+    "Ready to export" : {
+
+    },
     "Reminder" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1794,6 +1872,9 @@
         }
       }
     },
+    "Replace All Data" : {
+
+    },
     "Restore Purchases" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1803,6 +1884,9 @@
           }
         }
       }
+    },
+    "Restores countdowns from a backup file" : {
+
     },
     "Sample add button" : {
 
@@ -2032,6 +2116,9 @@
         }
       }
     },
+    "This backup file is not valid." : {
+
+    },
     "This event will repeat every %@" : {
       "localizations" : {
         "zh-Hans" : {
@@ -2108,6 +2195,9 @@
       }
     },
     "Times Matter Premium" : {
+
+    },
+    "Tips" : {
 
     },
     "Today" : {

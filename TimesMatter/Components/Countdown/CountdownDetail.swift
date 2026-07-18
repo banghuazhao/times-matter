@@ -123,37 +123,22 @@ struct CountdownDetailView: View {
     
     // Share state
     @State private var isShareCardPresented = false
+    @State private var musicPlayer = EventMusicPlayer()
     
     var body: some View {
         let scale = model.isPreview ? 0.6 : 1.0
+        let weights = model.countdown.layout.spacerWeights
         ZStack {
-            if let bgName = model.countdown.backgroundImageName, !bgName.isEmpty {
-                if let uiImage = UIImage(contentsOfFile: bgName) {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFill()
-                        .ignoresSafeArea()
-                } else {
-                    if let _ = UIImage(named: bgName, in: .main, with: nil) {
-                        Image(bgName, bundle: .main)
-                            .resizable()
-                            .scaledToFill()
-                            .ignoresSafeArea()
-                    } else {
-                        model.bgColor.ignoresSafeArea()
-                    }
-                }
-            } else {
-                model.bgColor.ignoresSafeArea()
-            }
+            backgroundLayer
+
             VStack {
-                if model.countdown.layout != .top {
+                // Multiple spacers create weighted positions (e.g. 1:2 = upper middle).
+                ForEach(0..<Int(weights.top), id: \.self) { _ in
                     Spacer(minLength: 0)
                 }
-                VStack(spacing: AppSpacing.large * scale) {
-                    // Title and date
-                    VStack(spacing: 8 * scale) {
 
+                VStack(spacing: AppSpacing.large * scale) {
+                    VStack(spacing: 8 * scale) {
                         Text(model.countdown.title)
                             .font(.system(size: 28 * scale, weight: .bold))
                             .foregroundStyle(model.textColor)
@@ -164,7 +149,6 @@ struct CountdownDetailView: View {
                             .font(.system(size: 17 * scale))
                             .foregroundStyle(model.textColor)
                             .shadow(color: .black.opacity(0.2), radius: 2, x: 0, y: 1)
-
                     }
 
                     HStack(spacing: 5 * scale) {
@@ -177,7 +161,8 @@ struct CountdownDetailView: View {
                     .modifier(CountdownGlassChrome(cornerRadius: 16 * scale))
                 }
                 .padding(.vertical, AppSpacing.medium * scale)
-                if model.countdown.layout != .bottom {
+
+                ForEach(0..<Int(weights.bottom), id: \.self) { _ in
                     Spacer(minLength: 0)
                 }
             }
@@ -189,6 +174,24 @@ struct CountdownDetailView: View {
         .toolbar {
             if !model.isPreview {
                 ToolbarItemGroup(placement: .topBarTrailing) {
+                    if let music = model.countdown.backgroundMusicName,
+                       !music.isEmpty,
+                       music != BackgroundMusicCatalog.none {
+                        Button(
+                            musicPlayer.isPlaying ? "Pause music" : "Play music",
+                            systemImage: musicPlayer.isPlaying ? "speaker.wave.2.fill" : "speaker.slash.fill"
+                        ) {
+                            Haptics.shared.vibrateIfEnabled()
+                            musicPlayer.toggle()
+                        }
+                        .labelStyle(.iconOnly)
+                        .accessibilityLabel(
+                            musicPlayer.isPlaying
+                                ? String(localized: "Pause background music")
+                                : String(localized: "Play background music")
+                        )
+                    }
+
                     Button("Delete", systemImage: "trash") {
                         Haptics.shared.vibrateIfEnabled()
                         model.onTapDelete()
@@ -241,7 +244,46 @@ struct CountdownDetailView: View {
                 backgroundImageName: model.countdown.backgroundImageName
             )
         }
+        .onAppear {
+            if !model.isPreview {
+                musicPlayer.play(fileName: model.countdown.backgroundMusicName)
+            }
+        }
+        .onDisappear {
+            musicPlayer.stop()
+        }
+        .onChange(of: model.countdown.backgroundMusicName) { _, newValue in
+            if !model.isPreview {
+                musicPlayer.play(fileName: newValue)
+            }
+        }
         .accessibilityElement(children: .contain)
+    }
+
+    @ViewBuilder
+    private var backgroundLayer: some View {
+        ZStack {
+            model.bgColor.ignoresSafeArea()
+
+            if let videoPath = model.countdown.backgroundVideoPath,
+               !videoPath.isEmpty,
+               FileManager.default.fileExists(atPath: videoPath) {
+                LoopingVideoPlayerView(path: videoPath, loopSeconds: 6)
+                    .ignoresSafeArea()
+            } else if let bgName = model.countdown.backgroundImageName, !bgName.isEmpty {
+                if let uiImage = UIImage(contentsOfFile: bgName) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                        .ignoresSafeArea()
+                } else if UIImage(named: bgName, in: .main, with: nil) != nil {
+                    Image(bgName, bundle: .main)
+                        .resizable()
+                        .scaledToFill()
+                        .ignoresSafeArea()
+                }
+            }
+        }
     }
 
     // Helper for timer block

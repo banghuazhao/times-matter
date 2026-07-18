@@ -23,6 +23,8 @@ struct Countdown: Identifiable {
     var repeatType: RepeatType = .nonRepeating
     var repeatTime: Int = 1
     var backgroundImageName: String? = nil
+    var backgroundVideoPath: String? = nil
+    var backgroundMusicName: String? = nil
     var compactTimeUnit: CompactTimeUnit = .days
     var layout: LayoutType = .middle
     @Column(as: CountdownReminder.JSONRepresentation.self)
@@ -116,22 +118,39 @@ enum CompactTimeUnit: String, Codable, CaseIterable, QueryBindable {
 
 enum LayoutType: String, Codable, CaseIterable, QueryBindable {
     case top
+    case upperMiddle
     case middle
+    case lowerMiddle
     case bottom
 
     var displayName: String {
         switch self {
-        case .top: return    String(localized: "Top")
+        case .top: return String(localized: "Top")
+        case .upperMiddle: return String(localized: "Upper Middle")
         case .middle: return String(localized: "Middle")
+        case .lowerMiddle: return String(localized: "Lower Middle")
         case .bottom: return String(localized: "Bottom")
         }
     }
 
     var iconName: String {
         switch self {
-        case .top: return "arrow.up.circle"
+        case .top: return "arrow.up.to.line"
+        case .upperMiddle: return "arrow.up.circle"
         case .middle: return "minus.circle"
-        case .bottom: return "arrow.down.circle"
+        case .lowerMiddle: return "arrow.down.circle"
+        case .bottom: return "arrow.down.to.line"
+        }
+    }
+
+    /// Relative spacer weights for vertical placement (top, bottom).
+    var spacerWeights: (top: CGFloat, bottom: CGFloat) {
+        switch self {
+        case .top: return (0, 1)
+        case .upperMiddle: return (1, 2)
+        case .middle: return (1, 1)
+        case .lowerMiddle: return (2, 1)
+        case .bottom: return (1, 0)
         }
     }
 }

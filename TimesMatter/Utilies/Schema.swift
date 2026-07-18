@@ -90,6 +90,21 @@ func appDatabase() throws -> any DatabaseWriter {
         }
     #endif
 
+    migrator.registerMigration("Add video and music backgrounds") { db in
+        try #sql(
+            """
+            ALTER TABLE "countdowns" ADD COLUMN "backgroundVideoPath" TEXT
+            """
+        )
+        .execute(db)
+        try #sql(
+            """
+            ALTER TABLE "countdowns" ADD COLUMN "backgroundMusicName" TEXT
+            """
+        )
+        .execute(db)
+    }
+
     try migrator.migrate(database)
 
     return database

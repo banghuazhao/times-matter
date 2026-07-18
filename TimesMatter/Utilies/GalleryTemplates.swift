@@ -80,6 +80,16 @@ struct GalleryTemplate: Identifiable, Hashable {
         ].compactMap { $0 }
     }
 
+    /// Mix of seasonal + famous history for the Today tab.
+    static var todaySuggestions: [GalleryTemplate] {
+        var picks: [GalleryTemplate] = []
+        picks.append(contentsOf: currentSeasonHighlights.prefix(3))
+        picks.append(contentsOf: historyEvents.prefix(6))
+        // Deduplicate by id while preserving order
+        var seen = Set<String>()
+        return picks.filter { seen.insert($0.id).inserted }
+    }
+
     static var currentSeasonHighlights: [GalleryTemplate] {
         let month = Calendar.current.component(.month, from: Date())
         let season: Season
@@ -91,6 +101,10 @@ struct GalleryTemplate: Identifiable, Hashable {
         }
         let seasonal = all.filter { $0.season == season || $0.season == .holidays }
         return Array(seasonal.prefix(6))
+    }
+
+    static var historyEvents: [GalleryTemplate] {
+        all.filter { $0.id.hasPrefix("history_") }
     }
 
     static let all: [GalleryTemplate] = [
@@ -370,6 +384,158 @@ struct GalleryTemplate: Identifiable, Hashable {
             backgroundImageName: "predefined_mt_eden",
             reminder: .init(type: .everyDay, time: .fiveMinutesEarly),
             daysFromNow: 0
+        ),
+
+        // Famous history / cultural milestones
+        .init(
+            id: "history_moon_landing",
+            emoji: "🌕",
+            title: String(localized: "Moon Landing (1969)"),
+            season: .summer,
+            categoryID: 3,
+            backgroundColor: 0x1A237ECC,
+            textColor: 0xFFFFFFFF,
+            repeatType: .yearly,
+            repeatTime: 1,
+            backgroundImageName: "predefined_history_night",
+            reminder: .init(type: .everyYear, time: .oneDayEarly),
+            month: 7,
+            day: 20
+        ),
+        .init(
+            id: "history_earth_day",
+            emoji: "🌍",
+            title: String(localized: "Earth Day"),
+            season: .spring,
+            categoryID: 3,
+            backgroundColor: 0x2E7D32CC,
+            textColor: 0xFFFFFFFF,
+            repeatType: .yearly,
+            repeatTime: 1,
+            backgroundImageName: "predefined_history_mist",
+            reminder: .init(type: .everyYear, time: .oneDayEarly),
+            month: 4,
+            day: 22
+        ),
+        .init(
+            id: "history_world_book",
+            emoji: "📚",
+            title: String(localized: "World Book Day"),
+            season: .spring,
+            categoryID: 3,
+            backgroundColor: 0x5D4037CC,
+            textColor: 0xFFFFFFFF,
+            repeatType: .yearly,
+            repeatTime: 1,
+            backgroundImageName: "predefined_history_map",
+            reminder: .init(type: .everyYear, time: .oneDayEarly),
+            month: 4,
+            day: 23
+        ),
+        .init(
+            id: "history_women_day",
+            emoji: "💜",
+            title: String(localized: "International Women’s Day"),
+            season: .spring,
+            categoryID: 3,
+            backgroundColor: 0x8E24AACC,
+            textColor: 0xFFFFFFFF,
+            repeatType: .yearly,
+            repeatTime: 1,
+            backgroundImageName: "predefined_history",
+            reminder: .init(type: .everyYear, time: .oneDayEarly),
+            month: 3,
+            day: 8
+        ),
+        .init(
+            id: "history_labor_day",
+            emoji: "🛠️",
+            title: String(localized: "International Workers’ Day"),
+            season: .spring,
+            categoryID: 3,
+            backgroundColor: 0xC62828CC,
+            textColor: 0xFFFFFFFF,
+            repeatType: .yearly,
+            repeatTime: 1,
+            backgroundImageName: "predefined_history_map",
+            reminder: .init(type: .everyYear, time: .oneDayEarly),
+            month: 5,
+            day: 1
+        ),
+        .init(
+            id: "history_unicef",
+            emoji: "🧒",
+            title: String(localized: "Universal Children’s Day"),
+            season: .autumn,
+            categoryID: 3,
+            backgroundColor: 0x0277BDCC,
+            textColor: 0xFFFFFFFF,
+            repeatType: .yearly,
+            repeatTime: 1,
+            backgroundImageName: "predefined_history_mist",
+            reminder: .init(type: .everyYear, time: .oneDayEarly),
+            month: 11,
+            day: 20
+        ),
+        .init(
+            id: "history_human_rights",
+            emoji: "🕊️",
+            title: String(localized: "Human Rights Day"),
+            season: .winter,
+            categoryID: 3,
+            backgroundColor: 0x37474FCC,
+            textColor: 0xFFFFFFFF,
+            repeatType: .yearly,
+            repeatTime: 1,
+            backgroundImageName: "predefined_history_night",
+            reminder: .init(type: .everyYear, time: .oneDayEarly),
+            month: 12,
+            day: 10
+        ),
+        .init(
+            id: "history_pi_day",
+            emoji: "π",
+            title: String(localized: "Pi Day"),
+            season: .spring,
+            categoryID: 3,
+            backgroundColor: 0x6A1B9ACC,
+            textColor: 0xFFFFFFFF,
+            repeatType: .yearly,
+            repeatTime: 1,
+            backgroundImageName: "predefined_star",
+            reminder: .init(type: .everyYear, time: .atEventTime),
+            month: 3,
+            day: 14
+        ),
+        .init(
+            id: "history_april_fools",
+            emoji: "🃏",
+            title: String(localized: "April Fools’ Day"),
+            season: .spring,
+            categoryID: 3,
+            backgroundColor: 0xF9A825CC,
+            textColor: 0xFFFFFFFF,
+            repeatType: .yearly,
+            repeatTime: 1,
+            backgroundImageName: "predefined_star",
+            reminder: .init(type: .everyYear, time: .atEventTime),
+            month: 4,
+            day: 1
+        ),
+        .init(
+            id: "history_teachers_day",
+            emoji: "🍎",
+            title: String(localized: "World Teachers’ Day"),
+            season: .autumn,
+            categoryID: 3,
+            backgroundColor: 0xEF6C00CC,
+            textColor: 0xFFFFFFFF,
+            repeatType: .yearly,
+            repeatTime: 1,
+            backgroundImageName: "predefined_shakespeare",
+            reminder: .init(type: .everyYear, time: .oneDayEarly),
+            month: 10,
+            day: 5
         ),
     ]
 }

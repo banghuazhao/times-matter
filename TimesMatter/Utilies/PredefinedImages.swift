@@ -17,5 +17,8 @@ struct PredefinedImages {
         "predefined_birthday",
         "predefined_relationship",
         "predefined_history",
+        "predefined_history_map",
+        "predefined_history_night",
+        "predefined_history_mist",
     ]
-} 
+}

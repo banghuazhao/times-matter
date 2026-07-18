@@ -37,6 +37,7 @@ struct CountdownBackup: Codable, Identifiable {
     var backgroundImageName: String?
     /// Base64-encoded custom photo background (optional).
     var customBackgroundImageBase64: String?
+    var backgroundMusicName: String?
     var compactTimeUnit: CompactTimeUnit
     var layout: LayoutType
     var reminder: CountdownReminder
@@ -88,6 +89,7 @@ enum BackupService {
                 repeatTime: countdown.repeatTime,
                 backgroundImageName: imageName,
                 customBackgroundImageBase64: customBase64,
+                backgroundMusicName: countdown.backgroundMusicName,
                 compactTimeUnit: countdown.compactTimeUnit,
                 layout: countdown.layout,
                 reminder: countdown.reminder
@@ -205,6 +207,7 @@ enum BackupService {
                     repeatType: item.repeatType,
                     repeatTime: item.repeatTime,
                     backgroundImageName: imageName,
+                    backgroundMusicName: item.backgroundMusicName,
                     compactTimeUnit: item.compactTimeUnit,
                     layout: item.layout,
                     reminder: item.reminder

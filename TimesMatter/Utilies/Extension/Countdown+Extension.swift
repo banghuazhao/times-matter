@@ -215,8 +215,11 @@ extension Countdown.Draft {
             repeatType: repeatType,
             repeatTime: repeatTime,
             backgroundImageName: backgroundImageName,
+            backgroundVideoPath: backgroundVideoPath,
+            backgroundMusicName: backgroundMusicName,
             compactTimeUnit: compactTimeUnit,
-            layout: layout
+            layout: layout,
+            reminder: reminder
         )
     }
     

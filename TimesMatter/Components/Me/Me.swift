@@ -250,6 +250,9 @@ struct MeView: View {
             Text("Others")
                 .appSectionHeader(theme: model.themeManager.current)
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: AppSpacing.large) {
+                NavigationLink(destination: HelpGuideView()) {
+                    moreItem(icon: "questionmark.circle.fill", title: String(localized: "How to Use"))
+                }
                 NavigationLink(destination: MoreAppsView()) {
                     moreItem(icon: "storefront", title: String(localized: "More Apps"))
                 }
