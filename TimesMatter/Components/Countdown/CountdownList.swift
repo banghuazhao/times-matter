@@ -288,6 +288,7 @@ struct CountdownListView: View {
     @State var model = CountdownListModel()
     @Dependency(\.themeManager) var themeManager
     @Dependency(\.purchaseManager) var purchaseManager
+    @Dependency(\.deepLinkRouter) var deepLinkRouter
 
     var body: some View {
         NavigationStack {
@@ -319,6 +320,12 @@ struct CountdownListView: View {
             .background(themeManager.current.background)
             .task {
                 model.scheduleRemindersForFirstLaunch()
+                openPendingDeepLinkIfNeeded()
+            }
+            .onChange(of: deepLinkRouter.pendingCountdownID) { _, newValue in
+                if newValue != nil {
+                    openPendingDeepLinkIfNeeded()
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -438,8 +445,17 @@ struct CountdownListView: View {
             }
             .onAppear {
                 model.syncWidgets()
+                openPendingDeepLinkIfNeeded()
             }
         }
+    }
+
+    private func openPendingDeepLinkIfNeeded() {
+        guard let id = deepLinkRouter.pendingCountdownID else { return }
+        // Search all countdowns (including archived) so widget links still resolve.
+        guard let countdown = model.allCountdowns.first(where: { $0.id == id }) else { return }
+        _ = deepLinkRouter.consumePendingCountdownID()
+        model.onTapCountDown(countdown)
     }
 
     @ViewBuilder

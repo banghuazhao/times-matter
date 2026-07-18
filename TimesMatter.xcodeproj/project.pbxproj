@@ -70,12 +70,10 @@
 			);
 			target = 99BABCE92E1BAFEE00895B3B /* TimesMatter */;
 		};
-
 		41WGT0122E90000100AA0012 /* Exceptions for "TimesMatterWidget" folder in "TimesMatterWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				TimesMatterWidget.entitlements,
 			);
 			target = 41WGT0022E90000100AA0002 /* TimesMatterWidgetExtension */;
 		};

@@ -51,24 +51,35 @@ struct TimesMatterWidgetEntryView: View {
     var entry: CountdownEntry
 
     var body: some View {
-        switch family {
-        case .accessoryCircular:
-            accessoryCircular
-        case .accessoryRectangular:
-            accessoryRectangular
-        case .accessoryInline:
-            accessoryInline
-        case .systemSmall:
-            smallWidget
-        case .systemMedium:
-            mediumWidget
-        default:
-            largeWidget
+        Group {
+            switch family {
+            case .accessoryCircular:
+                accessoryCircular.widgetURL(primaryURL)
+            case .accessoryRectangular:
+                accessoryRectangular.widgetURL(primaryURL)
+            case .accessoryInline:
+                accessoryInline.widgetURL(primaryURL)
+            case .systemSmall:
+                smallWidget.widgetURL(primaryURL)
+            case .systemMedium:
+                mediumWidget.widgetURL(primaryURL)
+            default:
+                // Large uses per-row Link destinations instead of a single widget URL.
+                largeWidget
+            }
         }
     }
 
     private var nextItem: WidgetCountdownItem? {
         entry.snapshot.items.first
+    }
+
+    private var primaryURL: URL {
+        if let nextItem {
+            AppDeepLink.countdownURL(id: nextItem.id)
+        } else {
+            AppDeepLink.homeURL
+        }
     }
 
     private var accessoryCircular: some View {
@@ -167,22 +178,24 @@ struct TimesMatterWidgetEntryView: View {
                         .font(.headline.weight(.bold))
                         .foregroundStyle(Color(rgba: nextItem?.textColor ?? 0xFFFFFFFF))
                     ForEach(entry.snapshot.items.prefix(4)) { item in
-                        HStack {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(item.title)
-                                    .font(.subheadline.weight(.semibold))
+                        Link(destination: AppDeepLink.countdownURL(id: item.id)) {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(item.title)
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundStyle(Color(rgba: item.textColor))
+                                        .lineLimit(1)
+                                    Text(item.relativeLabel())
+                                        .font(.caption)
+                                        .foregroundStyle(Color(rgba: item.textColor).opacity(0.85))
+                                }
+                                Spacer()
+                                Text("\(item.daysLeft())")
+                                    .font(.title2.weight(.bold).monospacedDigit())
                                     .foregroundStyle(Color(rgba: item.textColor))
-                                    .lineLimit(1)
-                                Text(item.relativeLabel())
-                                    .font(.caption)
-                                    .foregroundStyle(Color(rgba: item.textColor).opacity(0.85))
                             }
-                            Spacer()
-                            Text("\(item.daysLeft())")
-                                .font(.title2.weight(.bold).monospacedDigit())
-                                .foregroundStyle(Color(rgba: item.textColor))
+                            .padding(.vertical, 4)
                         }
-                        .padding(.vertical, 4)
                     }
                     Spacer(minLength: 0)
                 }
@@ -216,7 +229,6 @@ struct TimesMatterWidgetEntryView: View {
         .foregroundStyle(.white)
         .padding()
     }
-
 }
 
 struct TimesMatterWidget: Widget {

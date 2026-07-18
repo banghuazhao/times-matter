@@ -16,6 +16,7 @@ struct TimesMatterApp: App {
     @Dependency(\.themeManager) private var themeManager
     @Dependency(\.purchaseManager) private var purchaseManager
     @Dependency(\.appRatingService) private var appRatingService
+    @Dependency(\.deepLinkRouter) private var deepLinkRouter
     @StateObject private var openAd = OpenAd()
     @Environment(\.scenePhase) private var scenePhase
 
@@ -53,6 +54,9 @@ struct TimesMatterApp: App {
                         appRatingService.recordMeaningfulAction(.completedOnboarding)
                     }
                 }
+                .onOpenURL { url in
+                    deepLinkRouter.handle(url)
+                }
                 .onChange(of: scenePhase) { _, newPhase in
                     if newPhase == .active {
                         if !purchaseManager.isPremiumUserPurchased {
@@ -81,8 +85,11 @@ struct TimesMatterApp: App {
 
     @available(iOS 18.0, *)
     var tabView18: some View {
-        TabView {
-            Tab {
+        TabView(selection: Binding(
+            get: { deepLinkRouter.selectedTab },
+            set: { deepLinkRouter.selectedTab = $0 }
+        )) {
+            Tab(value: 0) {
                 CountdownListView()
                     .onAppear {
                         AdManager.requestATTPermission(with: 3)
@@ -91,13 +98,13 @@ struct TimesMatterApp: App {
                 Label("Countdowns", systemImage: "calendar")
             }
 
-            Tab {
+            Tab(value: 1) {
                 InsightsView()
             } label: {
                 Label("Today", systemImage: "sun.max.fill")
             }
 
-            Tab {
+            Tab(value: 2) {
                 MeView()
                     .onAppear {
                         AdManager.requestATTPermission(with: 1)
@@ -109,11 +116,15 @@ struct TimesMatterApp: App {
     }
 
     var tabView: some View {
-        TabView {
+        TabView(selection: Binding(
+            get: { deepLinkRouter.selectedTab },
+            set: { deepLinkRouter.selectedTab = $0 }
+        )) {
             CountdownListView()
                 .tabItem {
                     Label("Countdowns", systemImage: "calendar")
                 }
+                .tag(0)
                 .onAppear {
                     AdManager.requestATTPermission(with: 3)
                 }
@@ -122,11 +133,13 @@ struct TimesMatterApp: App {
                 .tabItem {
                     Label("Today", systemImage: "sun.max.fill")
                 }
+                .tag(1)
 
             MeView()
                 .tabItem {
                     Label("Me", systemImage: "person.fill")
                 }
+                .tag(2)
                 .onAppear {
                     AdManager.requestATTPermission(with: 1)
                 }

@@ -235,9 +235,10 @@ struct MeView: View {
                     featureItem(icon: "gear", title: String(localized: "Settings"))
                 }
                 NavigationLink(destination: ThemeColorView()) {
-                    
                     featureItem(icon: "paintbrush.fill", title: String(localized: "Theme Color"))
-                    
+                }
+                NavigationLink(destination: BackupView()) {
+                    featureItem(icon: "externaldrive.fill", title: String(localized: "Backup"))
                 }
             }
         }
