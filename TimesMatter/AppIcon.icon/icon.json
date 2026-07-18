@@ -17,21 +17,13 @@
           "image-name" : "01_Background.svg",
           "name" : "Background",
           "hidden" : true
-        },
-        {
-          "image-name" : "02_Shadow.svg",
-          "name" : "Shadow",
-          "position" : {
-            "scale" : 1.0,
-            "translation-in-points" : [12.0, -8.0]
-          }
         }
       ],
       "lighting" : "combined",
       "name" : "Back",
       "shadow" : {
         "kind" : "neutral",
-        "opacity" : 0.35
+        "opacity" : 0
       },
       "specular" : true,
       "blur-material" : 0.3
@@ -47,7 +39,7 @@
       "name" : "Front",
       "shadow" : {
         "kind" : "neutral",
-        "opacity" : 0.45
+        "opacity" : 0
       },
       "specular" : true,
       "blur-material" : 0.2
