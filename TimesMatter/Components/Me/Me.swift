@@ -240,6 +240,11 @@ struct MeView: View {
                 NavigationLink(destination: BackupView()) {
                     featureItem(icon: "externaldrive.fill", title: String(localized: "Backup"))
                 }
+                #if DEBUG
+                NavigationLink(destination: DebugToolsView()) {
+                    featureItem(icon: "hammer.fill", title: "Debug")
+                }
+                #endif
             }
         }
         .padding(.horizontal)

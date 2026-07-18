@@ -25,10 +25,29 @@ struct Countdown: Identifiable {
     var backgroundImageName: String? = nil
     var backgroundVideoPath: String? = nil
     var backgroundMusicName: String? = nil
+    /// 0...1 volume when background music is set.
+    var backgroundMusicVolume: Double = 0.55
     var compactTimeUnit: CompactTimeUnit = .days
     var layout: LayoutType = .middle
     @Column(as: CountdownReminder.JSONRepresentation.self)
     var reminder: CountdownReminder = .init()
+
+    /// Active visual background mode (image, video, and solid color are mutually exclusive).
+    enum BackgroundKind {
+        case video
+        case image
+        case color
+    }
+
+    var backgroundKind: BackgroundKind {
+        if let backgroundVideoPath, !backgroundVideoPath.isEmpty {
+            return .video
+        }
+        if let backgroundImageName, !backgroundImageName.isEmpty {
+            return .image
+        }
+        return .color
+    }
 }
 
 // MARK: - Draft Extension

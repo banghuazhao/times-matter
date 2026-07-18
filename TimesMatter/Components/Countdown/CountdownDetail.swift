@@ -246,7 +246,10 @@ struct CountdownDetailView: View {
         }
         .onAppear {
             if !model.isPreview {
-                musicPlayer.play(fileName: model.countdown.backgroundMusicName)
+                musicPlayer.play(
+                    fileName: model.countdown.backgroundMusicName,
+                    volume: model.countdown.backgroundMusicVolume
+                )
             }
         }
         .onDisappear {
@@ -254,7 +257,15 @@ struct CountdownDetailView: View {
         }
         .onChange(of: model.countdown.backgroundMusicName) { _, newValue in
             if !model.isPreview {
-                musicPlayer.play(fileName: newValue)
+                musicPlayer.play(
+                    fileName: newValue,
+                    volume: model.countdown.backgroundMusicVolume
+                )
+            }
+        }
+        .onChange(of: model.countdown.backgroundMusicVolume) { _, newValue in
+            if !model.isPreview {
+                musicPlayer.setVolume(newValue)
             }
         }
         .accessibilityElement(children: .contain)

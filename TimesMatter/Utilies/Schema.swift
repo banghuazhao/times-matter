@@ -81,7 +81,40 @@ func appDatabase() throws -> any DatabaseWriter {
             CountdownStore.seedLive
         }
     }
-    
+
+    // Must run before any seed that inserts Countdown rows (model includes these columns).
+    migrator.registerMigration("Add video and music backgrounds") { db in
+        let columns = try Set(db.columns(in: "countdowns").map(\.name))
+        if !columns.contains("backgroundVideoPath") {
+            try #sql(
+                """
+                ALTER TABLE "countdowns" ADD COLUMN "backgroundVideoPath" TEXT
+                """
+            )
+            .execute(db)
+        }
+        if !columns.contains("backgroundMusicName") {
+            try #sql(
+                """
+                ALTER TABLE "countdowns" ADD COLUMN "backgroundMusicName" TEXT
+                """
+            )
+            .execute(db)
+        }
+    }
+
+    migrator.registerMigration("Add background music volume") { db in
+        let columns = try Set(db.columns(in: "countdowns").map(\.name))
+        if !columns.contains("backgroundMusicVolume") {
+            try #sql(
+                """
+                ALTER TABLE "countdowns" ADD COLUMN "backgroundMusicVolume" REAL NOT NULL DEFAULT 0.55
+                """
+            )
+            .execute(db)
+        }
+    }
+
     #if DEBUG
         migrator.registerMigration("Seed countdown") { db in
             try db.seed {
@@ -89,21 +122,6 @@ func appDatabase() throws -> any DatabaseWriter {
             }
         }
     #endif
-
-    migrator.registerMigration("Add video and music backgrounds") { db in
-        try #sql(
-            """
-            ALTER TABLE "countdowns" ADD COLUMN "backgroundVideoPath" TEXT
-            """
-        )
-        .execute(db)
-        try #sql(
-            """
-            ALTER TABLE "countdowns" ADD COLUMN "backgroundMusicName" TEXT
-            """
-        )
-        .execute(db)
-    }
 
     try migrator.migrate(database)
 

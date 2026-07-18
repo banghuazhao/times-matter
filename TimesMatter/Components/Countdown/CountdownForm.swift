@@ -197,10 +197,16 @@ struct CountdownFormView: View {
                         
                         // Repeat Type Selection
                         VStack(alignment: .leading, spacing: AppSpacing.smallMedium) {
-                            Text("Repeat")
-                                .font(AppFont.subheadlineSemibold)
-                                .foregroundStyle(textPrimaryColor)
-                                
+                            HStack(spacing: AppSpacing.xSmall) {
+                                Text("Repeat")
+                                    .font(AppFont.subheadlineSemibold)
+                                    .foregroundStyle(textPrimaryColor)
+                                InfoTipButton(
+                                    title: FeatureTips.repeat.0,
+                                    message: FeatureTips.repeat.1
+                                )
+                            }
+
                             LazyVGrid(
                                 columns: [
                                     GridItem(.adaptive(minimum: 90, maximum: 140), spacing: AppSpacing.small)
@@ -233,9 +239,15 @@ struct CountdownFormView: View {
                         Divider()
                         // Reminder Row
                         HStack(spacing: AppSpacing.smallMedium) {
-                            Text("Reminder")
-                                .font(AppFont.subheadlineSemibold)
-                                .foregroundStyle(textPrimaryColor)
+                            HStack(spacing: AppSpacing.xSmall) {
+                                Text("Reminder")
+                                    .font(AppFont.subheadlineSemibold)
+                                    .foregroundStyle(textPrimaryColor)
+                                InfoTipButton(
+                                    title: FeatureTips.reminder.0,
+                                    message: FeatureTips.reminder.1
+                                )
+                            }
                             Spacer()
                             Button {
                                 model.route = .showingReminderSheet
@@ -343,12 +355,8 @@ struct CountdownFormView: View {
              }
              .appBackground(theme: themeManager.current)
              .toolbar {
-                 ToolbarItem(placement: .topBarLeading) {
-                     Button("Close", systemImage: "xmark") {
-                         dismiss()
-                     }
-                     .labelStyle(.iconOnly)
-                     .appToolbarStyle(iconOnly: true)
+                 ToolbarCloseItem {
+                     dismiss()
                  }
                  ToolbarItem(placement: .topBarTrailing) {
                      Button(model.isEdit ? String(localized: "Update") : String(localized: "Save")) {

@@ -172,6 +172,36 @@ extension View {
     ) -> some View {
         modifier(AppToolbarButtonModifier(prominent: prominent, iconOnly: iconOnly, theme: theme))
     }
+
+    /// Minimal close/dismiss control — plain symbol without bordered/glass chrome.
+    func appToolbarCloseStyle() -> some View {
+        buttonStyle(.plain)
+            .foregroundStyle(.secondary)
+    }
+}
+
+/// Leading toolbar dismiss control with no Liquid Glass shared-background padding.
+struct ToolbarCloseItem: ToolbarContent {
+    var action: () -> Void
+
+    var body: some ToolbarContent {
+        if #available(iOS 26.0, *) {
+            ToolbarItem(placement: .topBarLeading) {
+                closeButton
+            }
+            .sharedBackgroundVisibility(.hidden)
+        } else {
+            ToolbarItem(placement: .topBarLeading) {
+                closeButton
+            }
+        }
+    }
+
+    private var closeButton: some View {
+        Button("Close", systemImage: "xmark", action: action)
+            .labelStyle(.iconOnly)
+            .appToolbarCloseStyle()
+    }
 }
 
 // MARK: - Glass helpers for content buttons

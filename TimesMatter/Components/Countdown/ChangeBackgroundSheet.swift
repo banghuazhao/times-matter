@@ -131,6 +131,11 @@ class ChangeBackgroundSheetModel {
     }
 
     func updateBackgroundColor(_ color: Color) {
+        // Color is mutually exclusive with image/video.
+        removeOldImageIfNeed()
+        removeOldVideoIfNeed()
+        countdown.backgroundImageName = nil
+        countdown.backgroundVideoPath = nil
         countdown.backgroundColor = color.hexIntWithAlpha
     }
 
@@ -176,11 +181,13 @@ class ChangeBackgroundSheetModel {
 
     private func loadVideo(_ video: PhotosPickerItem) async {
         guard let movie = try? await video.loadTransferable(type: MovieFile.self) else { return }
+        // Video is mutually exclusive with image/color media.
+        removeOldImageIfNeed()
         removeOldVideoIfNeed()
+        countdown.backgroundImageName = nil
         do {
             let path = try videoBackgroundManager.saveCustomBackgroundVideo(from: movie.url)
             countdown.backgroundVideoPath = path
-            // Keep image as optional fallback poster; video takes precedence in detail.
         } catch {
             print("Failed to save video background: \(error)")
         }
@@ -193,13 +200,18 @@ class ChangeBackgroundSheetModel {
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
             let player = try AVAudioPlayer(contentsOf: url)
             player.numberOfLoops = 0
-            player.volume = 0.6
+            player.volume = Float(max(0, min(1, countdown.backgroundMusicVolume)))
             player.prepareToPlay()
             player.play()
             musicPreviewPlayer = player
         } catch {
             print("Music preview failed: \(error)")
         }
+    }
+
+    func updateMusicVolume(_ volume: Double) {
+        countdown.backgroundMusicVolume = max(0, min(1, volume))
+        musicPreviewPlayer?.volume = Float(countdown.backgroundMusicVolume)
     }
 
     private func removeOldImageIfNeed() {
@@ -312,14 +324,10 @@ struct ChangeBackgroundSheet: View {
             .tint(model.themeManager.current.primaryColor)
             .foregroundStyle(model.themeManager.current.textPrimary)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Close", systemImage: "xmark") {
-                        Haptics.shared.vibrateIfEnabled()
-                        model.stopMusicPreview()
-                        dismiss()
-                    }
-                    .labelStyle(.iconOnly)
-                    .appToolbarStyle(iconOnly: true)
+                ToolbarCloseItem {
+                    Haptics.shared.vibrateIfEnabled()
+                    model.stopMusicPreview()
+                    dismiss()
                 }
 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -404,8 +412,36 @@ struct ChangeBackgroundSheet: View {
     }
 
     private var musicBackground: some View {
-        ScrollView {
+        let hasMusic = model.countdown.backgroundMusicName != nil
+            && model.countdown.backgroundMusicName != BackgroundMusicCatalog.none
+
+        return ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.small) {
+                if hasMusic {
+                    VStack(alignment: .leading, spacing: AppSpacing.xSmall) {
+                        HStack {
+                            Text(String(localized: "Volume"))
+                                .font(AppFont.caption)
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Text("\(Int((model.countdown.backgroundMusicVolume * 100).rounded()))%")
+                                .font(AppFont.caption)
+                                .foregroundStyle(.secondary)
+                                .monospacedDigit()
+                        }
+                        Slider(
+                            value: Binding(
+                                get: { model.countdown.backgroundMusicVolume },
+                                set: { model.updateMusicVolume($0) }
+                            ),
+                            in: 0...1
+                        )
+                        .tint(model.primaryColor)
+                    }
+                    .padding(.horizontal, 4)
+                    .padding(.bottom, AppSpacing.xSmall)
+                }
+
                 Button {
                     Haptics.shared.vibrateIfEnabled()
                     model.selectMusic(nil)
@@ -413,8 +449,7 @@ struct ChangeBackgroundSheet: View {
                     musicRow(
                         title: String(localized: "None"),
                         subtitle: String(localized: "No background music"),
-                        selected: model.countdown.backgroundMusicName == nil
-                            || model.countdown.backgroundMusicName == BackgroundMusicCatalog.none
+                        selected: !hasMusic
                     )
                 }
                 .buttonStyle(.plain)
@@ -444,7 +479,7 @@ struct ChangeBackgroundSheet: View {
             .padding(.horizontal, AppSpacing.medium)
             .padding(.bottom, AppSpacing.medium)
         }
-        .frame(height: 160)
+        .frame(height: 180)
     }
 
     private func musicRow(title: String, subtitle: String, selected: Bool) -> some View {
@@ -548,15 +583,15 @@ struct ChangeBackgroundSheet: View {
 
     @ViewBuilder
     private var backgroundColor: some View {
-        // Use Color (No Image) button
-        if model.countdown.backgroundImageName != nil {
+        // Clear image/video so only solid color shows
+        if model.countdown.backgroundImageName != nil || model.countdown.backgroundVideoPath != nil {
             Button {
                 Haptics.shared.vibrateIfEnabled()
                 withAnimation {
                     model.useColorOnly()
                 }
             } label: {
-                Text("Use Color (No Image)")
+                Text("Use Color Only")
             }
             .buttonStyle(.appRect)
         }
@@ -573,6 +608,10 @@ struct ChangeBackgroundSheet: View {
                 .frame(width: 60, height: 100)
 
                 ForEach(PredefinedColors.backgroundColors, id: \.hexIntWithAlpha) { color in
+                    let isColorOnly = model.countdown.backgroundImageName == nil
+                        && model.countdown.backgroundVideoPath == nil
+                    let isSelected = isColorOnly
+                        && model.countdown.backgroundColor == color.hexIntWithAlpha
                     Button {
                         Haptics.shared.vibrateIfEnabled()
                         model.updateBackgroundColor(color)
@@ -583,10 +622,10 @@ struct ChangeBackgroundSheet: View {
                                 .frame(width: 66, height: 100)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(model.countdown.backgroundColor == color.hexIntWithAlpha ? model.primaryColor : Color.clear, lineWidth: 2)
+                                        .stroke(isSelected ? model.primaryColor : Color.clear, lineWidth: 2)
                                 )
 
-                            if model.countdown.backgroundColor == color.hexIntWithAlpha {
+                            if isSelected {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundStyle(.white)
                                     .background(Circle().fill(Color.black.opacity(0.3)))

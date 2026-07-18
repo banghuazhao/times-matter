@@ -83,10 +83,16 @@ struct ReminderSheet: View {
             VStack(spacing: AppSpacing.large) {
                 // Reminder Type Section
                 VStack(alignment: .leading, spacing: AppSpacing.medium) {
-                    Text("Reminder Type")
-                        .font(AppFont.headline)
-                        .foregroundStyle(themeManager.current.textPrimary)
-                        .padding(.horizontal, AppSpacing.medium)
+                    HStack(spacing: AppSpacing.xSmall) {
+                        Text("Reminder Type")
+                            .font(AppFont.headline)
+                            .foregroundStyle(themeManager.current.textPrimary)
+                        InfoTipButton(
+                            title: FeatureTips.reminderType.0,
+                            message: FeatureTips.reminderType.1
+                        )
+                    }
+                    .padding(.horizontal, AppSpacing.medium)
 
                     LazyVGrid(columns: reminderTypeColumns, spacing: AppSpacing.small) {
                         ForEach(ReminderType.allCases, id: \.self) { type in
@@ -105,10 +111,16 @@ struct ReminderSheet: View {
                 // Reminder Time Section (only show if reminder is enabled)
                 if reminder.type != .noReminder {
                     VStack(alignment: .leading, spacing: AppSpacing.medium) {
-                        Text("Reminder Time")
-                            .font(AppFont.headline)
-                            .foregroundStyle(themeManager.current.textPrimary)
-                            .padding(.horizontal, AppSpacing.medium)
+                        HStack(spacing: AppSpacing.xSmall) {
+                            Text("Reminder Time")
+                                .font(AppFont.headline)
+                                .foregroundStyle(themeManager.current.textPrimary)
+                            InfoTipButton(
+                                title: FeatureTips.reminderTime.0,
+                                message: FeatureTips.reminderTime.1
+                            )
+                        }
+                        .padding(.horizontal, AppSpacing.medium)
 
                         LazyVGrid(columns: reminderTimeColumns, spacing: AppSpacing.small) {
                             ForEach(ReminderTime.allCases, id: \.self) { time in

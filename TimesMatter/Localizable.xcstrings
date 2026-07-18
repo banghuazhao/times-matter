@@ -104,16 +104,6 @@
     "%@ theme, Premium" : {
 
     },
-    "%@, %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@, %2$@"
-          }
-        }
-      }
-    },
     "%@, Premium" : {
 
     },
@@ -156,6 +146,9 @@
           }
         }
       }
+    },
+    "•" : {
+
     },
     "• " : {
       "extractionState" : "stale",
@@ -469,7 +462,7 @@
     "Ad-Free Experience" : {
 
     },
-    "Add a countdown to see what’s next." : {
+    "Add %@" : {
 
     },
     "Add a Home Screen or Lock Screen widget to glance at your next countdown without opening the app." : {
@@ -511,6 +504,9 @@
     "All Events" : {
 
     },
+    "Ambient music plays when you open a countdown (mute from the toolbar)." : {
+
+    },
     "Animals" : {
       "localizations" : {
         "zh-Hans" : {
@@ -530,7 +526,13 @@
     "Appearance" : {
 
     },
+    "April Fools’ Day" : {
+
+    },
     "Archive" : {
+
+    },
+    "Archive past one-off events instead of deleting—keeps history without clutter." : {
 
     },
     "Archived" : {
@@ -579,6 +581,7 @@
 
     },
     "Background Color" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -589,6 +592,7 @@
       }
     },
     "Background Image" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -602,6 +606,12 @@
 
     },
     "Backup & Restore" : {
+
+    },
+    "Best practices" : {
+
+    },
+    "BG Color" : {
 
     },
     "Birthday" : {
@@ -631,6 +641,9 @@
 
     },
     "By category" : {
+
+    },
+    "Calm" : {
 
     },
     "Cancel" : {
@@ -679,10 +692,19 @@
         }
       }
     },
+    "Change Video" : {
+
+    },
     "Choose avatar" : {
 
     },
     "Choose photo from library" : {
+
+    },
+    "Choose Small, Medium, or Large. Lock Screen supports Circular, Rectangular, and Inline." : {
+
+    },
+    "Choose Video" : {
 
     },
     "Choose your avatar" : {
@@ -766,6 +788,9 @@
         }
       }
     },
+    "Create a countdown with + or pick a template from the Events Gallery." : {
+
+    },
     "Creates a new countdown event" : {
 
     },
@@ -801,7 +826,11 @@
     "Custom sounds are a Premium feature" : {
 
     },
+    "Customize" : {
+
+    },
     "Customize Background" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -810,6 +839,9 @@
           }
         }
       }
+    },
+    "Customize your look" : {
+
     },
     "Daily" : {
       "localizations" : {
@@ -951,6 +983,9 @@
       }
     },
     "Double tap to open details. Long press for more actions." : {
+
+    },
+    "Earth Day" : {
 
     },
     "Edit" : {
@@ -1201,6 +1236,9 @@
     "Exclusive Themes" : {
 
     },
+    "Export a backup from Me → Backup before switching phones." : {
+
+    },
     "Export a JSON backup of your countdowns and categories, or restore from a previous backup. Custom photo backgrounds are included when possible." : {
 
     },
@@ -1220,7 +1258,13 @@
         }
       }
     },
+    "Famous dates and seasonal moments—tap to customize and save." : {
+
+    },
     "Favorite" : {
+
+    },
+    "Favorite important events for quicker filtering." : {
 
     },
     "Favorites" : {
@@ -1269,6 +1313,15 @@
         }
       }
     },
+    "For yearly events, set Repeat to Yearly so next year’s date updates automatically." : {
+
+    },
+    "Forest" : {
+
+    },
+    "Free accounts can track up to %lld active countdowns." : {
+
+    },
     "Free accounts can track up to %lld active countdowns. Archive an event or unlock Premium for unlimited countdowns." : {
 
     },
@@ -1276,6 +1329,9 @@
 
     },
     "Free includes %lld countdowns. Premium is a one-time unlock." : {
+
+    },
+    "Free includes up to 5 active countdowns." : {
 
     },
     "Free limit reached" : {
@@ -1292,6 +1348,9 @@
       }
     },
     "Get Started" : {
+
+    },
+    "Getting started" : {
 
     },
     "Green" : {
@@ -1333,7 +1392,19 @@
     "How should we import?" : {
 
     },
+    "How to Use" : {
+
+    },
+    "How to use Times Matter" : {
+
+    },
+    "Human Rights Day" : {
+
+    },
     "I’ve been using Times Matter to track countdowns and reminders. Try it free:" : {
+
+    },
+    "Image" : {
 
     },
     "Import Backup" : {
@@ -1369,6 +1440,12 @@
         }
       }
     },
+    "International Women’s Day" : {
+
+    },
+    "International Workers’ Day" : {
+
+    },
     "Interval" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1391,6 +1468,9 @@
           }
         }
       }
+    },
+    "Layouts include Top, Upper Middle, Middle, Lower Middle, and Bottom." : {
+
     },
     "Less than 1 day" : {
       "localizations" : {
@@ -1416,6 +1496,9 @@
     "Loading product…" : {
 
     },
+    "Lower Middle" : {
+
+    },
     "Lunar New Year" : {
 
     },
@@ -1431,6 +1514,9 @@
           }
         }
       }
+    },
+    "Meditation" : {
+
     },
     "Merge adds backup items alongside your current data. Replace clears everything first." : {
 
@@ -1526,6 +1612,9 @@
         }
       }
     },
+    "Moon Landing (1969)" : {
+
+    },
     "More Apps" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1545,6 +1634,9 @@
           }
         }
       }
+    },
+    "Music" : {
+
     },
     "Never miss the moment" : {
 
@@ -1575,6 +1667,9 @@
           }
         }
       }
+    },
+    "No background music" : {
+
     },
     "No Countdowns Yet" : {
       "localizations" : {
@@ -1608,6 +1703,9 @@
           }
         }
       }
+    },
+    "None" : {
+
     },
     "Not Now" : {
 
@@ -1661,6 +1759,12 @@
         }
       }
     },
+    "Open a countdown → Edit → Background to change image, video, music, colors, and layout." : {
+
+    },
+    "Opens countdown details" : {
+
+    },
     "Opens the App Store review page" : {
 
     },
@@ -1694,6 +1798,12 @@
         }
       }
     },
+    "Pause background music" : {
+
+    },
+    "Pause music" : {
+
+    },
     "Photo Backgrounds" : {
 
     },
@@ -1701,6 +1811,9 @@
 
     },
     "Photo backgrounds, Premium" : {
+
+    },
+    "Pi Day" : {
 
     },
     "Pick a starting point—you can edit everything next." : {
@@ -1739,6 +1852,12 @@
         }
       }
     },
+    "Play background music" : {
+
+    },
+    "Play music" : {
+
+    },
     "Plays a soft tap sound on key actions" : {
 
     },
@@ -1768,6 +1887,9 @@
 
     },
     "Premium style — upgrade to export without limits" : {
+
+    },
+    "Premium unlocks unlimited countdowns, ad-free use, photo & video backgrounds, custom reminder sounds, exclusive themes, and premium share cards." : {
 
     },
     "Preview" : {
@@ -1807,6 +1929,9 @@
       }
     },
     "Purple, Pink, and Orange themes unlock with Premium." : {
+
+    },
+    "Rain" : {
 
     },
     "Rate Us" : {
@@ -1851,6 +1976,9 @@
           }
         }
       }
+    },
+    "Remove" : {
+
     },
     "Remove from Favorites" : {
       "localizations" : {
@@ -1952,6 +2080,9 @@
         }
       }
     },
+    "See what’s next, events this week, and a stable category breakdown." : {
+
+    },
     "Select your preferred primary color for the app" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1963,6 +2094,9 @@
       }
     },
     "Selected" : {
+
+    },
+    "Set a reminder so you get notified before the day arrives." : {
 
     },
     "Settings" : {
@@ -2063,6 +2197,9 @@
     "Style" : {
 
     },
+    "Suggested to add" : {
+
+    },
     "Summer" : {
 
     },
@@ -2083,6 +2220,9 @@
         }
       }
     },
+    "Tap a widget to open that countdown in the app." : {
+
+    },
     "Tap the + button to add your first countdown!" : {
       "localizations" : {
         "zh-Hans" : {
@@ -2093,7 +2233,11 @@
         }
       }
     },
+    "Text" : {
+
+    },
     "Text Color" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2200,7 +2344,13 @@
     "Tips" : {
 
     },
+    "Tips for countdowns, widgets, customization, and backups." : {
+
+    },
     "Today" : {
+
+    },
+    "Today tab" : {
 
     },
     "Top" : {
@@ -2213,10 +2363,16 @@
         }
       }
     },
+    "Touch and hold the Home Screen → tap Edit → Add Widget → search “Times Matter”." : {
+
+    },
     "Track birthdays, deadlines, and milestones—and see what’s next in seconds." : {
 
     },
     "Track every birthday, deadline, and milestone—no caps." : {
+
+    },
+    "Try a suggested event below, or add your own countdown." : {
 
     },
     "Unarchive" : {
@@ -2234,6 +2390,9 @@
           }
         }
       }
+    },
+    "Universal Children’s Day" : {
+
     },
     "Unlimited countdowns" : {
 
@@ -2277,6 +2436,12 @@
         }
       }
     },
+    "Upper Middle" : {
+
+    },
+    "Use categories (Birthday, Work, Holiday…) so Today insights stay useful." : {
+
+    },
     "Use Color (No Image)" : {
       "localizations" : {
         "zh-Hans" : {
@@ -2287,7 +2452,13 @@
         }
       }
     },
+    "Use Suggested to add famous dates and seasonal moments in one tap." : {
+
+    },
     "Use your own photos as countdown backgrounds." : {
+
+    },
+    "Uses the first few seconds of your video and loops them on the countdown screen." : {
 
     },
     "Uses this template for your countdown" : {
@@ -2318,6 +2489,15 @@
           }
         }
       }
+    },
+    "Video" : {
+
+    },
+    "Video backgrounds loop the first few seconds for a living wallpaper feel." : {
+
+    },
+    "Video backgrounds require Premium" : {
+
     },
     "week" : {
       "comment" : "Singular week unit",
@@ -2387,10 +2567,22 @@
     "What are you counting down to?" : {
 
     },
+    "Widgets" : {
+
+    },
+    "Widgets refresh when you add or edit events—open the app once after big changes." : {
+
+    },
     "Winter" : {
 
     },
     "Winter Holiday" : {
+
+    },
+    "World Book Day" : {
+
+    },
+    "World Teachers’ Day" : {
 
     },
     "year" : {

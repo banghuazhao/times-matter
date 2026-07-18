@@ -63,6 +63,11 @@ struct CountdownStore {
     /// Intentionally light — onboarding creates the user's first countdown.
     static let seedLive: [Countdown.Draft] = []
 
+    /// Titles used to identify (and remove) debug-seeded countdowns.
+    static var debugSeedTitles: Set<String> {
+        Set(seedDebug.map(\.title))
+    }
+
     static let seedDebug: [Countdown.Draft] = [
         testSecond,
 

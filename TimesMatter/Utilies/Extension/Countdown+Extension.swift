@@ -217,6 +217,7 @@ extension Countdown.Draft {
             backgroundImageName: backgroundImageName,
             backgroundVideoPath: backgroundVideoPath,
             backgroundMusicName: backgroundMusicName,
+            backgroundMusicVolume: backgroundMusicVolume,
             compactTimeUnit: compactTimeUnit,
             layout: layout,
             reminder: reminder

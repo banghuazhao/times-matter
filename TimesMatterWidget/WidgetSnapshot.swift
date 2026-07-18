@@ -4,11 +4,16 @@
 //
 
 import Foundation
+import UIKit
 
 enum WidgetAppGroup {
     static let identifier = "group.com.appsbay.TimesMatter1"
     static let widgetSnapshotKey = "widgetCountdownSnapshot"
     static let suite = UserDefaults(suiteName: identifier)
+
+    static var containerURL: URL? {
+        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier)
+    }
 }
 
 struct WidgetCountdownItem: Codable, Identifiable, Hashable {
@@ -18,6 +23,8 @@ struct WidgetCountdownItem: Codable, Identifiable, Hashable {
     var isFavorite: Bool
     var backgroundColor: Int
     var textColor: Int
+    /// Relative path under the App Group container (e.g. `widget-bg/12.jpg`).
+    var backgroundImageFileName: String?
 }
 
 struct WidgetSnapshot: Codable, Hashable {
@@ -61,5 +68,16 @@ extension WidgetCountdownItem {
         if days > 1 { return String(localized: "\(days) days left") }
         if days == -1 { return String(localized: "1 day ago") }
         return String(localized: "\(-days) days ago")
+    }
+
+    /// Loads the exported still (image background or video thumbnail) from the App Group.
+    func backgroundUIImage() -> UIImage? {
+        guard
+            let fileName = backgroundImageFileName,
+            !fileName.isEmpty,
+            let container = WidgetAppGroup.containerURL
+        else { return nil }
+        let url = container.appendingPathComponent(fileName)
+        return UIImage(contentsOfFile: url.path)
     }
 }

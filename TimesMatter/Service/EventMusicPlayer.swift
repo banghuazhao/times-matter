@@ -14,7 +14,7 @@ final class EventMusicPlayer {
     private(set) var isPlaying = false
     private(set) var currentFileName: String?
 
-    func play(fileName: String?) {
+    func play(fileName: String?, volume: Double = 0.55) {
         guard let fileName,
               fileName != BackgroundMusicCatalog.none,
               !fileName.isEmpty,
@@ -24,7 +24,14 @@ final class EventMusicPlayer {
             return
         }
 
-        if currentFileName == fileName, isPlaying {
+        let clamped = Float(max(0, min(1, volume)))
+
+        if currentFileName == fileName, let player {
+            player.volume = clamped
+            if !isPlaying {
+                player.play()
+                isPlaying = true
+            }
             return
         }
 
@@ -35,7 +42,7 @@ final class EventMusicPlayer {
             try AVAudioSession.sharedInstance().setActive(true)
             let audioPlayer = try AVAudioPlayer(contentsOf: url)
             audioPlayer.numberOfLoops = -1
-            audioPlayer.volume = 0.55
+            audioPlayer.volume = clamped
             audioPlayer.prepareToPlay()
             audioPlayer.play()
             player = audioPlayer
@@ -45,6 +52,10 @@ final class EventMusicPlayer {
             print("Failed to play event music: \(error)")
             stop()
         }
+    }
+
+    func setVolume(_ volume: Double) {
+        player?.volume = Float(max(0, min(1, volume)))
     }
 
     func toggle() {

@@ -24,7 +24,8 @@ struct CountdownProvider: TimelineProvider {
                         targetDate: Calendar.current.date(byAdding: .day, value: 12, to: .now) ?? .now,
                         isFavorite: true,
                         backgroundColor: 0xE76B5ECC,
-                        textColor: 0xFFFFFFFF
+                        textColor: 0xFFFFFFFF,
+                        backgroundImageFileName: nil
                     )
                 ],
                 upcomingCount: 3,
@@ -179,7 +180,14 @@ struct TimesMatterWidgetEntryView: View {
                         .foregroundStyle(Color(rgba: nextItem?.textColor ?? 0xFFFFFFFF))
                     ForEach(entry.snapshot.items.prefix(4)) { item in
                         Link(destination: AppDeepLink.countdownURL(id: item.id)) {
-                            HStack {
+                            HStack(spacing: 10) {
+                                if let thumb = item.backgroundUIImage() {
+                                    Image(uiImage: thumb)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 36, height: 36)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                }
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(item.title)
                                         .font(.subheadline.weight(.semibold))
@@ -238,12 +246,7 @@ struct TimesMatterWidget: Widget {
         StaticConfiguration(kind: kind, provider: CountdownProvider()) { entry in
             TimesMatterWidgetEntryView(entry: entry)
                 .containerBackground(for: .widget) {
-                    let color = Color(rgba: entry.snapshot.items.first?.backgroundColor ?? 0xE76B5ECC)
-                    LinearGradient(
-                        colors: [color, color.opacity(0.75)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
+                    WidgetBackgroundView(item: entry.snapshot.items.first)
                 }
         }
         .configurationDisplayName(String(localized: "Countdowns"))
@@ -256,6 +259,28 @@ struct TimesMatterWidget: Widget {
             .accessoryRectangular,
             .accessoryInline
         ])
+    }
+}
+
+private struct WidgetBackgroundView: View {
+    let item: WidgetCountdownItem?
+
+    var body: some View {
+        let color = Color(rgba: item?.backgroundColor ?? 0xE76B5ECC)
+        ZStack {
+            LinearGradient(
+                colors: [color, color.opacity(0.75)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            if let uiImage = item?.backgroundUIImage() {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFill()
+                // Keep text readable over photos / video stills.
+                Color.black.opacity(0.28)
+            }
+        }
     }
 }
 
