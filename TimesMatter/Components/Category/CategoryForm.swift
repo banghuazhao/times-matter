@@ -166,12 +166,9 @@ struct CategoryFormView: View {
             .navigationBarTitleDisplayMode(.inline)
             .scrollDismissesKeyboard(.immediately)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel") {
-                        Haptics.shared.vibrateIfEnabled()
-                        dismiss()
-                    }
-                    .appToolbarStyle(prominent: false)
+                ToolbarCloseItem {
+                    Haptics.shared.vibrateIfEnabled()
+                    dismiss()
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(model.isEditing ? "Done" : "Edit") {

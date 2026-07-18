@@ -445,7 +445,7 @@
         }
       }
     },
-    "A notification that alerts you before or when the event happens. Tap to choose how often it notifies you, how early, and which sound to use." : {
+    "A notification that alerts you before or when the event happens." : {
 
     },
     "About %@" : {
@@ -501,6 +501,9 @@
       }
     },
     "Advertisement" : {
+
+    },
+    "Alerts you for the next event only." : {
 
     },
     "All" : {
@@ -590,6 +593,9 @@
       }
     },
     "Background %@" : {
+
+    },
+    "Background color" : {
 
     },
     "Background Color" : {
@@ -867,6 +873,9 @@
           }
         }
       }
+    },
+    "Daily / Weekly / Monthly / Yearly" : {
+
     },
     "Dark Mode" : {
       "localizations" : {
@@ -1160,6 +1169,9 @@
         }
       }
     },
+    "Every Day / Week / Month / Year" : {
+
+    },
     "Every day at %@" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1362,6 +1374,9 @@
         }
       }
     },
+    "Get a heads-up so you can prepare beforehand." : {
+
+    },
     "Get Started" : {
 
     },
@@ -1379,6 +1394,9 @@
       }
     },
     "Halloween" : {
+
+    },
+    "Here’s everything included with your one-time Premium unlock." : {
 
     },
     "Holidays" : {
@@ -1404,13 +1422,16 @@
         }
       }
     },
-    "How early you want to be notified—right at the event time, or minutes/days before so you can prepare." : {
+    "How early you want to be notified." : {
 
     },
-    "How often the notification fires. Only Once alerts you for the next event. Every Day / Week / Month / Year keeps reminding on that schedule. No Reminder turns alerts off." : {
+    "How often it notifies you, how early, and which sound to use." : {
 
     },
-    "How often this event comes back. Choose No Repeat for one-time dates, or Daily / Weekly / Monthly / Yearly so the next occurrence updates automatically." : {
+    "How often the notification fires." : {
+
+    },
+    "How often this event comes back after the date you set." : {
 
     },
     "How should we import?" : {
@@ -1494,6 +1515,9 @@
       }
     },
     "Invite Friends" : {
+
+    },
+    "Keeps reminding on that schedule." : {
 
     },
     "Layout" : {
@@ -1596,6 +1620,9 @@
           }
         }
       }
+    },
+    "Minutes or days early" : {
+
     },
     "month" : {
       "comment" : "Singular month unit",
@@ -1760,6 +1787,9 @@
     "Nothing upcoming" : {
 
     },
+    "Notify you right when the event happens." : {
+
+    },
     "Now" : {
       "localizations" : {
         "zh-Hans" : {
@@ -1781,6 +1811,9 @@
       }
     },
     "Onboarding progress" : {
+
+    },
+    "One-time date. The countdown ends after that day." : {
 
     },
     "One-time purchase" : {
@@ -2186,6 +2219,9 @@
         }
       }
     },
+    "Shows what Premium includes" : {
+
+    },
     "Smileys" : {
       "localizations" : {
         "zh-Hans" : {
@@ -2270,6 +2306,9 @@
         }
       }
     },
+    "Tap to see your Premium benefits" : {
+
+    },
     "Text" : {
 
     },
@@ -2285,6 +2324,9 @@
       }
     },
     "Thanksgiving" : {
+
+    },
+    "The next occurrence updates automatically when the date passes." : {
 
     },
     "Theme Color" : {
@@ -2412,6 +2454,9 @@
     "Try a suggested event below, or add your own countdown." : {
 
     },
+    "Turns alerts off for this event." : {
+
+    },
     "Unarchive" : {
 
     },
@@ -2489,9 +2534,6 @@
           }
         }
       }
-    },
-    "Use Color Only" : {
-
     },
     "Use Suggested to add famous dates and seasonal moments in one tap." : {
 
@@ -2611,6 +2653,9 @@
     "What are you counting down to?" : {
 
     },
+    "What you can set" : {
+
+    },
     "Widgets" : {
 
     },
@@ -2724,6 +2769,9 @@
           }
         }
       }
+    },
+    "Your Premium Benefits" : {
+
     }
   },
   "version" : "1.0"
