@@ -203,23 +203,39 @@ struct MeView: View {
                         .appButtonStyle(theme: model.themeManager.current)
                 }
             } else {
-                HStack(spacing: 8) {
-                    Image(systemName: "crown.fill")
-                        .foregroundStyle(.yellow)
-                        .font(.title3)
-                    Text(String(localized: "Welcome, Premium user!"))
-                        .font(.headline)
-                        .foregroundStyle(model.themeManager.current.primaryColor)
+                Button {
+                    Haptics.shared.vibrateIfEnabled()
+                    model.onTapPurchase()
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "crown.fill")
+                            .foregroundStyle(.yellow)
+                            .font(.title3)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(String(localized: "Welcome, Premium user!"))
+                                .font(.headline)
+                                .foregroundStyle(model.themeManager.current.primaryColor)
+                            Text(String(localized: "Tap to see your Premium benefits"))
+                                .font(AppFont.caption)
+                                .foregroundStyle(model.themeManager.current.secondaryGray)
+                        }
+                        Spacer(minLength: 0)
+                        Image(systemName: "chevron.right")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(model.themeManager.current.secondaryGray)
+                    }
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 16)
+                    .background(model.themeManager.current.card)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AppCornerRadius.button)
+                            .stroke(model.themeManager.current.primaryColor, lineWidth: 1.5)
+                    )
+                    .clipShape(.rect(cornerRadius: AppCornerRadius.button))
+                    .shadow(color: AppShadow.card.color, radius: 4, x: 0, y: 2)
                 }
-                .padding(.vertical, 8)
-                .padding(.horizontal, 16)
-                .background(model.themeManager.current.card)
-                .overlay(
-                    RoundedRectangle(cornerRadius: AppCornerRadius.button)
-                        .stroke(model.themeManager.current.primaryColor, lineWidth: 1.5)
-                )
-                .clipShape(.rect(cornerRadius: AppCornerRadius.button))
-                .shadow(color: AppShadow.card.color, radius: 4, x: 0, y: 2)
+                .buttonStyle(.plain)
+                .accessibilityHint(String(localized: "Shows what Premium includes"))
             }
         }
         .appCardStyle(theme: model.themeManager.current)

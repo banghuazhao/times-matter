@@ -78,8 +78,10 @@ struct CountdownDraftRow: View {
         switch mock.backgroundKind {
         case .video:
             if let path = countdown.backgroundVideoPath {
-                LoopingVideoPlayerView(path: path, loopSeconds: 6)
-                    .allowsHitTesting(false)
+                VideoThumbnailView(
+                    path: path,
+                    fallbackColor: Color(hex: countdown.backgroundColor)
+                )
             } else {
                 Color(hex: countdown.backgroundColor)
             }

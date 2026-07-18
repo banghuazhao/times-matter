@@ -42,9 +42,6 @@ struct ShareCardSheet: View {
     let countdown: Countdown
     let relativeNumber: String
     let relativeLabel: String
-    let backgroundColor: Color
-    let textColor: Color
-    let backgroundImageName: String?
 
     @Environment(\.dismiss) private var dismiss
     @Dependency(\.themeManager) private var themeManager
@@ -130,9 +127,6 @@ struct ShareCardSheet: View {
             countdown: countdown,
             relativeNumber: relativeNumber,
             relativeLabel: relativeLabel,
-            backgroundColor: backgroundColor,
-            textColor: textColor,
-            backgroundImageName: backgroundImageName,
             style: style,
             showWatermark: showWatermark
         )
@@ -149,9 +143,6 @@ struct ShareCardSheet: View {
             countdown: countdown,
             relativeNumber: relativeNumber,
             relativeLabel: relativeLabel,
-            backgroundColor: backgroundColor,
-            textColor: textColor,
-            backgroundImageName: backgroundImageName,
             style: style,
             showWatermark: showWatermark
         )
@@ -171,11 +162,11 @@ struct ShareCardView: View {
     let countdown: Countdown
     let relativeNumber: String
     let relativeLabel: String
-    let backgroundColor: Color
-    let textColor: Color
-    let backgroundImageName: String?
     let style: ShareCardStyle
     let showWatermark: Bool
+
+    private var textColor: Color { Color(hex: countdown.textColor) }
+    private var backgroundColor: Color { Color(hex: countdown.backgroundColor) }
 
     var body: some View {
         ZStack {
@@ -195,21 +186,45 @@ struct ShareCardView: View {
 
     @ViewBuilder
     private var background: some View {
-        if let backgroundImageName, !backgroundImageName.isEmpty {
-            if let uiImage = UIImage(contentsOfFile: backgroundImageName) {
-                Image(uiImage: uiImage).resizable().scaledToFill()
-            } else if UIImage(named: backgroundImageName) != nil {
-                Image(backgroundImageName).resizable().scaledToFill()
+        switch countdown.backgroundKind {
+        case .video:
+            if let path = countdown.backgroundVideoPath,
+               let thumb = VideoThumbnailCache.image(for: path) {
+                Image(uiImage: thumb)
+                    .resizable()
+                    .scaledToFill()
             } else {
-                backgroundColor
+                solidOrGradientBackground
             }
-        } else {
-            LinearGradient(
-                colors: [backgroundColor, backgroundColor.opacity(0.75)],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+
+        case .image:
+            if let name = countdown.backgroundImageName, !name.isEmpty {
+                if let uiImage = UIImage(contentsOfFile: name) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                } else if UIImage(named: name) != nil {
+                    Image(name)
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    solidOrGradientBackground
+                }
+            } else {
+                solidOrGradientBackground
+            }
+
+        case .color:
+            solidOrGradientBackground
         }
+    }
+
+    private var solidOrGradientBackground: some View {
+        LinearGradient(
+            colors: [backgroundColor, backgroundColor.opacity(0.75)],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
     }
 
     @ViewBuilder

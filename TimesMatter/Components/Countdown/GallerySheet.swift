@@ -77,18 +77,20 @@ struct GallerySheet: View {
                                             VStack(alignment: .leading, spacing: 6) {
                                                 Text(template.emoji + " " + template.title)
                                                     .font(AppFont.subheadlineSemibold)
-                                                    .foregroundStyle(.white)
+                                                    .foregroundStyle(Color(hex: template.textColor))
                                                     .lineLimit(2)
+                                                    .shadow(color: .black.opacity(0.25), radius: 2, x: 0, y: 1)
                                                 Text(template.season.title)
                                                     .font(AppFont.caption)
-                                                    .foregroundStyle(.white.opacity(0.85))
+                                                    .foregroundStyle(Color(hex: template.textColor).opacity(0.9))
+                                                    .shadow(color: .black.opacity(0.2), radius: 1, x: 0, y: 1)
                                             }
                                             .padding(AppSpacing.medium)
                                             .frame(width: 160, height: 96, alignment: .topLeading)
-                                            .background(
-                                                RoundedRectangle(cornerRadius: AppCornerRadius.card)
-                                                    .fill(Color(rgba: template.backgroundColor))
-                                            )
+                                            .background {
+                                                GalleryTemplateCardBackground(template: template)
+                                            }
+                                            .clipShape(RoundedRectangle(cornerRadius: AppCornerRadius.card))
                                         }
                                         .buttonStyle(.plain)
                                         .accessibilityLabel(template.title)

@@ -207,6 +207,15 @@ class CountdownListModel {
     }
 
     func onToggleArchive(_ countdown: Countdown) {
+        // Unarchiving creates another active countdown — enforce free limit.
+        if countdown.isArchived {
+            let isPremium = purchaseManager.isPremiumUserPurchased
+            guard PremiumLimits.canCreateCountdown(activeCount: activeCountdownCount, isPremium: isPremium) else {
+                route = .showLimitReached
+                return
+            }
+        }
+
         withErrorReporting {
             var newCountdown = countdown
             newCountdown.isArchived.toggle()
@@ -237,6 +246,7 @@ class CountdownListModel {
             }
 
             ReminderNotificationManager.shared.removeNotification(for: countdown)
+            CountdownMediaCleanup.removeFiles(for: countdown)
             syncWidgets()
         }
     }
@@ -326,6 +336,9 @@ struct CountdownListView: View {
                 if newValue != nil {
                     openPendingDeepLinkIfNeeded()
                 }
+            }
+            .onChange(of: model.allCountdowns.count) { _, _ in
+                openPendingDeepLinkIfNeeded()
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

@@ -9,8 +9,10 @@ import UniformTypeIdentifiers
 
 protocol VideoBackgroundManaging {
     func saveCustomBackgroundVideo(from sourceURL: URL) throws -> String
+    func saveCustomBackgroundVideo(data: Data, fileExtension: String) throws -> String
     func deleteCustomBackgroundVideo(at path: String) throws
     func isCustomBackgroundVideoPath(_ path: String) -> Bool
+    func cleanupAllCustomBackgroundVideos()
 }
 
 @Observable
@@ -30,8 +32,7 @@ final class VideoBackgroundManager: VideoBackgroundManaging {
     func saveCustomBackgroundVideo(from sourceURL: URL) throws -> String {
         try createDirectoryIfNeeded()
         let ext = sourceURL.pathExtension.isEmpty ? "mp4" : sourceURL.pathExtension
-        let filename = "\(Constants.prefix)\(UUID().uuidString).\(ext)"
-        let destination = directoryURL.appendingPathComponent(filename)
+        let destination = makeDestinationURL(fileExtension: ext)
 
         if fileManager.fileExists(atPath: destination.path) {
             try fileManager.removeItem(at: destination)
@@ -44,13 +45,37 @@ final class VideoBackgroundManager: VideoBackgroundManaging {
         return destination.path
     }
 
+    func saveCustomBackgroundVideo(data: Data, fileExtension: String) throws -> String {
+        try createDirectoryIfNeeded()
+        let ext = fileExtension.isEmpty ? "mp4" : fileExtension
+        let destination = makeDestinationURL(fileExtension: ext)
+        try data.write(to: destination, options: .atomic)
+        return destination.path
+    }
+
     func deleteCustomBackgroundVideo(at path: String) throws {
         guard isCustomBackgroundVideoPath(path) else { return }
         try fileManager.removeItem(atPath: path)
+        VideoThumbnailCache.remove(for: path)
     }
 
     func isCustomBackgroundVideoPath(_ path: String) -> Bool {
         path.contains(Constants.prefix)
+    }
+
+    func cleanupAllCustomBackgroundVideos() {
+        guard let urls = try? fileManager.contentsOfDirectory(
+            at: directoryURL,
+            includingPropertiesForKeys: nil
+        ) else { return }
+        for url in urls where url.lastPathComponent.hasPrefix(Constants.prefix) {
+            try? deleteCustomBackgroundVideo(at: url.path)
+        }
+    }
+
+    private func makeDestinationURL(fileExtension: String) -> URL {
+        let filename = "\(Constants.prefix)\(UUID().uuidString).\(fileExtension)"
+        return directoryURL.appendingPathComponent(filename)
     }
 
     private func createDirectoryIfNeeded() throws {

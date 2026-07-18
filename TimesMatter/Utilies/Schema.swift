@@ -74,15 +74,9 @@ func appDatabase() throws -> any DatabaseWriter {
         )
         .execute(db)
     }
-    
-    migrator.registerMigration("Seed") { db in
-        try db.seed {
-            CategoryStore.seed
-            CountdownStore.seedLive
-        }
-    }
 
-    // Must run before any seed that inserts Countdown rows (model includes these columns).
+    // Additive column migrations run before any seed that inserts via the current Countdown model.
+    // Production DBs that already applied "Seed" earlier simply skip it and pick up these ALTERs next.
     migrator.registerMigration("Add video and music backgrounds") { db in
         let columns = try Set(db.columns(in: "countdowns").map(\.name))
         if !columns.contains("backgroundVideoPath") {
@@ -112,6 +106,13 @@ func appDatabase() throws -> any DatabaseWriter {
                 """
             )
             .execute(db)
+        }
+    }
+
+    migrator.registerMigration("Seed") { db in
+        try db.seed {
+            CategoryStore.seed
+            CountdownStore.seedLive
         }
     }
 

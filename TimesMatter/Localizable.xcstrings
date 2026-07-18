@@ -147,6 +147,9 @@
         }
       }
     },
+    "%lld%%" : {
+
+    },
     "•" : {
 
     },
@@ -160,6 +163,9 @@
           }
         }
       }
+    },
+    "• Free accounts keep up to %lld active events after import; extras are archived." : {
+
     },
     "• Keep backups somewhere safe (Files, iCloud Drive, or email)." : {
 
@@ -439,6 +445,12 @@
         }
       }
     },
+    "A notification that alerts you before or when the event happens. Tap to choose how often it notifies you, how early, and which sound to use." : {
+
+    },
+    "About %@" : {
+
+    },
     "Activities" : {
       "localizations" : {
         "zh-Hans" : {
@@ -601,6 +613,9 @@
           }
         }
       }
+    },
+    "Background music requires Premium" : {
+
     },
     "Backup" : {
 
@@ -820,10 +835,10 @@
         }
       }
     },
-    "Custom sounds & photos" : {
+    "Custom sounds are a Premium feature" : {
 
     },
-    "Custom sounds are a Premium feature" : {
+    "Custom sounds, photos, video & music" : {
 
     },
     "Customize" : {
@@ -1239,7 +1254,7 @@
     "Export a backup from Me → Backup before switching phones." : {
 
     },
-    "Export a JSON backup of your countdowns and categories, or restore from a previous backup. Custom photo backgrounds are included when possible." : {
+    "Export a JSON backup of your countdowns and categories, or restore from a previous backup. Custom photos and videos (under 12 MB) are included when possible. Background music track names are saved too." : {
 
     },
     "Export Backup" : {
@@ -1389,6 +1404,15 @@
         }
       }
     },
+    "How early you want to be notified—right at the event time, or minutes/days before so you can prepare." : {
+
+    },
+    "How often the notification fires. Only Once alerts you for the next event. Every Day / Week / Month / Year keeps reminding on that schedule. No Reminder turns alerts off." : {
+
+    },
+    "How often this event comes back. Choose No Repeat for one-time dates, or Daily / Weekly / Monthly / Yearly so the next occurrence updates automatically." : {
+
+    },
     "How should we import?" : {
 
     },
@@ -1407,6 +1431,9 @@
     "Image" : {
 
     },
+    "Image, video, and solid color backgrounds are separate—choosing one replaces the others. Music can play with any of them." : {
+
+    },
     "Import Backup" : {
 
     },
@@ -1416,6 +1443,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Imported %1$lld countdowns and %2$lld categories."
+          }
+        }
+      }
+    },
+    "Imported %lld countdowns and %lld categories. %lld were archived to stay within the free limit of %lld." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Imported %1$lld countdowns and %2$lld categories. %3$lld were archived to stay within the free limit of %4$lld."
           }
         }
       }
@@ -1804,7 +1841,7 @@
     "Pause music" : {
 
     },
-    "Photo Backgrounds" : {
+    "Photo & Video Backgrounds" : {
 
     },
     "Photo backgrounds require Premium" : {
@@ -1877,7 +1914,7 @@
     "Premium" : {
 
     },
-    "Premium is unlocked. Enjoy unlimited countdowns, custom sounds, photo backgrounds, and premium share cards." : {
+    "Premium is unlocked. Enjoy unlimited countdowns, custom sounds, photo & video backgrounds, ambient music, and premium share cards." : {
 
     },
     "Premium share cards" : {
@@ -2443,6 +2480,7 @@
 
     },
     "Use Color (No Image)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -2452,10 +2490,13 @@
         }
       }
     },
+    "Use Color Only" : {
+
+    },
     "Use Suggested to add famous dates and seasonal moments in one tap." : {
 
     },
-    "Use your own photos as countdown backgrounds." : {
+    "Use your photos or short looping videos as backgrounds, plus ambient music." : {
 
     },
     "Uses the first few seconds of your video and loops them on the countdown screen." : {
@@ -2497,6 +2538,9 @@
 
     },
     "Video backgrounds require Premium" : {
+
+    },
+    "Volume" : {
 
     },
     "week" : {

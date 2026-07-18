@@ -104,13 +104,15 @@ class CountdownDetailModel {
     
     func onDeleteCountdown() {
         withErrorReporting {
+            let deleted = countdown
             try database.write { db in
                 try Countdown
                     .delete(countdown)
                     .execute(db)
             }
             
-            ReminderNotificationManager.shared.removeNotification(for: countdown)
+            ReminderNotificationManager.shared.removeNotification(for: deleted)
+            CountdownMediaCleanup.removeFiles(for: deleted)
             
             onDelete?()
         }
@@ -238,10 +240,7 @@ struct CountdownDetailView: View {
             ShareCardSheet(
                 countdown: model.countdown,
                 relativeNumber: relative.number,
-                relativeLabel: relative.label,
-                backgroundColor: model.bgColor,
-                textColor: model.textColor,
-                backgroundImageName: model.countdown.backgroundImageName
+                relativeLabel: relative.label
             )
         }
         .onAppear {

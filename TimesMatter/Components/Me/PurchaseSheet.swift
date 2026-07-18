@@ -55,10 +55,18 @@ struct PurchaseSheet: View {
                     .accessibilityHidden(true)
 
                     VStack(spacing: 8) {
-                        Text(String(localized: "Times Matter Premium"))
+                        Text(
+                            purchaseManager.isPremiumUserPurchased
+                                ? String(localized: "Your Premium Benefits")
+                                : String(localized: "Times Matter Premium")
+                        )
                             .font(.title2.weight(.bold))
                             .multilineTextAlignment(.center)
-                        Text(String(localized: "Unlock the full toolkit for beautiful countdowns—built for people who never want to miss what matters."))
+                        Text(
+                            purchaseManager.isPremiumUserPurchased
+                                ? String(localized: "Here’s everything included with your one-time Premium unlock.")
+                                : String(localized: "Unlock the full toolkit for beautiful countdowns—built for people who never want to miss what matters.")
+                        )
                             .font(.body)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
@@ -246,7 +254,7 @@ struct PremiumSuccessView: View {
                 Text(String(localized: "You’re All Set!"))
                     .font(.system(size: 26, weight: .semibold))
 
-                Text(String(localized: "Premium is unlocked. Enjoy unlimited countdowns, custom sounds, photo backgrounds, and premium share cards."))
+                Text(String(localized: "Premium is unlocked. Enjoy unlimited countdowns, custom sounds, photo & video backgrounds, ambient music, and premium share cards."))
                     .font(.body)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
@@ -255,7 +263,7 @@ struct PremiumSuccessView: View {
                     ForEach([
                         String(localized: "Unlimited countdowns"),
                         String(localized: "Ad-free experience"),
-                        String(localized: "Custom sounds & photos"),
+                        String(localized: "Custom sounds, photos, video & music"),
                         String(localized: "Premium share cards"),
                     ], id: \.self) { line in
                         Label(line, systemImage: "checkmark.circle.fill")

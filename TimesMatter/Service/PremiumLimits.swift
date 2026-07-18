@@ -34,7 +34,7 @@ enum PremiumFeature: String, CaseIterable, Identifiable {
         case .unlimitedCountdowns: String(localized: "Unlimited Countdowns")
         case .adFree: String(localized: "Ad-Free Experience")
         case .customSounds: String(localized: "Custom Reminder Sounds")
-        case .customPhotos: String(localized: "Photo Backgrounds")
+        case .customPhotos: String(localized: "Photo & Video Backgrounds")
         case .premiumShareCards: String(localized: "Premium Share Cards")
         case .exclusiveThemes: String(localized: "Exclusive Themes")
         }
@@ -49,7 +49,7 @@ enum PremiumFeature: String, CaseIterable, Identifiable {
         case .customSounds:
             String(localized: "Pick playful and calming sounds for each reminder.")
         case .customPhotos:
-            String(localized: "Use your own photos as countdown backgrounds.")
+            String(localized: "Use your photos or short looping videos as backgrounds, plus ambient music.")
         case .premiumShareCards:
             String(localized: "Export beautiful Story-ready cards without watermarks.")
         case .exclusiveThemes:
@@ -61,8 +61,8 @@ enum PremiumFeature: String, CaseIterable, Identifiable {
         switch self {
         case .unlimitedCountdowns: "infinity"
         case .adFree: "nosign"
-        case .customSounds: "music.note"
-        case .customPhotos: "photo.on.rectangle"
+        case .customSounds: "speaker.wave.2.fill"
+        case .customPhotos: "photo.on.rectangle.angled"
         case .premiumShareCards: "square.and.arrow.up.on.square"
         case .exclusiveThemes: "paintpalette.fill"
         }

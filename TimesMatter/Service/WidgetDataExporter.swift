@@ -9,7 +9,7 @@ import UIKit
 import WidgetKit
 
 /// Lightweight snapshot shared with the widget extension via App Group.
-struct WidgetCountdownItem: Codable, Identifiable, Hashable {
+struct WidgetCountdownItem: Codable, Identifiable, Hashable, Sendable {
     var id: Int
     var title: String
     var targetDate: Date
@@ -21,7 +21,7 @@ struct WidgetCountdownItem: Codable, Identifiable, Hashable {
     var backgroundImageFileName: String?
 }
 
-struct WidgetSnapshot: Codable, Hashable {
+struct WidgetSnapshot: Codable, Hashable, Sendable {
     var updatedAt: Date
     var items: [WidgetCountdownItem]
     var upcomingCount: Int
@@ -32,6 +32,18 @@ struct WidgetSnapshot: Codable, Hashable {
 enum WidgetDataExporter {
     private static let backgroundFolderName = "widget-bg"
 
+    private struct ExportInput: Sendable {
+        var id: Int
+        var title: String
+        var targetDate: Date
+        var isFavorite: Bool
+        var backgroundColor: Int
+        var textColor: Int
+        var backgroundKindRaw: String
+        var backgroundImageName: String?
+        var backgroundVideoPath: String?
+    }
+
     static func export(countdowns: [Countdown]) {
         let now = Date()
         let active = countdowns.filter { !$0.isArchived }
@@ -41,34 +53,61 @@ enum WidgetDataExporter {
         let past = active.filter { ($0.nextOccurrence ?? $0.date) < now }
         let favorites = active.filter(\.isFavorite)
 
-        let items = Array(upcoming.prefix(5)).map { countdown in
-            WidgetCountdownItem(
+        let inputs: [ExportInput] = Array(upcoming.prefix(5)).map { countdown in
+            ExportInput(
                 id: countdown.id,
                 title: countdown.title,
                 targetDate: countdown.nextOccurrence ?? countdown.date,
                 isFavorite: countdown.isFavorite,
                 backgroundColor: countdown.backgroundColor,
                 textColor: countdown.textColor,
-                backgroundImageFileName: exportBackgroundStill(for: countdown)
+                backgroundKindRaw: {
+                    switch countdown.backgroundKind {
+                    case .video: "video"
+                    case .image: "image"
+                    case .color: "color"
+                    }
+                }(),
+                backgroundImageName: countdown.backgroundImageName,
+                backgroundVideoPath: countdown.backgroundVideoPath
             )
         }
 
-        let snapshot = WidgetSnapshot(
-            updatedAt: now,
-            items: items,
-            upcomingCount: upcoming.count,
-            pastCount: past.count,
-            favoriteCount: favorites.count
-        )
+        let upcomingCount = upcoming.count
+        let pastCount = past.count
+        let favoriteCount = favorites.count
 
-        guard let data = try? JSONEncoder().encode(snapshot) else { return }
-        AppGroup.suite?.set(data, forKey: AppGroup.widgetSnapshotKey)
-        WidgetCenter.shared.reloadAllTimelines()
+        Task.detached(priority: .utility) {
+            let items = inputs.map { input -> WidgetCountdownItem in
+                WidgetCountdownItem(
+                    id: input.id,
+                    title: input.title,
+                    targetDate: input.targetDate,
+                    isFavorite: input.isFavorite,
+                    backgroundColor: input.backgroundColor,
+                    textColor: input.textColor,
+                    backgroundImageFileName: exportBackgroundStill(for: input)
+                )
+            }
+
+            let snapshot = WidgetSnapshot(
+                updatedAt: now,
+                items: items,
+                upcomingCount: upcomingCount,
+                pastCount: pastCount,
+                favoriteCount: favoriteCount
+            )
+
+            guard let data = try? JSONEncoder().encode(snapshot) else { return }
+            AppGroup.suite?.set(data, forKey: AppGroup.widgetSnapshotKey)
+            await MainActor.run {
+                WidgetCenter.shared.reloadAllTimelines()
+            }
+        }
     }
 
     /// Copies/renders a still image into the App Group for widget display.
-    /// Video → thumbnail; custom/predefined image → JPEG; color-only → nil.
-    private static func exportBackgroundStill(for countdown: Countdown) -> String? {
+    private static func exportBackgroundStill(for input: ExportInput) -> String? {
         guard let container = FileManager.default.containerURL(
             forSecurityApplicationGroupIdentifier: AppGroup.identifier
         ) else { return nil }
@@ -76,22 +115,22 @@ enum WidgetDataExporter {
         let folder = container.appendingPathComponent(backgroundFolderName, isDirectory: true)
         try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
 
-        let relativeName = "\(countdown.id).jpg"
+        let relativeName = "\(input.id).jpg"
         let destination = folder.appendingPathComponent(relativeName)
 
         let image: UIImage?
-        switch countdown.backgroundKind {
-        case .video:
-            guard let path = countdown.backgroundVideoPath else { return nil }
-            image = videoThumbnail(at: path)
-        case .image:
-            guard let name = countdown.backgroundImageName, !name.isEmpty else { return nil }
+        switch input.backgroundKindRaw {
+        case "video":
+            guard let path = input.backgroundVideoPath else { return nil }
+            image = VideoThumbnailCache.image(for: path)
+        case "image":
+            guard let name = input.backgroundImageName, !name.isEmpty else { return nil }
             if let fileImage = UIImage(contentsOfFile: name) {
                 image = fileImage
             } else {
                 image = UIImage(named: name)
             }
-        case .color:
+        default:
             try? FileManager.default.removeItem(at: destination)
             return nil
         }
@@ -106,18 +145,5 @@ enum WidgetDataExporter {
         } catch {
             return nil
         }
-    }
-
-    private static func videoThumbnail(at path: String) -> UIImage? {
-        let url = URL(fileURLWithPath: path)
-        let asset = AVURLAsset(url: url)
-        let generator = AVAssetImageGenerator(asset: asset)
-        generator.appliesPreferredTrackTransform = true
-        generator.maximumSize = CGSize(width: 800, height: 800)
-        let time = CMTime(seconds: 0.3, preferredTimescale: 600)
-        guard let cgImage = try? generator.copyCGImage(at: time, actualTime: nil) else {
-            return nil
-        }
-        return UIImage(cgImage: cgImage)
     }
 }

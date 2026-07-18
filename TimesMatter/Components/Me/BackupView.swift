@@ -25,6 +25,12 @@ final class BackupViewModel {
     @Dependency(\.backgroundImageManager) var backgroundImageManager
 
     @ObservationIgnored
+    @Dependency(\.videoBackgroundManager) var videoBackgroundManager
+
+    @ObservationIgnored
+    @Dependency(\.purchaseManager) var purchaseManager
+
+    @ObservationIgnored
     @Dependency(\.themeManager) var themeManager
 
     var exportURL: URL?
@@ -42,7 +48,8 @@ final class BackupViewModel {
             let backup = BackupService.makeBackup(
                 countdowns: allCountdowns,
                 categories: allCategories,
-                backgroundImageManager: backgroundImageManager
+                backgroundImageManager: backgroundImageManager,
+                videoBackgroundManager: videoBackgroundManager
             )
             exportURL = try BackupService.writeTemporaryFile(backup)
             showExporter = true
@@ -72,13 +79,20 @@ final class BackupViewModel {
                 backup,
                 replaceExisting: replaceExisting,
                 database: database,
-                backgroundImageManager: backgroundImageManager
+                backgroundImageManager: backgroundImageManager,
+                videoBackgroundManager: videoBackgroundManager,
+                isPremium: purchaseManager.isPremiumUserPurchased
             )
             WidgetDataExporter.export(countdowns: try database.read { try Countdown.fetchAll($0) })
-            WidgetCenter.shared.reloadAllTimelines()
-            statusMessage = String(
-                localized: "Imported \(result.countdowns) countdowns and \(result.categories) categories."
-            )
+            if result.archivedForFreeLimit > 0 {
+                statusMessage = String(
+                    localized: "Imported \(result.countdowns) countdowns and \(result.categories) categories. \(result.archivedForFreeLimit) were archived to stay within the free limit of \(PremiumLimits.freeCountdownLimit)."
+                )
+            } else {
+                statusMessage = String(
+                    localized: "Imported \(result.countdowns) countdowns and \(result.categories) categories."
+                )
+            }
         } catch {
             statusMessage = error.localizedDescription
         }
@@ -94,7 +108,7 @@ struct BackupView: View {
                 VStack(alignment: .leading, spacing: AppSpacing.small) {
                     Text(String(localized: "Backup & Restore"))
                         .font(AppFont.title2)
-                    Text(String(localized: "Export a JSON backup of your countdowns and categories, or restore from a previous backup. Custom photo backgrounds are included when possible."))
+                    Text(String(localized: "Export a JSON backup of your countdowns and categories, or restore from a previous backup. Custom photos and videos (under 12 MB) are included when possible. Background music track names are saved too."))
                         .font(AppFont.body)
                         .foregroundStyle(.secondary)
                 }
@@ -141,6 +155,7 @@ struct BackupView: View {
                         .font(AppFont.headline)
                     Text(String(localized: "• Merge keeps your current events and adds items from the backup."))
                     Text(String(localized: "• Replace deletes current countdowns and categories before importing."))
+                    Text(String(localized: "• Free accounts keep up to \(PremiumLimits.freeCountdownLimit) active events after import; extras are archived."))
                     Text(String(localized: "• Keep backups somewhere safe (Files, iCloud Drive, or email)."))
                 }
                 .font(AppFont.footnote)

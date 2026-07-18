@@ -27,6 +27,12 @@ class CountdownFormModel: HashableObject {
     
     @ObservationIgnored
     @Dependency(\.purchaseManager) private var purchaseManager
+
+    @ObservationIgnored
+    @Dependency(\.backgroundImageManager) private var backgroundImageManager
+
+    @ObservationIgnored
+    @Dependency(\.videoBackgroundManager) private var videoBackgroundManager
     
     var displayMock: Countdown {
         countdown.mock
@@ -81,11 +87,26 @@ class CountdownFormModel: HashableObject {
             }
         }
 
-        // Custom sounds require Premium.
-        if !isPremiumUser, countdown.reminder.soundName != "Default" {
-            countdown.reminder.soundName = "Default"
+        // Premium-only media & sounds are stripped for free accounts on save.
+        if !isPremiumUser {
+            if countdown.reminder.soundName != "Default" {
+                countdown.reminder.soundName = "Default"
+            }
+            if let path = countdown.backgroundImageName,
+               backgroundImageManager.isCustomBackgroundImagePath(path) {
+                try? backgroundImageManager.deleteCustomBackgroundImage(at: path)
+                countdown.backgroundImageName = nil
+            }
+            if let path = countdown.backgroundVideoPath {
+                try? videoBackgroundManager.deleteCustomBackgroundVideo(at: path)
+                countdown.backgroundVideoPath = nil
+            }
+            if countdown.backgroundMusicName != nil,
+               countdown.backgroundMusicName != BackgroundMusicCatalog.none {
+                countdown.backgroundMusicName = nil
+            }
         }
-        
+
         withErrorReporting {
             let updatedCountDown = try database.write { [countdown] db in
                 try Countdown
@@ -201,10 +222,7 @@ struct CountdownFormView: View {
                                 Text("Repeat")
                                     .font(AppFont.subheadlineSemibold)
                                     .foregroundStyle(textPrimaryColor)
-                                InfoTipButton(
-                                    title: FeatureTips.repeat.0,
-                                    message: FeatureTips.repeat.1
-                                )
+                                InfoTipButton(tip: FeatureTips.repeat)
                             }
 
                             LazyVGrid(
@@ -243,10 +261,7 @@ struct CountdownFormView: View {
                                 Text("Reminder")
                                     .font(AppFont.subheadlineSemibold)
                                     .foregroundStyle(textPrimaryColor)
-                                InfoTipButton(
-                                    title: FeatureTips.reminder.0,
-                                    message: FeatureTips.reminder.1
-                                )
+                                InfoTipButton(tip: FeatureTips.reminder)
                             }
                             Spacer()
                             Button {

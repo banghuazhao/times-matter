@@ -80,8 +80,11 @@ struct CountdownRow: View {
         switch countdown.backgroundKind {
         case .video:
             if let path = countdown.backgroundVideoPath {
-                LoopingVideoPlayerView(path: path, loopSeconds: 6)
-                    .allowsHitTesting(false)
+                // Still frame only — looping AVPlayers in lists are too expensive.
+                VideoThumbnailView(
+                    path: path,
+                    fallbackColor: Color(hex: countdown.backgroundColor)
+                )
             } else {
                 Color(hex: countdown.backgroundColor)
             }

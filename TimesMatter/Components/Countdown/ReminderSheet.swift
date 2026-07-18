@@ -87,10 +87,7 @@ struct ReminderSheet: View {
                         Text("Reminder Type")
                             .font(AppFont.headline)
                             .foregroundStyle(themeManager.current.textPrimary)
-                        InfoTipButton(
-                            title: FeatureTips.reminderType.0,
-                            message: FeatureTips.reminderType.1
-                        )
+                        InfoTipButton(tip: FeatureTips.reminderType)
                     }
                     .padding(.horizontal, AppSpacing.medium)
 
@@ -115,10 +112,7 @@ struct ReminderSheet: View {
                             Text("Reminder Time")
                                 .font(AppFont.headline)
                                 .foregroundStyle(themeManager.current.textPrimary)
-                            InfoTipButton(
-                                title: FeatureTips.reminderTime.0,
-                                message: FeatureTips.reminderTime.1
-                            )
+                            InfoTipButton(tip: FeatureTips.reminderTime)
                         }
                         .padding(.horizontal, AppSpacing.medium)
 

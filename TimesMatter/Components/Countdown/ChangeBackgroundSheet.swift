@@ -28,6 +28,14 @@ class ChangeBackgroundSheetModel {
     var showPurchaseSheet = false
     var musicPreviewPlayer: AVAudioPlayer?
 
+    /// Paths present when the sheet opened — never deleted until Done confirms a replacement.
+    private let baselineImageName: String?
+    private let baselineVideoPath: String?
+    /// Files created during this editing session (safe to delete on Cancel).
+    private var sessionImagePaths = Set<String>()
+    private var sessionVideoPaths = Set<String>()
+    private var didApply = false
+
     var isPremium: Bool {
         purchaseManager.isPremiumUserPurchased
     }
@@ -68,6 +76,8 @@ class ChangeBackgroundSheetModel {
     init(countdown: Countdown.Draft, onSelect: @escaping (Countdown.Draft) -> Void) {
         self.countdown = countdown
         self.onSelect = onSelect
+        self.baselineImageName = countdown.backgroundImageName
+        self.baselineVideoPath = countdown.backgroundVideoPath
     }
 
     var primaryColor: Color {
@@ -110,18 +120,23 @@ class ChangeBackgroundSheetModel {
     }
 
     func selectPredefinedImage(_ imageName: String) {
-        removeOldImageIfNeed()
-        removeOldVideoIfNeed()
+        clearSessionImageIfReplacing()
+        clearSessionVideoIfReplacing()
         countdown.backgroundImageName = imageName
         countdown.backgroundVideoPath = nil
     }
 
     func clearVideo() {
-        removeOldVideoIfNeed()
+        clearSessionVideoIfReplacing()
         countdown.backgroundVideoPath = nil
     }
 
     func selectMusic(_ fileName: String?) {
+        // Clearing music is always allowed; choosing a track requires Premium.
+        if let fileName, fileName != BackgroundMusicCatalog.none, !isPremium {
+            showPurchaseSheet = true
+            return
+        }
         countdown.backgroundMusicName = fileName
         if let fileName, fileName != BackgroundMusicCatalog.none {
             previewMusic(fileName)
@@ -131,32 +146,49 @@ class ChangeBackgroundSheetModel {
     }
 
     func updateBackgroundColor(_ color: Color) {
-        // Color is mutually exclusive with image/video.
-        removeOldImageIfNeed()
-        removeOldVideoIfNeed()
+        updateBackgroundColor(hex: color.hexIntWithAlpha)
+    }
+
+    func updateBackgroundColor(hex: Int) {
+        // Color is mutually exclusive with image/video — picking a swatch is enough.
+        clearSessionImageIfReplacing()
+        clearSessionVideoIfReplacing()
         countdown.backgroundImageName = nil
         countdown.backgroundVideoPath = nil
-        countdown.backgroundColor = color.hexIntWithAlpha
+        countdown.backgroundColor = hex
     }
 
     func updateTextColor(_ color: Color) {
-        countdown.textColor = color.hexIntWithAlpha
+        updateTextColor(hex: color.hexIntWithAlpha)
+    }
+
+    func updateTextColor(hex: Int) {
+        countdown.textColor = hex
     }
 
     func updateLayout(_ layout: LayoutType) {
         countdown.layout = layout
     }
 
-    func useColorOnly() {
-        removeOldImageIfNeed()
-        removeOldVideoIfNeed()
-        countdown.backgroundImageName = nil
-        countdown.backgroundVideoPath = nil
-    }
-
     func applyChanges() {
         stopMusicPreview()
+        commitMediaDeletions()
+        didApply = true
         onSelect(countdown)
+    }
+
+    /// Call when dismissing without Done so temp files from this session are removed.
+    func discardChanges() {
+        guard !didApply else { return }
+        stopMusicPreview()
+        for path in sessionImagePaths {
+            try? backgroundImageManager.deleteCustomBackgroundImage(at: path)
+        }
+        for path in sessionVideoPaths {
+            try? videoBackgroundManager.deleteCustomBackgroundVideo(at: path)
+        }
+        sessionImagePaths.removeAll()
+        sessionVideoPaths.removeAll()
     }
 
     func stopMusicPreview() {
@@ -170,11 +202,12 @@ class ChangeBackgroundSheetModel {
         guard let data = try? await photo.loadTransferable(type: Data.self),
               let uiImage = UIImage(data: data) else { return }
 
-        removeOldImageIfNeed()
-        removeOldVideoIfNeed()
+        clearSessionImageIfReplacing()
+        clearSessionVideoIfReplacing()
         countdown.backgroundVideoPath = nil
 
         if let imagePath = try? backgroundImageManager.saveCustomBackgroundImage(uiImage) {
+            sessionImagePaths.insert(imagePath)
             countdown.backgroundImageName = imagePath
         }
     }
@@ -182,11 +215,12 @@ class ChangeBackgroundSheetModel {
     private func loadVideo(_ video: PhotosPickerItem) async {
         guard let movie = try? await video.loadTransferable(type: MovieFile.self) else { return }
         // Video is mutually exclusive with image/color media.
-        removeOldImageIfNeed()
-        removeOldVideoIfNeed()
+        clearSessionImageIfReplacing()
+        clearSessionVideoIfReplacing()
         countdown.backgroundImageName = nil
         do {
             let path = try videoBackgroundManager.saveCustomBackgroundVideo(from: movie.url)
+            sessionVideoPaths.insert(path)
             countdown.backgroundVideoPath = path
         } catch {
             print("Failed to save video background: \(error)")
@@ -214,16 +248,41 @@ class ChangeBackgroundSheetModel {
         musicPreviewPlayer?.volume = Float(countdown.backgroundMusicVolume)
     }
 
-    private func removeOldImageIfNeed() {
-        if let oldImagePath = countdown.backgroundImageName {
-            try? backgroundImageManager.deleteCustomBackgroundImage(at: oldImagePath)
+    /// Deletes only media created in this sheet session (keeps baseline files until Done).
+    private func clearSessionImageIfReplacing() {
+        if let path = countdown.backgroundImageName, sessionImagePaths.contains(path) {
+            try? backgroundImageManager.deleteCustomBackgroundImage(at: path)
+            sessionImagePaths.remove(path)
         }
     }
 
-    private func removeOldVideoIfNeed() {
-        if let oldPath = countdown.backgroundVideoPath {
-            try? videoBackgroundManager.deleteCustomBackgroundVideo(at: oldPath)
+    private func clearSessionVideoIfReplacing() {
+        if let path = countdown.backgroundVideoPath, sessionVideoPaths.contains(path) {
+            try? videoBackgroundManager.deleteCustomBackgroundVideo(at: path)
+            sessionVideoPaths.remove(path)
         }
+    }
+
+    private func commitMediaDeletions() {
+        if let baseline = baselineImageName,
+           baseline != countdown.backgroundImageName,
+           backgroundImageManager.isCustomBackgroundImagePath(baseline) {
+            try? backgroundImageManager.deleteCustomBackgroundImage(at: baseline)
+        }
+        if let baseline = baselineVideoPath,
+           baseline != countdown.backgroundVideoPath,
+           videoBackgroundManager.isCustomBackgroundVideoPath(baseline) {
+            try? videoBackgroundManager.deleteCustomBackgroundVideo(at: baseline)
+        }
+
+        for path in sessionImagePaths where path != countdown.backgroundImageName {
+            try? backgroundImageManager.deleteCustomBackgroundImage(at: path)
+        }
+        for path in sessionVideoPaths where path != countdown.backgroundVideoPath {
+            try? videoBackgroundManager.deleteCustomBackgroundVideo(at: path)
+        }
+        sessionImagePaths.removeAll()
+        sessionVideoPaths.removeAll()
     }
 }
 
@@ -326,7 +385,7 @@ struct ChangeBackgroundSheet: View {
             .toolbar {
                 ToolbarCloseItem {
                     Haptics.shared.vibrateIfEnabled()
-                    model.stopMusicPreview()
+                    model.discardChanges()
                     dismiss()
                 }
 
@@ -340,7 +399,7 @@ struct ChangeBackgroundSheet: View {
                 }
             }
             .onDisappear {
-                model.stopMusicPreview()
+                model.discardChanges()
             }
         }
     }
@@ -417,6 +476,18 @@ struct ChangeBackgroundSheet: View {
 
         return ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.small) {
+                if !model.isPremium {
+                    Label(String(localized: "Background music requires Premium"), systemImage: "crown.fill")
+                        .font(AppFont.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 4)
+                }
+
+                Text(String(localized: "Image, video, and solid color backgrounds are separate—choosing one replaces the others. Music can play with any of them."))
+                    .font(AppFont.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 4)
+
                 if hasMusic {
                     VStack(alignment: .leading, spacing: AppSpacing.xSmall) {
                         HStack {
@@ -583,19 +654,6 @@ struct ChangeBackgroundSheet: View {
 
     @ViewBuilder
     private var backgroundColor: some View {
-        // Clear image/video so only solid color shows
-        if model.countdown.backgroundImageName != nil || model.countdown.backgroundVideoPath != nil {
-            Button {
-                Haptics.shared.vibrateIfEnabled()
-                withAnimation {
-                    model.useColorOnly()
-                }
-            } label: {
-                Text("Use Color Only")
-            }
-            .buttonStyle(.appRect)
-        }
-
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: AppSpacing.small) {
                 VStack(spacing: 12) {
@@ -607,18 +665,17 @@ struct ChangeBackgroundSheet: View {
                 }
                 .frame(width: 60, height: 100)
 
-                ForEach(PredefinedColors.backgroundColors, id: \.hexIntWithAlpha) { color in
+                ForEach(PredefinedColors.backgroundColorHexes, id: \.self) { hex in
                     let isColorOnly = model.countdown.backgroundImageName == nil
                         && model.countdown.backgroundVideoPath == nil
-                    let isSelected = isColorOnly
-                        && model.countdown.backgroundColor == color.hexIntWithAlpha
+                    let isSelected = isColorOnly && model.countdown.backgroundColor == hex
                     Button {
                         Haptics.shared.vibrateIfEnabled()
-                        model.updateBackgroundColor(color)
+                        model.updateBackgroundColor(hex: hex)
                     } label: {
                         ZStack(alignment: .topTrailing) {
                             RoundedRectangle(cornerRadius: 12)
-                                .fill(color)
+                                .fill(Color(hex: hex))
                                 .frame(width: 66, height: 100)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 12)
@@ -634,6 +691,8 @@ struct ChangeBackgroundSheet: View {
                         }
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel(String(localized: "Background color"))
+                    .accessibilityAddTraits(isSelected ? .isSelected : [])
                 }
             }
             .padding(.horizontal, AppSpacing.medium)
@@ -654,21 +713,22 @@ struct ChangeBackgroundSheet: View {
                 ))
                 .labelsHidden()
 
-                ForEach(PredefinedColors.textColors, id: \.hexIntWithAlpha) { color in
+                ForEach(PredefinedColors.textColorHexes, id: \.self) { hex in
+                    let isSelected = model.countdown.textColor == hex
                     Button {
                         Haptics.shared.vibrateIfEnabled()
-                        model.updateTextColor(color)
+                        model.updateTextColor(hex: hex)
                     } label: {
                         ZStack(alignment: .topTrailing) {
                             RoundedRectangle(cornerRadius: 12)
-                                .fill(color)
+                                .fill(Color(hex: hex))
                                 .frame(width: 50, height: 50)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 12)
-                                        .stroke(model.countdown.textColor == color.hexIntWithAlpha ? model.primaryColor : Color.clear, lineWidth: 2)
+                                        .stroke(isSelected ? model.primaryColor : Color.clear, lineWidth: 2)
                                 )
 
-                            if model.countdown.textColor == color.hexIntWithAlpha {
+                            if isSelected {
                                 Image(systemName: "checkmark.circle.fill")
                                     .foregroundStyle(.white)
                                     .background(Circle().fill(Color.black.opacity(0.3)))
@@ -677,6 +737,7 @@ struct ChangeBackgroundSheet: View {
                         }
                     }
                     .buttonStyle(.plain)
+                    .accessibilityAddTraits(isSelected ? .isSelected : [])
                 }
             }
             .padding(.horizontal, AppSpacing.medium)
